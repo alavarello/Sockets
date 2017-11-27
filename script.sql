@@ -38,6 +38,6 @@ CREATE TABLE CANCELATIONS
   seat TEXT,
   passport TEXT,
   name TEXT,
-  reservation_code TEXT,
+  reservation_code TEXT PRIMARY KEY,
   FOREIGN KEY (flight_code) REFERENCES FLIGHTS
 );
