@@ -4,7 +4,11 @@ CREATE TABLE FLIGHTS
   origin TEXT,
   destination TEXT,
   departure_time TEXT,
-  arrival_time TEXT
+  departure_date TEXT,
+  arrival_time TEXT,
+  arrival_date TEXT,
+  model TEXT,
+  FOREIGN KEY(model) REFERENCES PLANES
 );
 
 CREATE TABLE PLANES
@@ -23,8 +27,8 @@ CREATE TABLE RESERVATIONS
   seat TEXT,
   passport TEXT,
   name TEXT,
-  reservation_code TEXT,
-  FOREIGN KEY flight_code REFERENCES FLIGHTS
+  reservation_code TEXT PRIMARY KEY,
+  FOREIGN KEY (flight_code) REFERENCES FLIGHTS
 
 );
 
@@ -35,5 +39,5 @@ CREATE TABLE CANCELATIONS
   passport TEXT,
   name TEXT,
   reservation_code TEXT,
-  FOREIGN KEY flight_code REFERENCES FLIGHTS
+  FOREIGN KEY (flight_code) REFERENCES FLIGHTS
 );
