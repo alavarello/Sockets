@@ -1,3 +1,4 @@
+
 #include "flightsTableManager.h"
 #include "constants.h"
 #include "structs.h"
@@ -10,6 +11,7 @@ extern sqlite3 *db;
 
 void printFlightArray(tFlightArray flightArray){
   int i;
+  printf("PRINTING ARRAY: SIZE:%ld\n--------------------------------------------------",flightArray.size );
   for(i = 0; i<flightArray.size; i++){
 
     printf("FlighCode: %s\n", flightArray.flightArray[i]->flightCode);
@@ -52,7 +54,7 @@ int getNumberOfFLighst(){
 }
 
 
-tFlightArray getFlightArray(){
+tFlightArray * getFlightArray(){
 	char *err_msg = 0;
     sqlite3_stmt *res;
     tFlight** flightArray = NULL; 
@@ -87,7 +89,7 @@ tFlightArray getFlightArray(){
     flightArrayStruct = malloc(sizeof(tFlightArray));
     flightArrayStruct->flightArray = flightArray;
     flightArrayStruct->size = numberOfFlights;
-    return *flightArrayStruct;
+    return flightArrayStruct;
 }
 
 

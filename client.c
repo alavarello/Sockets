@@ -4,12 +4,29 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
+#include "structs.h"
+#include "serialize_flight.h"
+
+void printFlightArray(tFlightArray flightArray){
+  int i;
+  printf("PRINTING ARRAY: SIZE:%ld\n",flightArray.size );
+  for(i = 0; i<flightArray.size; i++){
+
+    printf("FlighCode: %s\n", flightArray.flightArray[i]->flightCode);
+    printf("O:%s  D:%s\n", flightArray.flightArray[i]->origin,flightArray.flightArray[i]->destination);
+    printf("DT:%s  DD:%s\n", flightArray.flightArray[i]->departureTime, flightArray.flightArray[i]->departureDate);
+    printf("AT:%s  AD:%s\n", flightArray.flightArray[i]->arrivalTime,flightArray.flightArray[i]->arrivalDate);
+
+  }
+}
+
 
 int main(){
   int clientSocket, n;
-  char buffer[1024];
+  char buffer[2048];
   struct sockaddr_in serverAddr;
   socklen_t addr_size;
+
 
   /*---- Create the socket. The three arguments are: ----*/
   /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
@@ -46,14 +63,14 @@ int main(){
    }
    
    /* Now read server response */
-   bzero(buffer,256);
-   n = read(clientSocket, buffer, 255);
-   
+   bzero(buffer,2000);
+   n = read(clientSocket, buffer, 2000);
+   tFlightArray * t = deserialize_flight_array(buffer);
    if (n < 0) {
       perror("ERROR reading from socket");
       exit(1);
    }
-   
-   printf("%s\n",buffer);
+   printFlightArray(*t);
+   //printf("FC:%s. O:%s.  D:%s.   DT:%s.   DD:%s.   AT:%s.  AD:%s.   PC:%s \n",t->flightCode, t->origin, t->destination, t->departureTime, t->departureDate, t->arrivalTime, t->arrivalDate, t->planeCode);
    return 0;
 }
