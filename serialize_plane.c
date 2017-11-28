@@ -1,3 +1,10 @@
+#include "structs.h"
+#include "constants.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+
 char * serialize_plane(tPlane * t)
 {
   int bytes = 0;
