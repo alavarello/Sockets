@@ -121,4 +121,8 @@ tFlightArray * deserialize_flight_array(char * buff){
   return res;
 }
 
+char * serialize_seatArray(char ** seatArray){
+  
+}
+
 

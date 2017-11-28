@@ -93,11 +93,12 @@ tFlightArray * getFlightArray(){
 }
 
 
-int getFlight(char * flight_code)
+tFlight * getFlight(char * flight_code)
 {
   char * sql = "SELECT * FROM FLIGHTS WHERE flight_code LIKE ?;";
   sqlite3_stmt * res;
   int rc;
+  tFlight * flight = malloc(sizeof(tFlight));
 
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
@@ -112,19 +113,18 @@ int getFlight(char * flight_code)
 
   if(rc == SQLITE_ROW)
   {
-     printf("Flight Code: %s\n", sqlite3_column_text(res, 0));
-     printf("Origin: %s\n", sqlite3_column_text(res, 1));
-     printf("Destination: %s\n", sqlite3_column_text(res, 2));
-     printf("Departure time: %s\n", sqlite3_column_text(res, 3));
-     printf("Departure date: %s\n", sqlite3_column_text(res, 4));
-     printf("Arrival time: %s\n", sqlite3_column_text(res, 5));
-     printf("Arrival date: %s\n", sqlite3_column_text(res, 6));
-     printf("Model: %s\n", sqlite3_column_text(res, 7));
-
+     strcpy(flight->flightCode,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
+      strcpy(flight->origin,(char*)sqlite3_column_text(res, ORIGIN_COLUMN));
+      strcpy(flight->destination,(char*)sqlite3_column_text(res, DESTINATION_COLUMN));
+      strcpy(flight->departureTime,(char*)sqlite3_column_text(res, DEPARTURE_TIME_COLUMN));
+      strcpy(flight->arrivalTime,(char*)sqlite3_column_text(res, ARRIVAL_TIME_COLUMN));
+      strcpy(flight->planeCode,(char*)sqlite3_column_text(res, PLANE_CODE_COLUMN));
+      strcpy(flight->departureDate,(char*)sqlite3_column_text(res, DEPARTURE_DATE_COLUMN));
+      strcpy(flight->arrivalDate,(char*)sqlite3_column_text(res, ARRIVAL_DATE_COLUMN));
   }
 
   sqlite3_finalize(res);
-  return OK;
+  return flight;
 
 }
 
@@ -139,7 +139,8 @@ int insert_flight(char * flight_code, char * origin, char * destination, char * 
 
   if(rc != SQLITE_OK)
   {
-    return ERROR;
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
   }
 
   sqlite3_bind_text(res, 1, flight_code, -1, NULL);
@@ -154,13 +155,12 @@ int insert_flight(char * flight_code, char * origin, char * destination, char * 
   rc = sqlite3_step(res);
 
   if(rc != SQLITE_DONE)
-  {
-    printf("An error has occured\n");
-    return ERROR;
+  { fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
   }
 
   sqlite3_finalize(res);
 
-  return OK;
+  return sqlite3_errcode(db); 
 
 }
