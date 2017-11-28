@@ -121,8 +121,36 @@ tFlightArray * deserialize_flight_array(char * buff){
   return res;
 }
 
-char * serialize_seatArray(char ** seatArray){
-  
+
+
+char * serialize_seatArray(tSeatArray * seatArray){
+char * buff = malloc((SEAT_NUMBER_CHAR_MAX*seatArray->size)+sizeof(int));
+char * auxBuff = buff;
+int i = 0;
+memcp(auxBuff,seatArray->size, sizeof(int));
+auxBuff += sizeof(int);
+  while(i< seatArray->size)
+  {
+    memcp(auxBuff,seatArray->reservedSeats[i], SEAT_NUMBER_CHAR_MAX);
+    auxBuff += SEAT_NUMBER_CHAR_MAX;
+    i++;
+  }
+  return buff;
+}
+
+tSeatArray * deserialize_seatArray(char* buff){
+  tSeatArray * seatArray = malloc(sizeof(tSeatArray));
+  int i = 0;
+  memcpy(&(seatArray->size), buff, sizeof(int));
+  buff += sizeof(int);
+  seatArray->reservedSeats = malloc(sizeof(char*)*seatArray->size);
+  while(i < seatArray->size){
+      seatArray->reservedSeats[i] = malloc(sizeof(char)*SEAT_NUMBER_CHAR_MAX);
+      memcpy(seatArray->reservedSeats[i], buff, sizeof(char)*SEAT_NUMBER_CHAR_MAX);
+      buff += sizeof(char)*SEAT_NUMBER_CHAR_MAX;
+      i++;
+  }
+  returb seatArray;
 }
 
 

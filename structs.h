@@ -47,4 +47,10 @@ typedef struct{
   long size;
 }tReservationArray;
 
+
+typedef struct {
+	char ** reservedSeats;
+	int size;
+}tSeatsArray;
+
 #endif

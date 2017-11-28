@@ -35,9 +35,10 @@ char ** exapndSeatsArray(char** seatsArray, int* size){
   return seatsArray;
 }
 
-char** getReservationsSeats(char * flightCode){
+tSeatsArray * getReservationsSeats(char * flightCode){
   int rc, numberOfRowsInTable, size = 0, aux = 0;
   sqlite3_stmt *res;
+  tSeatsArray * seatsArrayStruct = malloc(sizeof(tSeatsArray));
   char ** seatsArray = NULL;
   char *sql ="SELECT seat FROM RESERVATIONS NATURAL JOIN FLIGHTS WHERE flight_code = ?";
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
@@ -53,7 +54,8 @@ char** getReservationsSeats(char * flightCode){
   if(size==aux){
     seatsArray=exapndSeatsArray(seatsArray, &size);
   }
-  strcpy(seatsArray[aux] ,EOSA); 
+  seatsArrayStruct->reservedSeats = seatsArray;
+  seatsArrayStruct->size = aux;
   return seatsArray;
 }
 
