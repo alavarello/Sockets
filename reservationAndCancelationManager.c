@@ -1,4 +1,4 @@
-#include "constants.h"
+e#include "constants.h"
 #include <sqlite3.h>
 #include "structs.h"
 #include "reservationAndCancelationManager.h"
@@ -55,11 +55,6 @@ char** getReservationsSeats(char * flightCode){
   if(size==aux){
     seatsArray=exapndSeatsArray(seatsArray, &size);
   }
-  // for (int i = 0; i < aux; ++i)
-  // {
-  //   printf("%s\n", seatsArray[i]);
-  // }
- 
   strcpy(seatsArray[aux] ,EOSA); 
   return seatsArray;
 }
@@ -139,11 +134,12 @@ tReservationArray getCancelationArray(){
 }
 
 
-int getReservation(char * reservation_code)
+tReservation * getReservation(char * reservation_code)
 {
   char * sql = "SELECT * FROM RESERVATIONS WHERE reservation_code LIKE ?;";
   sqlite3_stmt * res;
   int rc;
+  tReservation * reservation = malloc(sizeof(tReservation));
 
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
@@ -158,15 +154,15 @@ int getReservation(char * reservation_code)
 
   if(rc == SQLITE_ROW)
   {
-    printf("Flight Code: %s\n", sqlite3_column_text(res, 0));
-    printf("Seat: %s\n", sqlite3_column_text(res, 1));
-    printf("Passport: %s\n", sqlite3_column_text(res, 2));
-    printf("Name: %s\n", sqlite3_column_text(res, 3));
-    printf("Reservation Code: %s\n", sqlite3_column_text(res, 4));
+    strcpy(reservation->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
+    strcpy(reservation->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
+    strcpy(reservation->passport ,(char*)sqlite3_column_text(res, PASSPORT_COLUMN));
+    strcpy(reservation->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
+    strcpy(reservation->reservationCode ,(char*)sqlite3_column_text(res, RESERVATION_CODE_COLUMN));
   }
 
    sqlite3_finalize(res);
-   return OK;
+   return reservation;
 
 }
 
