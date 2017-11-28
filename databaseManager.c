@@ -51,8 +51,8 @@ int main(int argc, char* argv[]) {
   // insert_flight("AA954", "EZE", "MIA", "00:30", "01/01/2017", "04:20", "02/01/2017", "Boeing 777");
   // insert_reservation("AA954", "30C", "AAA451802", "John Doe", "DWUAIP");
   // insert_reservation("AA954", "41C", "AAA451802", "John Doe", "DWUAIR");
-  // insert_reservation("AA954", "4C", "AAA451802", "John Doe", "DWUAIS");
-  // insert_reservation("AA954", "1C", "AAA451802", "John Doe", "DWUAID");
+  // insert_reservation("AA954", "04C", "AAA451802", "John Doe", "DWUAIS");
+  // insert_reservation("AA954", "01C", "AAA451802", "John Doe", "DWUAID");
   // insert_reservation("AA954", "40A", "AAA451802", "John Doe", "DWUANT");
   // insert_reservation("AA954", "40B", "AAA451802", "John Doe", "DWUAIL");
   // insert_reservation("AA954", "40D", "AAA451802", "John Doe", "DWUAIA");

@@ -26,12 +26,12 @@ tReservation** expanReservationArray(tReservation** reservationsArray, long size
 
 char ** exapndSeatsArray(char** seatsArray, int* size){
   int i;
-  *size=+NUMBER_OF_SEATS_TO_EXPAND;
-  seatsArray = realloc(seatsArray, (*size)*sizeof(char));
+  (*size) += NUMBER_OF_SEATS_TO_EXPAND;
+  seatsArray = realloc(seatsArray, (*size)*sizeof(char*));
   if(seatsArray == NULL){
     //Free and size back to how it was before
   }
-  for(i = (*size - NUMBER_OF_SEATS_TO_EXPAND ); i< NUMBER_OF_SEATS_TO_EXPAND; i++){
+  for(i = ((*size) - NUMBER_OF_SEATS_TO_EXPAND ); i< NUMBER_OF_SEATS_TO_EXPAND; i++){
     seatsArray[i] = malloc(sizeof(char)*SEAT_NUMBER_CHAR_MAX);
   }
   return seatsArray;
@@ -55,7 +55,12 @@ char** getReservationsSeats(char * flightCode){
   if(size==aux){
     seatsArray=exapndSeatsArray(seatsArray, &size);
   }
-  strcpy(seatsArray[aux] ,EOSA);  
+  // for (int i = 0; i < aux; ++i)
+  // {
+  //   printf("%s\n", seatsArray[i]);
+  // }
+ 
+  strcpy(seatsArray[aux] ,EOSA); 
   return seatsArray;
 }
 
