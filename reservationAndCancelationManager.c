@@ -1,4 +1,4 @@
-e#include "constants.h"
+#include "constants.h"
 #include <sqlite3.h>
 #include "structs.h"
 #include "reservationAndCancelationManager.h"
@@ -17,9 +17,7 @@ tReservation** expanReservationArray(tReservation** reservationsArray, long size
     reservationsArray[i] = malloc(sizeof(tReservation));
     reservationsArray[i]->flightCode = malloc(sizeof(char)*FLIGHT_CODE_CHAR_MAX);
     reservationsArray[i]->seatNumber = malloc(sizeof(char)*SEAT_NUMBER_CHAR_MAX);
-    reservationsArray[i]->passport = malloc(sizeof(char)*PASSPORT_CHAR_MAX);
     reservationsArray[i]->userName = malloc(sizeof(char)*USER_NAME_CHAR_MAX);
-    reservationsArray[i]->reservationCode = malloc(sizeof(char)*RESERVATION_CODE_CHAR_MAX);
   }
   return reservationsArray;
 }
@@ -103,9 +101,7 @@ tReservationArray getReservationOrCancelationArray(char* table){
   while(sqlite3_step(res) == SQLITE_ROW) {
     strcpy(reservationsArray[i]->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
     strcpy(reservationsArray[i]->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
-    strcpy(reservationsArray[i]->passport ,(char*)sqlite3_column_text(res, PASSPORT_COLUMN));
     strcpy(reservationsArray[i]->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
-    strcpy(reservationsArray[i]->reservationCode ,(char*)sqlite3_column_text(res, RESERVATION_CODE_COLUMN));
     i++;
   }    
   sqlite3_finalize(res);
@@ -121,7 +117,6 @@ void printReservationArray(tReservationArray reservationsArray){
   for (i = 0; i < reservationsArray.size; ++i)
   {
    printf("FC:%s\n",reservationsArray.reservationsArray[i]->flightCode);
-   printf("RC:%s\n", reservationsArray.reservationsArray[i]->reservationCode);
   }
 }
 
@@ -156,9 +151,7 @@ tReservation * getReservation(char * reservation_code)
   {
     strcpy(reservation->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
     strcpy(reservation->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
-    strcpy(reservation->passport ,(char*)sqlite3_column_text(res, PASSPORT_COLUMN));
     strcpy(reservation->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
-    strcpy(reservation->reservationCode ,(char*)sqlite3_column_text(res, RESERVATION_CODE_COLUMN));
   }
 
    sqlite3_finalize(res);
@@ -167,10 +160,10 @@ tReservation * getReservation(char * reservation_code)
 }
 
 
-int insert_reservation(char * flight_code, char * seat, char * passport, char * name, char * reservation_code)
+int insert_reservation(char * flight_code, char * seat, char * name)
 {
 
-  char * sql = "INSERT INTO RESERVATIONS VALUES(?,?,?,?,?);";
+  char * sql = "INSERT INTO RESERVATIONS VALUES(?,?,?);";
   sqlite3_stmt * res;
   int rc;
   char * err_msg;
@@ -184,10 +177,8 @@ int insert_reservation(char * flight_code, char * seat, char * passport, char * 
 
   sqlite3_bind_text(res, 1, flight_code, -1, NULL);
   sqlite3_bind_text(res, 2, seat, -1, NULL);
-  sqlite3_bind_text(res, 3, passport, -1, NULL);
-  sqlite3_bind_text(res, 4, name, -1, NULL);
-  sqlite3_bind_text(res, 5, reservation_code, -1, NULL);
-
+  sqlite3_bind_text(res, 3, name, -1, NULL);
+  
   rc = sqlite3_step(res);
 
   if(rc != SQLITE_DONE)
@@ -202,15 +193,16 @@ int insert_reservation(char * flight_code, char * seat, char * passport, char * 
 
 }
 
-int insert_cancellation(char * reservation)
+int insert_cancellation(char * seat, char * flightCode)
 {
-    char * sql = "INSERT INTO CANCELATIONS SELECT * FROM RESERVATIONS WHERE reservation_code LIKE ?;";
+    char * sql = "INSERT INTO CANCELATIONS SELECT * FROM RESERVATIONS WHERE seat LIKE ? AND flight_code LIKE ?;";
     sqlite3_stmt * res;
     int rc;
 
     sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
-    sqlite3_bind_text(res, 1, reservation, -1, NULL);
+    sqlite3_bind_text(res, 1, seat, -1, NULL);
+    sqlite3_bind_text(res, 2, flightCode, -1, NULL);
 
     rc = sqlite3_step(res);
 
