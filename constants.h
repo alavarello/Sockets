@@ -44,4 +44,6 @@
 #define ERROR -1
 #define OK 0
 
+#define EOSA "FFFF" //End Of Seats Array
+
 #endif

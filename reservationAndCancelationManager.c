@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define NUMBER_OF_SEATS_TO_EXPAND 10
+
 extern sqlite3 *db;
 
 tReservation** expanReservationArray(tReservation** reservationsArray, long size){
@@ -20,6 +22,41 @@ tReservation** expanReservationArray(tReservation** reservationsArray, long size
     reservationsArray[i]->reservationCode = malloc(sizeof(char)*RESERVATION_CODE_CHAR_MAX);
   }
   return reservationsArray;
+}
+
+char ** exapndSeatsArray(char** seatsArray, int* size){
+  int i;
+  *size=+NUMBER_OF_SEATS_TO_EXPAND;
+  seatsArray = realloc(seatsArray, (*size)*sizeof(char));
+  if(seatsArray == NULL){
+    //Free and size back to how it was before
+  }
+  for(i = (*size - NUMBER_OF_SEATS_TO_EXPAND ); i< NUMBER_OF_SEATS_TO_EXPAND; i++){
+    seatsArray[i] = malloc(sizeof(char)*SEAT_NUMBER_CHAR_MAX);
+  }
+  return seatsArray;
+}
+
+char** getReservationsSeats(char * flightCode){
+  int rc, numberOfRowsInTable, size = 0, aux = 0;
+  sqlite3_stmt *res;
+  char ** seatsArray = NULL;
+  char *sql ="SELECT seat FROM RESERVATIONS NATURAL JOIN FLIGHTS WHERE flight_code = ?";
+  rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+  sqlite3_bind_text(res, 1, flightCode, -1, NULL);
+  seatsArray = exapndSeatsArray(seatsArray, &size);
+  while(sqlite3_step(res) == SQLITE_ROW){
+    if(size==aux){
+      seatsArray = exapndSeatsArray(seatsArray, &size);
+    }
+    strcpy(seatsArray[aux] ,(char*)sqlite3_column_text(res, 0));
+    aux++;
+  }
+  if(size==aux){
+    seatsArray=exapndSeatsArray(seatsArray, &size);
+  }
+  strcpy(seatsArray[aux] ,EOSA);  
+  return seatsArray;
 }
 
 int getNumberOfReservationOrCancelations(char* table){

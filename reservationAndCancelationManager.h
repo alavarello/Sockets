@@ -13,4 +13,6 @@ int insert_reservation(char * flight_code, char * seat, char * passport, char * 
 int insert_cancellation(char * reservation);
 tReservationArray getReservationArray();
 tReservationArray getCancelationArray();
+char** getReservationsSeats(char * flightCode);
+char ** exapndSeatsArray(char** seatsArray, int* size);
 #endif
