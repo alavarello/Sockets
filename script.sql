@@ -25,9 +25,8 @@ CREATE TABLE RESERVATIONS
 (
   flight_code TEXT,
   seat TEXT,
-  passport TEXT,
   name TEXT,
-  reservation_code TEXT PRIMARY KEY,
+  PRIMARY KEY(flight_code, seat),
   FOREIGN KEY (flight_code) REFERENCES FLIGHTS
 
 );
@@ -36,8 +35,7 @@ CREATE TABLE CANCELATIONS
 (
   flight_code TEXT,
   seat TEXT,
-  passport TEXT,
   name TEXT,
-  reservation_code TEXT PRIMARY KEY,
+  PRIMARY KEY(flight_code, seat),
   FOREIGN KEY (flight_code) REFERENCES FLIGHTS
 );
