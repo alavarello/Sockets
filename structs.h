@@ -39,9 +39,7 @@ typedef struct{
 typedef struct {
 	char* flightCode;
 	char* seatNumber;
-	char* passport;
 	char* userName;
-	char* reservationCode;
 }tReservation;
 
 typedef struct{
