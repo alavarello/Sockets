@@ -42,8 +42,6 @@ char * * getOccupiedSeats(tFlight * flight)
 {
 	char ** seats = malloc(8 * sizeof(*seats));
 
-	printf("FLIGHTS %p\n", seats );
-
 	seats[0] = "01B";
 	seats[1] = "10A";
 	seats[2] = "13E";
@@ -59,3 +57,9 @@ char * * getOccupiedSeats(tFlight * flight)
 int reserve(tFlight * flight , char * seat){
 	return 0;
 }
+
+int cancel(tFlight * flight , char * seat){
+	return 0;
+}
+
+

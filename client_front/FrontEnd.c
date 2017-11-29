@@ -237,3 +237,15 @@ char * receiveSeatNumber()
 	
 	return buffer ;
 }
+
+void logError(char * msg){
+	printf("\nERROR: %s \n", msg );
+}
+
+void logAction(char * msg){
+	printf("\nACTION: %s \n", msg );
+}
+
+void logMessage(char * msg){
+	printf("%s\n",msg );
+}

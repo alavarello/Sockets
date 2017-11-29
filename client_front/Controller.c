@@ -2,10 +2,11 @@
 
 #define DO_ANOTHER_OPERATION 10
 #define DONT_DO_ANOTHER_OPERATION -10
-
-
+#define MAX_MSG_LOG 100
 
 static tFlight  currentFlight ;
+
+static char msgLog[MAX_MSG_LOG];
 
 int main(void)
 {
@@ -98,6 +99,48 @@ int checkSeatNumberFormat(char * seat)
 
 }
 
+void cancelSeatNumber()
+{
+	char * seat;
+	int flag = 1;
+
+	while(flag){
+
+		drawPlane();
+
+		seat = receiveSeatNumber();
+
+		if(strcmp(seat , "q") == 0){
+			return;
+		}
+
+		if(checkSeatNumberFormat(seat)){
+			
+			flag = cancel(currentFlight , seat ) ;
+
+			if(flag){
+				sprintf(msgLog, "Cancelling seat %s\n" , seat);
+				logAction(msgLog);
+				flag = 0;
+			}else{
+				sprintf(msgLog, "\nSeat %s is not able to cancel:\n\n" , seat);
+				logError(msgLog);
+				flag = 1;
+			}
+		}else{
+			sprintf(msgLog , "The seat format is invalid\n");
+			logError(msgLog);
+			flag = 1;
+		}
+
+		free(seat);
+
+
+		
+	}
+
+}
+
 void reserveSeatNumber()
 {
 	char * seat;
@@ -118,14 +161,17 @@ void reserveSeatNumber()
 			flag = reserve(currentFlight , seat ) ;
 
 			if(flag){
-				printf("Reserving seat %s\n" , seat);
+				sprintf(msgLog, "Reserving seat %s\n" , seat);
+				logAction(msgLog);
 				flag = 0;
 			}else{
-				printf("\nSeat %s is no longer available, please choose another one:\n\n" , seat);
+				sprintf(msgLog, "\nSeat %s is no longer available, please choose another one:\n\n" , seat);
+				logError(msgLog);
 				flag = 1;
 			}
 		}else{
-			printf("The seat format is invalid\n");
+			sprintf(msgLog ,"The seat format is invalid\n");
+			logError(msgLog);
 			flag = 1;
 		}
 
@@ -148,8 +194,6 @@ int reserveSeat()
 	while(flag){
 
 		flights = getFlights();
-
-		printf("DIO %p\n", flights);
 		
 		displayFlights(flights);
 
@@ -170,7 +214,8 @@ int reserveSeat()
 		flights = NULL;
 
 		if(!result){
-			printf("Please insert a valid flight code\n");
+			sprintf(msgLog, "Please insert a valid flight code\n");
+			logError(msgLog);
 			flag = 1;
 		}else{
 
@@ -185,7 +230,8 @@ int reserveSeat()
 void listFlights()
 {
 	tFlight ** flights;
-	printf("Listing flights\n");
+	sprintf(msgLog,"Listing flights\n");
+	logMessage(msgLog);
 	flights = getFlights();
 	displayFlights(flights);
 }
@@ -221,26 +267,14 @@ void cancelSeat()
 		flights = NULL;
 
 		if(!result){
-			printf("Please insert a valid flight code\n");
+			sprintf(msgLog,"Please insert a valid flight code\n");
+			logError(msgLog);
 			flag = 1;
 			break;
 		}else{
 
 
-			//TODO
-
-			drawPlane();
-
-			seat = receiveSeatNumber();
-
-			if(strcmp(seat , "q") == 0){
-				free(seat);
-				return;
-			}
-
-			printf("Canceling seat %s\n" , seat);
-
-			free(seat);
+			cancelSeatNumber();
 
 			flag=0;
 		}
@@ -288,7 +322,8 @@ void readClientMenu ()
 			
 			default:
 			{
-				printf("That option is not valid");
+				sprintf(msgLog , "That option is not valid");
+				logError(msgLog);
 				flag=1;
 			}
 		}
@@ -427,9 +462,6 @@ void fillOcuppiedMatrix(char * * occupiedSeats , int * * totalOccupied)
 	{
 		number = getNumber(occupiedSeats[i]);  
 		column = getColumn(occupiedSeats[i]);
-
-		printf("Asiento %s : numero %d ,columna %c\n", occupiedSeats[i] , number , 'A' + column );
-
 		totalOccupied[number-1][column] = 1;
 
 		i++;
@@ -459,13 +491,9 @@ void drawPlane()
 
 	int * * totalOccupied = malloc(plane->rows* sizeof(*totalOccupied));
 
-	printf("FREE BEFORe %p - %p - %p \n", totalOccupied , plane, occupiedSeats );
-
 	for( j = 0 ; j < plane->rows ; j++){
 		totalOccupied[j] = calloc((plane->left + plane->right + plane->middle) , sizeof(int));
 	}
-
-	printf("FREE BEFORE 2 %p - %p - %p \n", totalOccupied , plane, occupiedSeats );
 
 	fillOcuppiedMatrix(occupiedSeats , totalOccupied);
 
@@ -485,11 +513,8 @@ void freeAllDrawPlane(int *** totalOccupiedP , tPlane ** planeP , char *** occup
 	int ** totalOccupied = *totalOccupiedP;
 	tPlane * plane = *planeP;
 	char ** occupiedSeats = *occupiedSeatsP;
-
-	printf("FREE %p - %p - %p \n", totalOccupied , plane, occupiedSeats );
 	
 	for( j = 0 ; j < plane->rows ; j++){
-		printf(" FOR %p \n", totalOccupied[j] );
 		free(totalOccupied[j]);
 		totalOccupied[j] = NULL;
 	}
