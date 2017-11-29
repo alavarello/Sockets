@@ -6,20 +6,19 @@
 #include <string.h>
 #include "structs.h"
 #include "serialize_flight.h"
+#include "serialize_plane.h"
+#include "serialize_reservation.h"
 
-void printFlightArray(tFlightArray flightArray){
+//gcc client.c serialize_reservation.c serialize_plane.c serialize_flight.c -o client -lsqlite3 -std=c99
+
+void printSeatsArray(tSeatsArray seatsArray){
   int i;
-  printf("PRINTING ARRAY: SIZE:%ld\n",flightArray.size );
-  for(i = 0; i<flightArray.size; i++){
-
-    printf("FlighCode: %s\n", flightArray.flightArray[i]->flightCode);
-    printf("O:%s  D:%s\n", flightArray.flightArray[i]->origin,flightArray.flightArray[i]->destination);
-    printf("DT:%s  DD:%s\n", flightArray.flightArray[i]->departureTime, flightArray.flightArray[i]->departureDate);
-    printf("AT:%s  AD:%s\n", flightArray.flightArray[i]->arrivalTime,flightArray.flightArray[i]->arrivalDate);
-
+  printf("SEATS ARRAY: SIZE:%d\n",seatsArray.size);
+  for (i = 0; i < seatsArray.size; ++i)
+  {
+   printf("SEAT:%s\n",seatsArray.reservedSeats[i]);
   }
 }
-
 
 int main(){
   int clientSocket, n;
@@ -65,12 +64,12 @@ int main(){
    /* Now read server response */
    bzero(buffer,2000);
    n = read(clientSocket, buffer, 2000);
-   tFlightArray * t = deserialize_flight_array(buffer);
+   tSeatsArray * t = deserialize_seatArray(buffer);
    if (n < 0) {
       perror("ERROR reading from socket");
       exit(1);
    }
-   printFlightArray(*t);
+   printSeatsArray(*t);
    //printf("FC:%s. O:%s.  D:%s.   DT:%s.   DD:%s.   AT:%s.  AD:%s.   PC:%s \n",t->flightCode, t->origin, t->destination, t->departureTime, t->departureDate, t->arrivalTime, t->arrivalDate, t->planeCode);
    return 0;
 }

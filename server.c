@@ -7,8 +7,15 @@
 #include "constants.h"
 #include "structs.h"
 #include "serialize_flight.h"
+#include "serialize_plane.h"
+#include "serialize_reservation.h"
 #include "flightsTableManager.h"
+#include "planesTableManager.h"
+#include "reservationAndCancelationManager.h"
 #include <sqlite3.h>
+
+//gcc serialize_flight.c server.c flightsTableManager.c reservationAndCancelationManager.c planesTableManager.c serialize_reservation.c serialize_plane.c -o server -lsqlite3 -std=c99
+
 
  sqlite3 *db;
 
@@ -35,21 +42,23 @@ void childForClient (int sock) {
    bzero(buffer,256);
    n = read(sock,buffer,255);
    openDataBase();
-  //tFlight t = {"AR304","EZE", "LIM", "19:00", "27/11/2017", "20:00", "27/11/2017", "Boeing 777"};
-  //char * buff = serialize_flight(&t);
-  tFlightArray * t = getFlightArray();
-  int bytes = ( FLIGHT_CODE_CHAR_MAX + ORIGIN_CHAR_MAX + DESTINATION_CHAR_MAX + DEPARTURE_TIME_CHAR_MAX + DEPARTURE_DATE_CHAR_MAX +
-  ARRIVAL_TIME_CHAR_MAX + ARRIVAL_DATE_CHAR_MAX + PLANE_CODE_CHAR_MAX )*sizeof(char);
-  char * buff = serialize_flight_array(t);
-  tFlightArray * r = deserialize_flight_array(buff);
-  printFlightArray(*r);
+  
+   tSeatsArray * r = getReservationsSeats("AA954");
+   printf("PRINING SEATS ARRAY\n");
+   printSeatsArray(*r);
+   char * buff = serialize_seatArray(r);
+   printf("SERIALIZE OK\n");
+   tSeatsArray * h = deserialize_seatArray(buff);
+   printf("PRINING Seats  ARRAY\n");
+   printSeatsArray(*r);
+
    if (n < 0) {
       perror("ERROR reading from socket");
       exit(1);
    }
    
   printf("Here is the message: %s\n",buffer);
-  n = write(sock,buff,(bytes*t->size)+sizeof(long));
+  n = write(sock,buff,500);
    
    if (n < 0) {
       perror("ERROR writing to socket");
@@ -126,4 +135,6 @@ int main(){
    printf("Close database successfully\n");
   return 0;
 }
+
+
 

@@ -10,6 +10,7 @@ extern sqlite3 *db;
 
 void printPlaneArray(tPlaneArray planeArray){
   int i;
+  printf("PLANE SIZE: %d\n",planeArray.size );
   for(i=0; i< planeArray.size; i++){
     printf("%s\n",planeArray.planeArray[i]->model ); 
     printf("Rows:%d R:%d M:%d L:%d\n",planeArray.planeArray[i]->rows,planeArray.planeArray[i]->right,planeArray.planeArray[i]->middle,planeArray.planeArray[i]->left); 
@@ -39,7 +40,7 @@ tPlane** expandPlaneArray(tPlane** planeArray, long size){
 }
 
 
-tPlaneArray getPlaneArray(){
+tPlaneArray * getPlaneArray(){
   char *err_msg = 0;
   sqlite3_stmt * res;
   tPlane** planeArray = NULL;
@@ -68,7 +69,7 @@ tPlaneArray getPlaneArray(){
     planeArrayStruct = malloc(sizeof(tPlaneArray));
     planeArrayStruct->planeArray = planeArray;
     planeArrayStruct->size = numberOfPlanes;
-    return *planeArrayStruct;
+    return planeArrayStruct;
 }
 
 

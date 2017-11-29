@@ -28,7 +28,7 @@ char * serialize_plane(tPlane * t)
   memcpy(aux, &(t->middle), sizeof(t->middle));
   aux += sizeof(t->middle);
 
-  memcpy(aux, t->right, sizeof(t->right));
+  memcpy(aux, &(t->right), sizeof(t->right));
   aux += sizeof(t->right);
 
   return buff;
@@ -44,20 +44,20 @@ tPlane * deserialize_plane(char * buff)
   memcpy(res->model, buff, MODEL_CHAR_MAX);
   buff += MODEL_CHAR_MAX;
 
-  res->rows = malloc(sizeof(res->rows));
-  memcpy(res->rows, buff, sizeof(res->rows));
+  //res->rows = malloc(sizeof(res->rows));
+  memcpy(&(res->rows), buff, sizeof(res->rows));
   buff += sizeof(res->rows);
 
-  res->left = malloc(sizeof(res->left));
-  memcpy(res->left, buff, sizeof(res->left));
+  //res->left = malloc(sizeof(res->left));
+  memcpy(&(res->left), buff, sizeof(res->left));
   buff += sizeof(res->left);
-
-  res->middle = malloc(sizeof(sizeof(res->middle)));
-  memcpy(res->middle, buff, sizeof(res->middle));
+ 
+  //res->middle = malloc(sizeof(sizeof(res->middle)));
+  memcpy(&(res->middle), buff, sizeof(res->middle));
   buff += sizeof(res->middle);
 
-  res->right = malloc(sizeof(sizeof(res->right)));
-  memcpy(res->right, buff, sizeof(res->right));
+  //res->right = malloc(sizeof(sizeof(res->right)));
+  memcpy(&(res->right), buff, sizeof(res->right));
   buff += sizeof(res->right);
 
   return res;
@@ -77,11 +77,11 @@ char * serialize_plane_array(tPlaneArray * planeArray)
   aux = buff;
   memcpy(aux, &(planeArray->size), sizeof(long));
   aux += sizeof(long);
-
   for(i = 0; i < planeArray->size; i++) {
-
+    
     plane = serialize_plane(planeArray->planeArray[i]);
     memcpy(aux, plane, bytes);
+
     free(plane);
     aux += bytes;
   }
@@ -93,7 +93,7 @@ tPlaneArray * deserialize_plane_array(char * buff)
 {
   int i;
   int bytes;
-
+  
   tPlaneArray * res = malloc(sizeof(tPlaneArray));
   memcpy(&(res->size), buff, sizeof(res->size));
   buff += sizeof(res->size);
@@ -102,11 +102,11 @@ tPlaneArray * deserialize_plane_array(char * buff)
 
 
   res->planeArray = malloc(res->size*sizeof(tPlane*));
-
   for(i = 0; i < res->size; i++)
   {
     res->planeArray[i] = deserialize_plane(buff);
     buff += bytes;
   }
+printf("SALIO del FOR\n");
   return res;
 }

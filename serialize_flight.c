@@ -1,3 +1,4 @@
+
 #include "structs.h"
 #include "constants.h"
 #include <stdlib.h>
@@ -123,23 +124,23 @@ tFlightArray * deserialize_flight_array(char * buff){
 
 
 
-char * serialize_seatArray(tSeatArray * seatArray){
+char * serialize_seatArray(tSeatsArray * seatArray){
 char * buff = malloc((SEAT_NUMBER_CHAR_MAX*seatArray->size)+sizeof(int));
 char * auxBuff = buff;
 int i = 0;
-memcp(auxBuff,seatArray->size, sizeof(int));
+memcpy(auxBuff,&(seatArray->size), sizeof(int));
 auxBuff += sizeof(int);
   while(i< seatArray->size)
   {
-    memcp(auxBuff,seatArray->reservedSeats[i], SEAT_NUMBER_CHAR_MAX);
+    memcpy(auxBuff,seatArray->reservedSeats[i], SEAT_NUMBER_CHAR_MAX);
     auxBuff += SEAT_NUMBER_CHAR_MAX;
     i++;
   }
   return buff;
 }
 
-tSeatArray * deserialize_seatArray(char* buff){
-  tSeatArray * seatArray = malloc(sizeof(tSeatArray));
+tSeatsArray * deserialize_seatArray(char* buff){
+  tSeatsArray * seatArray = malloc(sizeof(tSeatsArray));
   int i = 0;
   memcpy(&(seatArray->size), buff, sizeof(int));
   buff += sizeof(int);
@@ -150,7 +151,7 @@ tSeatArray * deserialize_seatArray(char* buff){
       buff += sizeof(char)*SEAT_NUMBER_CHAR_MAX;
       i++;
   }
-  returb seatArray;
+  return seatArray;
 }
 
 

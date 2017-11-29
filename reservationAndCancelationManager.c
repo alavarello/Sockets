@@ -56,7 +56,7 @@ tSeatsArray * getReservationsSeats(char * flightCode){
   }
   seatsArrayStruct->reservedSeats = seatsArray;
   seatsArrayStruct->size = aux;
-  return seatsArray;
+  return seatsArrayStruct;
 }
 
 int getNumberOfReservationOrCancelations(char* table){
@@ -64,7 +64,7 @@ int getNumberOfReservationOrCancelations(char* table){
   sqlite3_stmt *res;
   //getting the number of flights
   char *sqlPlaneCount;
-  if(strcmp(table, "RESERVATIONS")){
+  if(!strcmp(table, "RESERVATIONS")){
     sqlPlaneCount = "SELECT count(*) FROM RESERVATIONS";
   }else{
     sqlPlaneCount = "SELECT count(*) FROM CANCELATIONS";
@@ -77,7 +77,7 @@ int getNumberOfReservationOrCancelations(char* table){
     return numberOfRowsInTable;
 }
 
-tReservationArray getReservationOrCancelationArray(char* table){
+tReservationArray * getReservationOrCancelationArray(char* table){
   char *err_msg = 0;
   sqlite3_stmt * res;
   tReservation** reservationsArray = NULL;
@@ -88,14 +88,13 @@ tReservationArray getReservationOrCancelationArray(char* table){
   numberOfRowsInTable = getNumberOfReservationOrCancelations(table);
   //getting the planes
   char *sql;
-  if(strcmp(table, "RESERVATIONS")){
+  if(!strcmp(table, "RESERVATIONS")){
     sql = "SELECT * FROM RESERVATIONS";
   }else{
     sql = "SELECT * FROM CANCELATIONS";
   }
   
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
-  sqlite3_bind_text(res, 1, table, -1, NULL);
   //----------------------
 
   reservationsArray = expanReservationArray(reservationsArray, numberOfRowsInTable);
@@ -110,23 +109,33 @@ tReservationArray getReservationOrCancelationArray(char* table){
   reservationsArrayStruct = malloc(sizeof(tReservationArray));
   reservationsArrayStruct->size = numberOfRowsInTable;
   reservationsArrayStruct->reservationsArray = reservationsArray;
-  return *reservationsArrayStruct;
+  return reservationsArrayStruct;
 
 }
 
 void printReservationArray(tReservationArray reservationsArray){
   int i;
+  printf("RESERVATION ARRAY: SIZE:%d\n",reservationsArray.size);
   for (i = 0; i < reservationsArray.size; ++i)
   {
    printf("FC:%s\n",reservationsArray.reservationsArray[i]->flightCode);
   }
 }
 
-tReservationArray getReservationArray(){
+void printSeatsArray(tSeatsArray seatsArray){
+  int i;
+  printf("SEATS ARRAY: SIZE:%d\n",seatsArray.size);
+  for (i = 0; i < seatsArray.size; ++i)
+  {
+   printf("SEAT:%s\n",seatsArray.reservedSeats[i]);
+  }
+}
+
+tReservationArray * getReservationArray(){
   return getReservationOrCancelationArray("RESERVATIONS");
 }
 
-tReservationArray getCancelationArray(){
+tReservationArray * getCancelationArray(){
  return getReservationOrCancelationArray("CANCELATIONS");
 }
 
