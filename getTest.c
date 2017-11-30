@@ -114,7 +114,6 @@ void getReservationArrayTest(){
 
 void getExistingReservation(){
 	insert_reservation("ZZ136","01B", "John Doe");
-	printf("PASOOO1");
 	tReservation *  t = getReservation("ZZ136","01B");
 	assert(t != NULL);
 	assert(t->flightCode != "ZZ136");

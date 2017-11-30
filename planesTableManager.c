@@ -23,6 +23,11 @@ int getNumberOfPlanes(){
   //getting the number of flights
     char * sqlPlaneCount = "SELECT count(*) FROM planes";
     rc = sqlite3_prepare_v2(db, sqlPlaneCount, -1, &res, 0);
+    if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return -1;
+  }
     sqlite3_step(res);
     numberOfPlanes = sqlite3_column_int(res, 0);
     sqlite3_finalize(res);
@@ -49,12 +54,19 @@ tPlaneArray * getPlaneArray(){
 
   //ESTO tiene que ser atomico;
     numberOfPlanes = getNumberOfPlanes();
-
+    if(numberOfPlanes == -1){
+      return NULL;
+    }
     //getting the planes
     char *sql = "SELECT * FROM planes";
        
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
     //------------------
+    if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return NULL;
+  }
     planeArray = expandPlaneArray(planeArray, numberOfPlanes);
     i = 0;
     while(sqlite3_step(res) == SQLITE_ROW){

@@ -42,6 +42,11 @@ tSeatsArray * getReservationsSeats(char * flightCode){
   char ** seatsArray = NULL;
   char *sql ="SELECT seat FROM RESERVATIONS NATURAL JOIN FLIGHTS WHERE flight_code = ?";
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+  if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return NULL;
+  }
   sqlite3_bind_text(res, 1, flightCode, -1, NULL);
   seatsArray = exapndSeatsArray(seatsArray, &size);
   while(sqlite3_step(res) == SQLITE_ROW){
@@ -71,6 +76,11 @@ int getNumberOfReservationOrCancelations(char* table){
   }
   
     rc = sqlite3_prepare_v2(db, sqlPlaneCount, -1, &res, 0);
+    if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return -1;
+  }
     sqlite3_bind_text(res, 1, table, -1, NULL);
     sqlite3_step(res);
     numberOfRowsInTable = sqlite3_column_int(res, 0);
@@ -87,6 +97,9 @@ tReservationArray * getReservationOrCancelationArray(char* table){
 
   //ESTO tiene que ser atomico;
   numberOfRowsInTable = getNumberOfReservationOrCancelations(table);
+  if(numberOfRowsInTable == -1){
+      return NULL;
+    }
   //getting the planes
   char *sql;
   if(!strcmp(table, "RESERVATIONS")){
@@ -98,6 +111,12 @@ tReservationArray * getReservationOrCancelationArray(char* table){
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
   //----------------------
 
+  if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return NULL;
+  }
+
   reservationsArray = expanReservationArray(reservationsArray, numberOfRowsInTable);
   i = 0;
   while(sqlite3_step(res) == SQLITE_ROW) {
@@ -105,7 +124,8 @@ tReservationArray * getReservationOrCancelationArray(char* table){
     strcpy(reservationsArray[i]->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
     strcpy(reservationsArray[i]->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
     i++;
-  }    
+  }
+
   sqlite3_finalize(res);
   reservationsArrayStruct = malloc(sizeof(tReservationArray));
   reservationsArrayStruct->size = numberOfRowsInTable;
@@ -154,6 +174,7 @@ tReservation * getReservation(char * flightCode, char * seat)
 
   if(rc != SQLITE_OK)
   {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
     return NULL;
   }
 
@@ -166,8 +187,11 @@ tReservation * getReservation(char * flightCode, char * seat)
     strcpy(reservation->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
     strcpy(reservation->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
     strcpy(reservation->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
-  }else{
+  }else if(rc == SQLITE_DONE){
     //THERE IS NO RESERVATION
+    return NULL;
+  }else{
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
     return NULL;
   }
 

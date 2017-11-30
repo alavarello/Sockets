@@ -142,8 +142,11 @@ tFlight * getFlight(char * flight_code)
       strcpy(flight->planeCode,(char*)sqlite3_column_text(res, PLANE_CODE_COLUMN));
       strcpy(flight->departureDate,(char*)sqlite3_column_text(res, DEPARTURE_DATE_COLUMN));
       strcpy(flight->arrivalDate,(char*)sqlite3_column_text(res, ARRIVAL_DATE_COLUMN));
-  }else{
+  }else if(rc == SQLITE_DONE){
     //THERE IS NO FLIGHT
+    return NULL;
+  }else{
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
     return NULL;
   }
 
