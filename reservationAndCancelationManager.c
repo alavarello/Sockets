@@ -69,6 +69,7 @@ int getNumberOfReservationOrCancelations(char* table){
   }else{
     sqlPlaneCount = "SELECT count(*) FROM CANCELATIONS";
   }
+  
     rc = sqlite3_prepare_v2(db, sqlPlaneCount, -1, &res, 0);
     sqlite3_bind_text(res, 1, table, -1, NULL);
     sqlite3_step(res);
@@ -140,29 +141,34 @@ tReservationArray * getCancelationArray(){
 }
 
 
-tReservation * getReservation(char * reservation_code)
+tReservation * getReservation(char * flightCode, char * seat)
 {
-  char * sql = "SELECT * FROM RESERVATIONS WHERE reservation_code LIKE ?;";
+  char * sql = "SELECT * FROM RESERVATIONS WHERE flight_code LIKE ? AND seat LIKE ?;";
   sqlite3_stmt * res;
   int rc;
   tReservation * reservation = malloc(sizeof(tReservation));
-
+  reservation->flightCode = malloc(sizeof(char)*FLIGHT_CODE_CHAR_MAX);
+  reservation->seatNumber = malloc(sizeof(char)*SEAT_NUMBER_CHAR_MAX);
+  reservation->userName = malloc(sizeof(char)*USER_NAME_CHAR_MAX);
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
   if(rc != SQLITE_OK)
   {
-    return ERROR;
+    return NULL;
   }
 
-  sqlite3_bind_text(res, 1, reservation_code, -1, NULL);
-
+  sqlite3_bind_text(res, 1, flightCode, -1, NULL);
+  sqlite3_bind_text(res, 2, seat, -1, NULL);
   rc = sqlite3_step(res);
 
   if(rc == SQLITE_ROW)
-  {
+  { 
     strcpy(reservation->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
     strcpy(reservation->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
     strcpy(reservation->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
+  }else{
+    //THERE IS NO RESERVATION
+    return NULL;
   }
 
    sqlite3_finalize(res);
@@ -183,7 +189,8 @@ int insert_reservation(char * flight_code, char * seat, char * name)
 
   if(rc != SQLITE_OK)
   {
-    return ERROR;
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
   }
 
   sqlite3_bind_text(res, 1, flight_code, -1, NULL);
@@ -194,8 +201,8 @@ int insert_reservation(char * flight_code, char * seat, char * name)
 
   if(rc != SQLITE_DONE)
   {
-    printf("An error has occured\n");
-    return ERROR;
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
   }
 
   sqlite3_finalize(res);
@@ -212,6 +219,12 @@ int insert_cancellation(char * seat, char * flightCode)
 
     sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
+    if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
+  }
+
     sqlite3_bind_text(res, 1, seat, -1, NULL);
     sqlite3_bind_text(res, 2, flightCode, -1, NULL);
 
@@ -219,8 +232,8 @@ int insert_cancellation(char * seat, char * flightCode)
 
     if(rc != SQLITE_DONE)
     {
-      printf("An error has occured\n");
-      return ERROR;
+      fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+      return sqlite3_errcode(db);
     }
 
     sqlite3_finalize(res);

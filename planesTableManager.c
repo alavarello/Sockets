@@ -83,9 +83,10 @@ int insert_plane(char * model, int rows, int left, int middle, int right)
 
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
-  if(rc != SQLITE_OK)
+ if(rc != SQLITE_OK)
   {
-    return ERROR;
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
   }
 
   sqlite3_bind_text(res, 1, model, -1, NULL);
@@ -98,8 +99,8 @@ int insert_plane(char * model, int rows, int left, int middle, int right)
 
   if(rc != SQLITE_DONE)
   {
-    printf("An error has occured\n");
-    return ERROR;
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
   }
 
   sqlite3_finalize(res);

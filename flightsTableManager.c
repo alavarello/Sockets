@@ -47,6 +47,11 @@ int getNumberOfFLighst(){
 	//getting the number of flights
     char * sqlFLightCount = "SELECT count(*) FROM flights";
     rc = sqlite3_prepare_v2(db, sqlFLightCount, -1, &res, 0);
+     if(rc != SQLITE_OK)
+    {
+      fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+      return -1;
+    }
     sqlite3_step(res);
     numberOfFlights = sqlite3_column_int(res, 0);
     sqlite3_finalize(res);
@@ -64,11 +69,18 @@ tFlightArray * getFlightArray(){
 
     //ESTO tiene que ser atomico;
     numberOfFlights = getNumberOfFLighst();
-
+    if(numberOfFlights == -1){
+      return NULL;
+    }
     //getting the flights
     char *sql = "SELECT * FROM flights";
        
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+    if(rc != SQLITE_OK)
+    {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return NULL;
+    }
     //------------------
    	
    	flightArray = expandFLightArray(flightArray, numberOfFlights);
@@ -84,7 +96,7 @@ tFlightArray * getFlightArray(){
       strcpy(flightArray[i]->departureDate,(char*)sqlite3_column_text(res, DEPARTURE_DATE_COLUMN));
       strcpy(flightArray[i]->arrivalDate,(char*)sqlite3_column_text(res, ARRIVAL_DATE_COLUMN));
       i++; 
-    } 
+    }
     sqlite3_finalize(res);
     flightArrayStruct = malloc(sizeof(tFlightArray));
     flightArrayStruct->flightArray = flightArray;
@@ -92,28 +104,37 @@ tFlightArray * getFlightArray(){
     return flightArrayStruct;
 }
 
-
+//The function that calls this function should check if the result is NULL;
 tFlight * getFlight(char * flight_code)
 {
   char * sql = "SELECT * FROM FLIGHTS WHERE flight_code LIKE ?;";
   sqlite3_stmt * res;
   int rc;
   tFlight * flight = malloc(sizeof(tFlight));
+  flight->flightCode = malloc(sizeof(char)*FLIGHT_CODE_CHAR_MAX);
+  flight->origin = malloc(sizeof(char)*ORIGIN_CHAR_MAX);
+  flight->destination = malloc(sizeof(char)*DESTINATION_CHAR_MAX);
+  flight->departureTime = malloc(sizeof(char)*DEPARTURE_TIME_CHAR_MAX);
+  flight->arrivalTime = malloc(sizeof(char)*ARRIVAL_TIME_CHAR_MAX);
+  flight->arrivalDate = malloc(sizeof(char)*ARRIVAL_DATE_CHAR_MAX);
+  flight->departureDate = malloc(sizeof(char)*DEPARTURE_DATE_CHAR_MAX);
+  flight->planeCode = malloc(sizeof(char)*PLANE_CODE_CHAR_MAX);
 
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
   if(rc != SQLITE_OK)
   {
-    return ERROR;
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return NULL;
   }
-
   sqlite3_bind_text(res, 1, flight_code, -1, NULL);
 
   rc = sqlite3_step(res);
 
   if(rc == SQLITE_ROW)
   {
-     strcpy(flight->flightCode,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
+
+      strcpy(flight->flightCode,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
       strcpy(flight->origin,(char*)sqlite3_column_text(res, ORIGIN_COLUMN));
       strcpy(flight->destination,(char*)sqlite3_column_text(res, DESTINATION_COLUMN));
       strcpy(flight->departureTime,(char*)sqlite3_column_text(res, DEPARTURE_TIME_COLUMN));
@@ -121,6 +142,9 @@ tFlight * getFlight(char * flight_code)
       strcpy(flight->planeCode,(char*)sqlite3_column_text(res, PLANE_CODE_COLUMN));
       strcpy(flight->departureDate,(char*)sqlite3_column_text(res, DEPARTURE_DATE_COLUMN));
       strcpy(flight->arrivalDate,(char*)sqlite3_column_text(res, ARRIVAL_DATE_COLUMN));
+  }else{
+    //THERE IS NO FLIGHT
+    return NULL;
   }
 
   sqlite3_finalize(res);
@@ -155,7 +179,8 @@ int insert_flight(char * flight_code, char * origin, char * destination, char * 
   rc = sqlite3_step(res);
 
   if(rc != SQLITE_DONE)
-  { fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+  { 
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
     return sqlite3_errcode(db);
   }
 

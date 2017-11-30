@@ -8,7 +8,7 @@ tReservation** expanReservationArray(tReservation** reservationsArray, long size
 int getNumberOfReservationOrCancelations(char* table);
 tReservationArray *getReservationOrCancelationArray(char* table);
 void printReservationArray(tReservationArray reservationsArray);
-tReservation * getReservation(char * reservation_code);
+tReservation * getReservation(char * flightCode, char * seat);
 int insert_reservation(char * flight_code, char * seat, char * name);
 tReservationArray *getReservationArray();
 tReservationArray *getCancelationArray();
