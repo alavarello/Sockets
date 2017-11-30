@@ -12,6 +12,10 @@
 #include "FrontEnd.h"
 #include "structs.h"
 
+#define DO_ANOTHER_OPERATION 10
+#define DONT_DO_ANOTHER_OPERATION -10
+#define MAX_MSG_LOG 100
+
 int setCurrentFlight(tFlight ** flights , char * flightCode);
 
 void readClientMenu ();
@@ -19,10 +23,6 @@ void readClientMenu ();
 void readAdministratorMenu ();
 
 void readMenu ();
-
-int getNumber(char * seat);
-
-int getColumn(char * seat);
 
 void fillOcuppiedMatrix(char * * occupiedSeats , int * * totalOccupied);
 

@@ -1,9 +1,5 @@
 #include "Controller.h"
 
-#define DO_ANOTHER_OPERATION 10
-#define DONT_DO_ANOTHER_OPERATION -10
-#define MAX_MSG_LOG 100
-
 static tFlight  currentFlight ;
 
 static char msgLog[MAX_MSG_LOG];
@@ -13,6 +9,46 @@ int main(void)
 	printMenu();
 	readMenu();
 	return 0;
+}
+
+void readMenu ()
+{
+	int sel;
+	int flag=1;
+	int ret=0;
+	char nombrearch[MAX_BUFFER]; 
+
+	do
+	{
+		sel=getint("Choose your option:\n");
+		switch(sel)
+		{
+			case 1:
+			{
+				flag = clientSession();
+				break;
+			}
+			
+			case 2:
+			{
+				flag = administratorSession();
+				break;
+			}
+			
+			case 3:
+			{
+				flag = 0;
+				break;
+			}
+			
+			default:
+			{
+				printf("That option is not valid \n");
+				flag=1;
+			}
+		}
+	}
+	while (flag);
 }
 
 int setCurrentFlight(tFlight ** flights , char * flightCode){
@@ -30,75 +66,6 @@ int setCurrentFlight(tFlight ** flights , char * flightCode){
 	return 0;
 }
 
-void freeFlightsArray( tFlight ** flights)
-{
-	int h = 0 ;
-
-	while(flights[h] != NULL){
-		free(flights[h]);
-		h++;
-	}
-
-	free(flights[h]);
-
-	free(flights);
-
-}
-
-int isNumber(char c)
-{
-	if( c <= '9' && c>= '0'){
-		return 1;
-	}
-
-	return 0;
-}
-
-int isAlpha(char c)
-{
-	if( c <= 'Z' && c>= 'A'){
-		return 1;
-	}
-
-	return 0;
-}
-
-int isValidSeatExpression(char * seat)
-{	
-
-	char c1 = seat[0];
-	char c2 = seat[1];
-	char c3 = seat[2];
-
-	if(isNumber(c1) && isNumber(c2) && isAlpha(c3) && seat[3] == 0){
-		return 1;
-	}else{
-		return 0;
-	}
-
-}
-
-int checkSeatNumberFormat(char * seat)
-{
-	int row = getNumber(seat);
-	int column = getColumn(seat);
-
-	tPlane * plane = getPlane(currentFlight);
-
-	if(row <= 0  || row >= plane->rows + 1){
-		return 0;
-	}
-
-	if(column < 0 || column >= (plane->left + plane->middle + plane->right)){
-		return 0;
-	}
-
-	return 1;
-
-
-
-}
-
 void cancelSeatNumber()
 {
 	char * seat;
@@ -114,7 +81,7 @@ void cancelSeatNumber()
 			return;
 		}
 
-		if(checkSeatNumberFormat(seat)){
+		if(checkSeatNumberFormat(seat , currentFlight)){
 			
 			flag = cancel(currentFlight , seat ) ;
 
@@ -124,7 +91,7 @@ void cancelSeatNumber()
 				flag = 0;
 			}else{
 				sprintf(msgLog, "\nSeat %s is not able to cancel:\n\n" , seat);
-				logError(msgLog);
+				 logError(msgLog);
 				flag = 1;
 			}
 		}else{
@@ -156,7 +123,7 @@ void reserveSeatNumber()
 			return;
 		}
 
-		if(checkSeatNumberFormat(seat)){
+		if(checkSeatNumberFormat(seat , currentFlight)){
 			
 			flag = reserve(currentFlight , seat ) ;
 
@@ -227,15 +194,6 @@ int reserveSeat()
 
 }
 
-void listFlights()
-{
-	tFlight ** flights;
-	sprintf(msgLog,"Listing flights\n");
-	logMessage(msgLog);
-	flights = getFlights();
-	displayFlights(flights);
-}
-
 void cancelSeat()
 {
 	tFlight ** flights;
@@ -282,175 +240,8 @@ void cancelSeat()
 
 }
 
-void readClientMenu ()
-{
-	int sel;
-	int flag=1;
-	char nombrearch[MAX_BUFFER]; 
-	char * flightCode ;
-	char * seat;
-	int result; 
-	do
-	{
-		printClientMenu();
-		sel=getint("Choose your option:\n");
-		switch(sel)
-		{
-			case 1:
-			{
-				reserveSeat();
-				break;
-			}
-			
-			case 2:
-			{
-				listFlights();
-				break;
-			}
-
-			case 3:
-			{
-				cancelSeat();
-				break;
-			}	
-			
-			case 4:
-			{
-				flag = 0;
-				break;
-			}	
-			
-			default:
-			{
-				sprintf(msgLog , "That option is not valid");
-				logError(msgLog);
-				flag=1;
-			}
-		}
-
-	}
-	while (flag );
 
 
-}
-
-void readAdministratorMenu ()
-{
-	int sel;
-	int error=1;
-	int ret=0;
-	char nombrearch[MAX_BUFFER]; 
-
-	do
-	{
-		printAdministratorMenu();
-		sel=getint("Choose your option:\n");
-		switch(sel)
-		{
-			case 1:
-			{
-				printf("Adding a flight\n");
-				error=0;
-				break;
-			}
-			
-			case 2:
-			{
-				printf("Removing a flight\n");
-				error=0;
-				break;
-			}
-			
-			case 3:
-			{
-				return;
-				break;
-			}		
-			
-			default:
-			{
-				printf("That option is not valid");
-				error=1;
-			}
-		}
-	}
-	while (error);
-}
-
-int clientSession()
-{
-	readClientMenu();
-
-	return 0;
-}
-
-int administratorSession()
-{
-	readAdministratorMenu();
-
-	return 0;
-}
-
-
-void readMenu ()
-{
-	int sel;
-	int flag=1;
-	int ret=0;
-	char nombrearch[MAX_BUFFER]; 
-
-	do
-	{
-		sel=getint("Choose your option:\n");
-		switch(sel)
-		{
-			case 1:
-			{
-				flag = clientSession();
-				break;
-			}
-			
-			case 2:
-			{
-				flag = administratorSession();
-				break;
-			}
-			
-			case 3:
-			{
-				flag = 0;
-				break;
-			}
-			
-			default:
-			{
-				printf("That option is not valid \n");
-				flag=1;
-			}
-		}
-	}
-	while (flag);
-}
-
-int getNumber(char * seat){
-
-	char c1 = seat[0];
-	char c2 = seat[1];
-
-	int a = c1 - '0';
-	int b = c2 - '0';
-
-	return a*10 + b;
-
-}
-
-int getColumn(char * seat){
-
-	char c3 = seat[2];
-
-	return c3 - 'A';
-
-}
 
 void fillOcuppiedMatrix(char * * occupiedSeats , int * * totalOccupied)
 {
@@ -501,27 +292,7 @@ void drawPlane()
 
 
 	freeAllDrawPlane(&totalOccupied , &plane , &occupiedSeats);
-
 	
 
 }
 
-void freeAllDrawPlane(int *** totalOccupiedP , tPlane ** planeP , char *** occupiedSeatsP ){
-
-	int j;
-
-	int ** totalOccupied = *totalOccupiedP;
-	tPlane * plane = *planeP;
-	char ** occupiedSeats = *occupiedSeatsP;
-	
-	for( j = 0 ; j < plane->rows ; j++){
-		free(totalOccupied[j]);
-		totalOccupied[j] = NULL;
-	}
-
-	free(totalOccupied);
-	free(occupiedSeats);
-	free(plane);
-
-
-}

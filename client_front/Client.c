@@ -62,4 +62,13 @@ int cancel(tFlight * flight , char * seat){
 	return 0;
 }
 
+int addFlightClient(char * origin ,char *   destination ,char *  departureTime ,char * arrivalTime ,char *  planeCode,char *  departureDate ,char *  arrivalDate)
+{
+	return 1;
+}
+int removeFlightClient(char * flightCode)
+{
+	return 1;
+}
+
 
