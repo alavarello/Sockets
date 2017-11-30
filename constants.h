@@ -42,4 +42,9 @@
 
 #define EOSA "FFF" //End Of Seats Array
 
+#define MAX_SMAPHORE_NAME 15
+#define PLANE_SEMAPHORE "/Plane"
+#define FLIGHT_SEMAPHORE "/Flight"
+#define RESERVATION_SEMAPHORE "/Reservation"
+#define CANCELLATION_SEMAPHORE "/Cancellation"
 #endif

@@ -4,16 +4,22 @@
 #include "reservationAndCancelationManager.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include "semaphores.h"
+#include <semaphore.h>
 #include <string.h>
 
 #define NUMBER_OF_SEATS_TO_EXPAND 10
 
 extern sqlite3 *db;
 
-tReservation** expanReservationArray(tReservation** reservationsArray, long size){
+tReservation** expanReservationArray(tReservation** reservationsArray, long size)
+{
   int i;
   reservationsArray = malloc(size*sizeof(tReservation*));
-  for(i=0; i<size; i++){
+  for(i=0; i<size; i++)
+  {
     reservationsArray[i] = malloc(sizeof(tReservation));
     reservationsArray[i]->flightCode = malloc(sizeof(char)*FLIGHT_CODE_CHAR_MAX);
     reservationsArray[i]->seatNumber = malloc(sizeof(char)*SEAT_NUMBER_CHAR_MAX);
@@ -22,11 +28,14 @@ tReservation** expanReservationArray(tReservation** reservationsArray, long size
   return reservationsArray;
 }
 
-char ** exapndSeatsArray(char** seatsArray, int* size){
+char ** exapndSeatsArray(char** seatsArray, int* size)
+{
   int i;
   (*size) += NUMBER_OF_SEATS_TO_EXPAND;
-  seatsArray = realloc(seatsArray, (*size)*sizeof(char*));
-  if(seatsArray == NULL){
+  seatsArray = reallocf(seatsArray, (*size)*sizeof(char*));
+  if(seatsArray == NULL)
+  {
+    return NULL;
     //Free and size back to how it was before
   }
   for(i = ((*size) - NUMBER_OF_SEATS_TO_EXPAND ); i< NUMBER_OF_SEATS_TO_EXPAND; i++){
@@ -35,7 +44,8 @@ char ** exapndSeatsArray(char** seatsArray, int* size){
   return seatsArray;
 }
 
-tSeatsArray * getReservationsSeats(char * flightCode){
+tSeatsArray * getReservationsSeats(char * flightCode)
+{
   int rc, numberOfRowsInTable, size = 0, aux = 0;
   sqlite3_stmt *res;
   tSeatsArray * seatsArrayStruct = malloc(sizeof(tSeatsArray));
@@ -50,13 +60,15 @@ tSeatsArray * getReservationsSeats(char * flightCode){
   sqlite3_bind_text(res, 1, flightCode, -1, NULL);
   seatsArray = exapndSeatsArray(seatsArray, &size);
   while(sqlite3_step(res) == SQLITE_ROW){
-    if(size==aux){
+    if(size==aux)
+    {
       seatsArray = exapndSeatsArray(seatsArray, &size);
     }
     strcpy(seatsArray[aux] ,(char*)sqlite3_column_text(res, 0));
     aux++;
   }
-  if(size==aux){
+  if(size==aux)
+  {
     seatsArray=exapndSeatsArray(seatsArray, &size);
   }
   seatsArrayStruct->reservedSeats = seatsArray;
@@ -64,14 +76,18 @@ tSeatsArray * getReservationsSeats(char * flightCode){
   return seatsArrayStruct;
 }
 
-int getNumberOfReservationOrCancelations(char* table){
+int getNumberOfReservationOrCancelations(char* table)
+{
   int rc, numberOfRowsInTable;
   sqlite3_stmt *res;
   //getting the number of flights
   char *sqlPlaneCount;
-  if(!strcmp(table, "RESERVATIONS")){
+  if(!strcmp(table, "RESERVATIONS"))
+  {
     sqlPlaneCount = "SELECT count(*) FROM RESERVATIONS";
-  }else{
+  }
+  else
+  {
     sqlPlaneCount = "SELECT count(*) FROM CANCELATIONS";
   }
   
@@ -95,17 +111,24 @@ tReservationArray * getReservationOrCancelationArray(char* table){
   tReservationArray* reservationsArrayStruct; 
   int rc, numberOfRowsInTable, i;
 
-  //ESTO tiene que ser atomico;
-  numberOfRowsInTable = getNumberOfReservationOrCancelations(table);
-  if(numberOfRowsInTable == -1){
-      return NULL;
-    }
-  //getting the planes
+  sem_t * sem;
   char *sql;
-  if(!strcmp(table, "RESERVATIONS")){
+  if(!strcmp(table, "RESERVATIONS"))
+  {
     sql = "SELECT * FROM RESERVATIONS";
-  }else{
+    sem = openSemaphore(RESERVATION_SEMAPHORE);
+    sem_wait(sem);
+  }
+  else
+  {
     sql = "SELECT * FROM CANCELATIONS";
+    sem = openSemaphore(CANCELLATION_SEMAPHORE);
+    sem_wait(sem);
+  }
+  numberOfRowsInTable = getNumberOfReservationOrCancelations(table);
+  if(numberOfRowsInTable == -1)
+  {
+      return NULL;
   }
   
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
@@ -119,7 +142,8 @@ tReservationArray * getReservationOrCancelationArray(char* table){
 
   reservationsArray = expanReservationArray(reservationsArray, numberOfRowsInTable);
   i = 0;
-  while(sqlite3_step(res) == SQLITE_ROW) {
+  while(sqlite3_step(res) == SQLITE_ROW) 
+  {
     strcpy(reservationsArray[i]->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
     strcpy(reservationsArray[i]->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
     strcpy(reservationsArray[i]->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
@@ -127,6 +151,7 @@ tReservationArray * getReservationOrCancelationArray(char* table){
   }
 
   sqlite3_finalize(res);
+  sem_post(sem);
   reservationsArrayStruct = malloc(sizeof(tReservationArray));
   reservationsArrayStruct->size = numberOfRowsInTable;
   reservationsArrayStruct->reservationsArray = reservationsArray;
@@ -134,7 +159,8 @@ tReservationArray * getReservationOrCancelationArray(char* table){
 
 }
 
-void printReservationArray(tReservationArray reservationsArray){
+void printReservationArray(tReservationArray reservationsArray)
+{
   int i;
   printf("RESERVATION ARRAY: SIZE:%d\n",reservationsArray.size);
   for (i = 0; i < reservationsArray.size; ++i)
@@ -143,7 +169,8 @@ void printReservationArray(tReservationArray reservationsArray){
   }
 }
 
-void printSeatsArray(tSeatsArray seatsArray){
+void printSeatsArray(tSeatsArray seatsArray)
+{
   int i;
   printf("SEATS ARRAY: SIZE:%d\n",seatsArray.size);
   for (i = 0; i < seatsArray.size; ++i)
@@ -152,11 +179,13 @@ void printSeatsArray(tSeatsArray seatsArray){
   }
 }
 
-tReservationArray * getReservationArray(){
+tReservationArray * getReservationArray()
+{
   return getReservationOrCancelationArray("RESERVATIONS");
 }
 
-tReservationArray * getCancelationArray(){
+tReservationArray * getCancelationArray()
+{
  return getReservationOrCancelationArray("CANCELATIONS");
 }
 
@@ -187,10 +216,14 @@ tReservation * getReservation(char * flightCode, char * seat)
     strcpy(reservation->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
     strcpy(reservation->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
     strcpy(reservation->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
-  }else if(rc == SQLITE_DONE){
+  }
+  else if(rc == SQLITE_DONE)
+  {
     //THERE IS NO RESERVATION
     return NULL;
-  }else{
+  }
+  else
+  {
     fprintf(stderr, "%s\n",sqlite3_errmsg(db));
     return NULL;
   }
@@ -208,6 +241,10 @@ int insert_reservation(char * flight_code, char * seat, char * name)
   sqlite3_stmt * res;
   int rc;
   char * err_msg;
+  sem_t * sem;
+
+  sem = openSemaphore(RESERVATION_SEMAPHORE);
+  sem_wait(sem);
 
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
@@ -230,40 +267,45 @@ int insert_reservation(char * flight_code, char * seat, char * name)
   }
 
   sqlite3_finalize(res);
-
-  return OK;
+  sem_post(sem);
+  sem_close(sem);
+  return SQLITE_OK;
 
 }
 
 int insert_cancellation(char * seat, char * flightCode)
 {
-    char * sql = "INSERT INTO CANCELATIONS SELECT * FROM RESERVATIONS WHERE seat LIKE ? AND flight_code LIKE ?;";
-    sqlite3_stmt * res;
-    int rc;
+  char * sql = "INSERT INTO CANCELATIONS SELECT * FROM RESERVATIONS WHERE seat LIKE ? AND flight_code LIKE ?;";
+  sqlite3_stmt * res;
+  int rc;
+  sem_t * sem;
 
-    sqlite3_prepare_v2(db, sql, -1, &res, 0);
+  sem = openSemaphore(CANCELLATION_SEMAPHORE);
+  sem_wait(sem);
+  sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
-    if(rc != SQLITE_OK)
+  if(rc != SQLITE_OK)
   {
     fprintf(stderr, "%s\n",sqlite3_errmsg(db));
     return sqlite3_errcode(db);
   }
 
-    sqlite3_bind_text(res, 1, seat, -1, NULL);
-    sqlite3_bind_text(res, 2, flightCode, -1, NULL);
+  sqlite3_bind_text(res, 1, seat, -1, NULL);
+  sqlite3_bind_text(res, 2, flightCode, -1, NULL);
 
-    rc = sqlite3_step(res);
+  rc = sqlite3_step(res);
 
-    if(rc != SQLITE_DONE)
-    {
-      fprintf(stderr, "%s\n",sqlite3_errmsg(db));
-      return sqlite3_errcode(db);
-    }
+  if(rc != SQLITE_DONE)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
+  }
 
-    sqlite3_finalize(res);
-
+  sqlite3_finalize(res);
+  sem_post(sem);
+  sem_close(sem);
     //delete_reservation(char * reservation); Should be called to avoid data being in both tables at the same time
 
-    return OK;
+  return SQLITE_OK;
 
 }
