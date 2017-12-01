@@ -13,6 +13,7 @@
 #include "Client.h"
 #include "Controller.h"
 #include "structs.h"
+#include <ctype.h>
 
 int isNumber(char c);
 int isAlpha(char c);

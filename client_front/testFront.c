@@ -33,15 +33,9 @@ void fillOcuppiedMatrix2(char * * occupiedSeats , int totalOccupied[3][3])
 
 	while(occupiedSeats[i] != NULL)
 	{
-		printf("AQUI\n");
 		number = getNumber(occupiedSeats[i]); 
-		printf("AQUI2\n");
 		column = getColumn(occupiedSeats[i]);
-		printf("AQUI3\n");
-		printf("%d %d\n", number, column );
-		printf("%p\n", totalOccupied );
 		totalOccupied[number-1][column] = 1;
-		printf("AQUI4\n");
 
 
 		i++;
@@ -55,11 +49,8 @@ void testFillOccupiedMatrix()
 	char ** occupiedSeats;
 	int totalOccupied[3][3] = {{0,0,0} , {0,0,0} , {0,0,0} };
 
-	printf("ACA\n");
 	occupiedSeats = givenOccupiedArray();
-	printf("DESPUEs\n");
 	whenWeCreateTheOccupiedMatrix(occupiedSeats , totalOccupied);
-	printf("FINAL\n");
 	thenTheMatrixIsCorrect(totalOccupied);
 
 

@@ -13,7 +13,7 @@ int isNumber(char c)
 
 int isAlpha(char c)
 {
-	if( c <= 'Z' && c>= 'A'){
+	if( toupper(c) <= 'Z' && toupper(c)>= 'A'){
 		return 1;
 	}
 
@@ -54,7 +54,8 @@ int checkSeatNumberFormat(char * seat , tFlight *  currentFlight)
 
 }
 
-int getColumn(char * seat){
+int getColumn(char * seat)
+{
 
 	char c3 = seat[2];
 
@@ -62,7 +63,8 @@ int getColumn(char * seat){
 
 }
 
-int getNumber(char * seat){
+int getNumber(char * seat)
+{
 
 	char c1 = seat[0];
 	char c2 = seat[1];
