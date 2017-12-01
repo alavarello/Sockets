@@ -2,18 +2,19 @@
 
 #include "adminMenu.h"
 
+
 static char msgLog[MAX_MSG_LOG];
 
 int addFlight()
 {
-	char * flightCode;
-	char * origin;
-	char * destination;
-	char * departureTime;
-	char * arrivalTime;
-	char * planeCode;
-	char * departureDate;
-	char * arrivalDate;
+	char * flightCode = NULL;
+	char * origin = NULL;
+	char * destination = NULL;
+	char * departureTime = NULL;
+	char * arrivalTime = NULL;
+	char * planeCode = NULL;
+	char * departureDate = NULL;
+	char * arrivalDate = NULL;
 
 	flightCode = getFlightCode();
 
@@ -47,7 +48,11 @@ int addFlight()
 
 	RETURN_NULL_CONDITION(planeCode);
 
-	return addFlightClient(origin , destination , departureTime ,arrivalTime , planeCode, departureDate , arrivalDate);
+	int res = addFlightClient(origin , destination , departureTime ,arrivalTime , planeCode, departureDate , arrivalDate);
+
+	FREE_ALL();
+	
+	return res;
 
 }
 

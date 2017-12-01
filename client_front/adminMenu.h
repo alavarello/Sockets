@@ -15,7 +15,8 @@
 #include "structs.h"
 #include "expressions.h"
 
-#define RETURN_NULL_CONDITION(t) if(t == NULL) return 0
+#define FREE_ALL() free(flightCode); free(origin) ; free(destination); free(departureDate); free(departureTime); free(arrivalTime) ; free(planeCode); free(arrivalDate)
+#define RETURN_NULL_CONDITION(t) if(t == NULL){ FREE_ALL() ;  return 0 ;}
 #define ERROR_MESSAGE_ADDING_FLIGHT "There has been a problem while adding the flight\n"
 #define ERROR_MESSAGE_REMOVING_FLIGHT "There has been a problem while removing the flight\n"
 
