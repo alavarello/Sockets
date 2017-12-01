@@ -108,7 +108,7 @@ int isValidTimeHour (char n1, char n2){
 	if(!isNumber(n1) || !isNumber(n2))
 		return 0;
 
-	if(i1 == 0 || i2 == 1)
+	if(i1 == 0 || i1 == 1)
 		return 1;
 
 	if(i1 == 2 && i2 < 5)
