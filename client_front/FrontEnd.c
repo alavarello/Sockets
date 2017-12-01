@@ -2,7 +2,6 @@
 
 #define MAX_FLIGHTS 50
 
-
 void printMenu (void)
 {
 	printf("Welcome:\n\n");
@@ -64,6 +63,237 @@ char * readFlightCode(){
 
 	return s;
 
+}
+
+char * readOrigin(){
+
+	char * s = malloc(MAX_BUFFER * sizeof(*s));
+	int c;
+	int i = 0 ;
+	int error = 1;
+
+	while(error)
+	{
+		i=0;
+
+		printf("\nPlease insert the flight origin location:\n");
+
+		while((c = getchar()) != '\n'  && i < MAX_BUFFER){
+				s[i] = c ; 
+				i ++ ;
+
+		}
+
+		if( i >= MAX_BUFFER){
+			printf("Please insert a valid flight origin location \n");
+			CLEAN_BUFFER;
+			error = 1;
+		}else{
+			error = 0;
+		}
+	}
+
+	s[i] = 0;
+
+	return s;
+}
+
+char * readDestination(){
+
+	char * s = malloc(MAX_BUFFER * sizeof(*s));
+	int c;
+	int i = 0 ;
+	int error = 1;
+
+	while(error)
+	{
+		i=0;
+
+		printf("\nPlease insert the flight destination:\n");
+
+		while((c = getchar()) != '\n'  && i < MAX_BUFFER){
+				s[i] = c ; 
+				i ++ ;
+
+		}
+
+		if( i >= MAX_BUFFER){
+			printf("Please insert a valid flight destination \n");
+			CLEAN_BUFFER;
+			error = 1;
+		}else{
+			error = 0;
+		}
+	}
+
+	s[i] = 0;
+
+	return s;
+}
+
+char * readDepTime(){
+
+	char * s = malloc(MAX_BUFFER * sizeof(*s));
+	int c;
+	int i = 0 ;
+	int error = 1;
+
+	while(error)
+	{
+		i=0;
+
+		printf("\nPlease insert the departure time:\n");
+
+		while((c = getchar()) != '\n'  && i < MAX_BUFFER){
+				s[i] = c ; 
+				i ++ ;
+
+		}
+
+		if( i >= MAX_BUFFER){
+			printf("Please insert a valid departure time \n");
+			CLEAN_BUFFER;
+			error = 1;
+		}else{
+			error = 0;
+		}
+	}
+
+	s[i] = 0;
+
+	return s;
+}
+
+char * readArrTime(){
+
+	char * s = malloc(MAX_BUFFER * sizeof(*s));
+	int c;
+	int i = 0 ;
+	int error = 1;
+
+	while(error)
+	{
+		i=0;
+
+		printf("\nPlease insert the arrival time:\n");
+
+		while((c = getchar()) != '\n'  && i < MAX_BUFFER){
+				s[i] = c ; 
+				i ++ ;
+
+		}
+
+		if( i >= MAX_BUFFER){
+			printf("Please insert a valid arrival time \n");
+			CLEAN_BUFFER;
+			error = 1;
+		}else{
+			error = 0;
+		}
+	}
+
+	s[i] = 0;
+
+	return s;
+}
+
+char * readPlaneCode(){
+
+	char * s = malloc(MAX_BUFFER * sizeof(*s));
+	int c;
+	int i = 0 ;
+	int error = 1;
+
+	while(error)
+	{
+		i=0;
+
+		printf("\nPlease insert the plane code:\n");
+
+		while((c = getchar()) != '\n'  && i < MAX_BUFFER){
+				s[i] = c ; 
+				i ++ ;
+
+		}
+
+		if( i >= MAX_BUFFER){
+			printf("Please insert a valid plane code \n");
+			CLEAN_BUFFER;
+			error = 1;
+		}else{
+			error = 0;
+		}
+	}
+
+	s[i] = 0;
+
+	return s;
+}
+
+char * readDepDate(){
+
+	char * s = malloc(MAX_BUFFER * sizeof(*s));
+	int c;
+	int i = 0 ;
+	int error = 1;
+
+	while(error)
+	{
+		i=0;
+
+		printf("\nPlease insert the departure date:\n");
+
+		while((c = getchar()) != '\n'  && i < MAX_BUFFER){
+				s[i] = c ; 
+				i ++ ;
+
+		}
+
+		if( i >= MAX_BUFFER){
+			printf("Please insert a valid departure date \n");
+			CLEAN_BUFFER;
+			error = 1;
+		}else{
+			error = 0;
+		}
+	}
+
+	s[i] = 0;
+
+	return s;
+}
+
+char * readArrDate(){
+
+	char * s = malloc(MAX_BUFFER * sizeof(*s));
+	int c;
+	int i = 0 ;
+	int error = 1;
+
+	while(error)
+	{
+		i=0;
+
+		printf("\nPlease insert the arrival date:\n");
+
+		while((c = getchar()) != '\n'  && i < MAX_BUFFER){
+				s[i] = c ; 
+				i ++ ;
+
+		}
+
+		if( i >= MAX_BUFFER){
+			printf("Please insert a valid arrival date \n");
+			CLEAN_BUFFER;
+			error = 1;
+		}else{
+			error = 0;
+		}
+	}
+
+	s[i] = 0;
+
+	return s;
 }
 
 void dummy(){
@@ -179,7 +409,6 @@ char * receiveSeatNumber()
 	char c;
 	char empty;
 	char digit1 , digit2;
-	char letter;
 
 	char * buffer = malloc(4 * sizeof(*buffer)) ;
 	

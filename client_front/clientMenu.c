@@ -14,10 +14,8 @@ void readClientMenu ()
 {
 	int sel;
 	int flag=1;
-	char nombrearch[MAX_BUFFER]; 
-	char * flightCode ;
-	char * seat;
-	int result; 
+	//char nombrearch[MAX_BUFFER]; 
+	
 	do
 	{
 		printClientMenu();

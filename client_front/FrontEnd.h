@@ -21,5 +21,12 @@ char * readFlightCode();
 void displayFlights(tFlight ** flights);
 void printRow(int n , int * occupied);
 void printHeaders(tPlane * plane);
+char * readOrigin();
+char * readDestination();
+char * readDepTime();
+char * readArrTime();
+char * readPlaneCode();
+char * readDepDate();
+char * readArrDate();
 
 #endif

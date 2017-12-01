@@ -13,6 +13,7 @@
 #include "Client.h"
 #include "FrontEnd.h"
 #include "structs.h"
+#include "expressions.h"
 
 #define RETURN_NULL_CONDITION(t) if(t == NULL) return 0
 #define ERROR_MESSAGE_ADDING_FLIGHT "There has been a problem while adding the flight\n"
@@ -21,12 +22,13 @@
 int administratorSession();
 void readAdministratorMenu ();
 char * getFlightCode();
+char * getFlightCodeToRemove();
 char * getOrigin();
-char * getDestination();
+char * getDestination(char *);
 char * getDepartureTime();
-char * getArrivalTime();
+char * getArrivalTime(char * departureDate, char * arrivalDate, char * departureTime);
 char * getPlaneCode();
 char * getDepartureDate();
-char * getArrivalDate();
+char * getArrivalDate(char *);
 
 #endif

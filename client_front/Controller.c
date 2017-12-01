@@ -15,8 +15,7 @@ void readMenu ()
 {
 	int sel;
 	int flag=1;
-	int ret=0;
-	char nombrearch[MAX_BUFFER]; 
+	//char nombrearch[MAX_BUFFER]; 
 
 	do
 	{
@@ -150,7 +149,7 @@ void reserveSeatNumber()
 
 }
 
-int reserveSeat()
+void reserveSeat()
 {
 	int flag = 1;
 	tFlight ** flights;
@@ -170,7 +169,6 @@ int reserveSeat()
 			freeFlightsArray(flights);
 			free(flightCode);
 			flights = NULL;
-			return 0 ;
 		}
 
 		result = setCurrentFlight(flights , flightCode);
@@ -199,7 +197,7 @@ void cancelSeat()
 	tFlight ** flights;
 	char * flightCode ;
 	int result ;
-	char * seat; 
+	//char * seat; 
 	int flag = 1;
 
 	while(flag){
@@ -273,8 +271,6 @@ void updateOccupiedArrays(tPlane * plane , int row , int  ** totalOccupied , int
 void drawPlane()
 {
 	int j = 0;
-
-	int i = 0;
 
 	tPlane * plane = getPlane(&currentFlight);
 
