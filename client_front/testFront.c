@@ -20,7 +20,7 @@ char ** givenOccupiedArray();
 void whenWeCreateTheOccupiedMatrix(char ** occupiedSeats , int totalOccupied[3][3]);
 void thenTheMatrixIsCorrect();
 
-int main()
+int mainTestFront()
 {
 	testFillOccupiedMatrix();
 }

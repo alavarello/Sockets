@@ -18,7 +18,7 @@ int getNumber(char * seat);
 
 /* Beginning of tests*/
 
-int main()
+int mainTestExpressions()
 {
 	isNumberTest();
 	isAlphaTest();
