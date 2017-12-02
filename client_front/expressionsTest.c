@@ -34,6 +34,7 @@ int mainTestExpressions()
 	isAlphaTest();
 	testValidExpDates();
 
+	return 1;
 }
 
 void isNumberTest()

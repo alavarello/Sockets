@@ -29,4 +29,10 @@ char * readPlaneCode();
 char * readDepDate();
 char * readArrDate();
 
+/*error logs*/
+
+void logError(char * msg);
+void logAction(char * msg);
+void logMessage(char * msg);
+
 #endif
