@@ -8,21 +8,16 @@
 #include "serialize_flight.h"
 #include "serialize_plane.h"
 #include "serialize_reservation.h"
+#include "clientParser.h"
 
 //gcc client.c serialize_reservation.c serialize_plane.c serialize_flight.c -o client -lsqlite3 -std=c99
 
-void printSeatsArray(tSeatsArray seatsArray){
-  int i;
-  printf("SEATS ARRAY: SIZE:%d\n",seatsArray.size);
-  for (i = 0; i < seatsArray.size; ++i)
-  {
-   printf("SEAT:%s\n",seatsArray.reservedSeats[i]);
-  }
-}
+
 
 int main(){
   int clientSocket, n;
   char buffer[2048];
+  char * resBuff;
   struct sockaddr_in serverAddr;
   socklen_t addr_size;
 
@@ -54,8 +49,25 @@ int main(){
    fgets(buffer,255,stdin);
    
    /* Send message to the server */
-   n = write(clientSocket, buffer, strlen(buffer));
+   int action = (int)((*buffer)-'0');
+   char * res;
+   if(action == 2 || action == 9){
+       res = "AA954";
+       resBuff = parseMessageToSend(action, res);
+   }
+   else if(action == 3){
+      tFlight t = {"ZD136","EZE", "LIM", "19:00", "27/11/2017", "20:00", "27/11/2017", "Boeing 777"};
+      resBuff = parseMessageToSend(action, &t);
+   }
+   else if(action == 7 || action == 8){
+    tReservation r = {"ZD136","01A", "John"};
+    resBuff = parseMessageToSend(action, &r);
+   }
+   else{
+    resBuff = parseMessageToSend(action, NULL);
+   }
    
+   n = write(clientSocket, resBuff, 200);
    if (n < 0) {
       perror("ERROR writing to socket");
       exit(1);
@@ -64,12 +76,10 @@ int main(){
    /* Now read server response */
    bzero(buffer,2000);
    n = read(clientSocket, buffer, 2000);
-   tSeatsArray * t = deserialize_seatArray(buffer);
    if (n < 0) {
       perror("ERROR reading from socket");
       exit(1);
    }
-   printSeatsArray(*t);
-   //printf("FC:%s. O:%s.  D:%s.   DT:%s.   DD:%s.   AT:%s.  AD:%s.   PC:%s \n",t->flightCode, t->origin, t->destination, t->departureTime, t->departureDate, t->arrivalTime, t->arrivalDate, t->planeCode);
+  parseRecivedMessage(action, buffer);
    return 0;
 }

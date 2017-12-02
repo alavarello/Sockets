@@ -35,7 +35,7 @@ typedef struct{
 }tPlaneArray;
 
 
-//supports (2^(64)-1) reservations 
+
 typedef struct {
 	char* flightCode;
 	char* seatNumber;

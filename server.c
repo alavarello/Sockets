@@ -12,10 +12,10 @@
 #include "flightsTableManager.h"
 #include "planesTableManager.h"
 #include "reservationAndCancelationManager.h"
+#include "serverParser.h"
 #include <sqlite3.h>
 
-//gcc serialize_flight.c server.c flightsTableManager.c reservationAndCancelationManager.c planesTableManager.c serialize_reservation.c serialize_plane.c -o server -lsqlite3 -std=c99
-
+//gcc serialize_flight.c server.c flightsTableManager.c reservationAndCancelationManager.c planesTableManager.c serialize_reservation.c serialize_plane.c serverParser.c semaphores.c -o server -lsqlite3 -std=c99
 
  sqlite3 *db;
 
@@ -40,25 +40,17 @@ void childForClient (int sock) {
    int n;
    char buffer[256];
    bzero(buffer,256);
+   char * resBuffer;
    n = read(sock,buffer,255);
    openDataBase();
-  
-   tSeatsArray * r = getReservationsSeats("AA954");
-   printf("PRINING SEATS ARRAY\n");
-   printSeatsArray(*r);
-   char * buff = serialize_seatArray(r);
-   printf("SERIALIZE OK\n");
-   tSeatsArray * h = deserialize_seatArray(buff);
-   printf("PRINING Seats  ARRAY\n");
-   printSeatsArray(*r);
+   resBuffer = parseAndExecute(buffer);
 
    if (n < 0) {
       perror("ERROR reading from socket");
       exit(1);
    }
    
-  printf("Here is the message: %s\n",buffer);
-  n = write(sock,buff,500);
+  n = write(sock,resBuffer,500);
    
    if (n < 0) {
       perror("ERROR writing to socket");
