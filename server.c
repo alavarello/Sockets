@@ -15,7 +15,8 @@
 #include "serverParser.h"
 #include <sqlite3.h>
 
-//gcc serialize_flight.c server.c flightsTableManager.c reservationAndCancelationManager.c planesTableManager.c serialize_reservation.c serialize_plane.c serverParser.c semaphores.c -o server -lsqlite3 -std=c99
+//gcc serialize_flight.c server.c flightsTableManager.c reservationAndCancelationManager.c planesTableManager.c serialize_reservation.c serialize_plane.c serverParser.c semaphores.c -o server -lsqlite3
+
 
  sqlite3 *db;
 

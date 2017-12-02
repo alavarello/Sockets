@@ -10,8 +10,7 @@
 #include "serialize_reservation.h"
 #include "clientParser.h"
 
-//gcc client.c serialize_reservation.c serialize_plane.c serialize_flight.c -o client -lsqlite3 -std=c99
-
+//gcc client.c serialize_reservation.c serialize_plane.c serialize_flight.c clientParser.c -o client  -lsqlite3 -std=c99
 
 
 int main(){
