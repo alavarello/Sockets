@@ -1,0 +1,159 @@
+/****************** CLIENT CODE ****************/
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
+#include "structs.h"
+#include "serialize_flight.h"
+#include "serialize_plane.h"
+#include "serialize_reservation.h"
+#include "clientParser.h"
+
+//gcc client.c serialize_reservation.c serialize_plane.c serialize_flight.c clientParser.c -o client  -lsqlite3 -std=c99
+
+
+int clientSocket, n;
+char buffer[2048];
+char * resBuff;
+struct sockaddr_in serverAddr;
+socklen_t addr_size;
+
+int initiateSocket(){
+
+  printf("INITIATING\n");
+  /*---- Create the socket. The three arguments are: ----*/
+  /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
+  clientSocket = socket(PF_INET, SOCK_STREAM, 0);
+  
+  /*---- Configure settings of the server address struct ----*/
+  /* Address family = Internet */
+  serverAddr.sin_family = AF_INET;
+  /* Set port number, using htons function to use proper byte order */
+  serverAddr.sin_port = htons(5002);
+  /* Set IP address to localhost */
+  serverAddr.sin_addr.s_addr = inet_addr("192.168.1.3"); //this address is for local conection
+  /* Set all bits of the padding field to 0 */
+  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);  
+
+  /*---- Connect the socket to the server using the address struct ----*/
+  addr_size = sizeof serverAddr;
+  connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
+
+  // add control if everything went fine
+}
+
+int sendMessage( char * parsedMessage)
+{
+    
+    bzero(buffer,256);
+    n = write(clientSocket, resBuff, 200);
+
+    if (n < 0) {
+      perror("ERROR writing to socket");
+      return 0;
+   }else{
+      return 1;
+   }
+}
+
+char * receiveMessage()
+{
+  char * pBuffer = malloc(2000 * sizeof(char)); 
+
+  bzero(pBuffer,2000);
+  n = read(clientSocket, pBuffer, 2000);
+  if (n < 0) {
+      perror("ERROR reading from socket");
+      return NULL;
+  }
+
+  return pBuffer;
+}
+
+tFlight * * getFlights()
+{
+  int success = 1;
+  tFlightArray * parsed;
+  char * response;
+  char * instruction = parseMessageToSend(GET_ALL_FLIGHTS , NULL);
+
+  success = sendMessage(instruction);
+
+  if(!success){
+    printf("ERROR CON SERVIDOR\n");
+    return NULL;
+  }
+
+
+  response = receiveMessage();
+
+  if(!success){
+    printf("ERROR CON SERVIDOR\n");
+    return NULL;
+  }
+
+  parsed = (tFlightArray *)  parseRecivedMessage(GET_ALL_FLIGHTS, response);
+
+  if(parsed == NULL)
+  {
+    printf("ERRORROROROR\n");
+    return NULL;
+  }
+
+  parsed->flightArray[parsed->size - 1] = NULL;
+  return parsed->flightArray;
+
+
+}
+
+tPlane * getPlane(tFlight * flight)
+{
+
+  tPlane * plane = (tPlane * ) malloc(sizeof(tPlane));
+
+  plane->model = "BO747";
+  plane->rows = 20;
+  plane->left = 3;
+  plane->middle = 4;
+  plane->right = 3;
+
+  return plane;
+
+}
+
+char * * getOccupiedSeats(tFlight * flight)
+{
+  char ** seats = malloc(8 * sizeof(*seats));
+
+  seats[0] = "01B";
+  seats[1] = "10A";
+  seats[2] = "13E";
+  seats[3] = "13C";
+  seats[4] = "17G";
+  seats[5] = "18F";
+  seats[6] = "19A";
+  seats[7] = NULL;
+
+  return seats;
+}
+
+int reserve(tFlight * flight , char * seat){
+  return 0;
+}
+
+int cancel(tFlight * flight , char * seat){
+  return 0;
+}
+
+int addFlightClient(char * origin ,char *   destination ,char *  departureTime ,char * arrivalTime ,char *  planeCode,char *  departureDate ,char *  arrivalDate)
+{
+  return 1;
+}
+int removeFlightClient(char * flightCode)
+{
+  return 1;
+}
+
+
+   
