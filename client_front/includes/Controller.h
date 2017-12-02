@@ -11,6 +11,8 @@
 #include "Client.h"
 #include "FrontEnd.h"
 #include "structs.h"
+#include "clientMenu.h"
+#include "adminMenu.h"
 
 #define DO_ANOTHER_OPERATION 10
 #define DONT_DO_ANOTHER_OPERATION -10
@@ -34,6 +36,8 @@ void freeAllDrawPlane(int *** totalOccupied , tPlane ** plane , char *** occupie
 
 void freeFlightsArray( tFlight ** flights);
 
+void reserveSeat();
 
+void cancelSeat();
 
 #endif

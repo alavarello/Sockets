@@ -80,9 +80,9 @@ void cancelSeatNumber()
 			return;
 		}
 
-		if(checkSeatNumberFormat(seat , currentFlight)){
+		if(checkSeatNumberFormat(seat , &currentFlight)){
 			
-			flag = cancel(currentFlight , seat ) ;
+			flag = cancel(&currentFlight , seat ) ;
 
 			if(flag){
 				sprintf(msgLog, "Cancelling seat %s\n" , seat);
@@ -122,9 +122,9 @@ void reserveSeatNumber()
 			return;
 		}
 
-		if(checkSeatNumberFormat(seat , currentFlight)){
+		if(checkSeatNumberFormat(seat , &currentFlight)){
 			
-			flag = reserve(currentFlight , seat ) ;
+			flag = reserve(&currentFlight , seat ) ;
 
 			if(flag){
 				sprintf(msgLog, "Reserving seat %s\n" , seat);

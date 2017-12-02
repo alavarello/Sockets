@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "expressions.h"
 
 /*
 *This archive will have tests for functions in the model part of the front,
@@ -23,6 +24,7 @@ void thenTheMatrixIsCorrect();
 int mainTestFront()
 {
 	testFillOccupiedMatrix();
+	return 1;
 }
 
 void fillOcuppiedMatrix2(char * * occupiedSeats , int totalOccupied[3][3])
