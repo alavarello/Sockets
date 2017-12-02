@@ -23,6 +23,8 @@
 #define INSERT_CANCELLATION 8
 #define SEND_RESERVATIONS_FOR_A_FLIGHT 9
 #define SEND_RESERVATION 10
+#define DELETE_FLIGHT 11
+#define DELETE_RESERVATON 12
 #define ERROR_CODE "ERROR"
 #define COMPLETE_CODE "OKEYY"
 #define COMPLETE_CODE_CHAR_MAX 6
@@ -174,6 +176,42 @@ char * insertCancellation(char * buff){
 	}
 }
 
+char * deleteFlight(char * buff){
+	int error = sqlite3_errcode(db);
+	int  res =delete_flight(buff);
+	char * resBuff;
+	if(res == SQLITE_OK){
+		resBuff = malloc(COMPLETE_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
+		strcpy(resBuff, COMPLETE_CODE);
+		memcpy((resBuff+COMPLETE_CODE_CHAR_MAX), &res, sizeof(int));
+		return resBuff;
+	}
+	else{
+		resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
+		strcpy(resBuff, ERROR_CODE);
+		memcpy((resBuff+ERROR_CODE_CHAR_MAX), &res, sizeof(int));
+		return resBuff;
+	}
+}
+
+char * deleteReservation(char * buff){
+	int error = sqlite3_errcode(db);
+	int  res = delete_reservation(buff, buff + FLIGHT_CODE_CHAR_MAX);
+	char * resBuff;
+	if(res == SQLITE_OK){
+		resBuff = malloc(COMPLETE_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
+		strcpy(resBuff, COMPLETE_CODE);
+		memcpy((resBuff+COMPLETE_CODE_CHAR_MAX), &res, sizeof(int));
+		return resBuff;
+	}
+	else{
+		resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
+		strcpy(resBuff, ERROR_CODE);
+		memcpy((resBuff+ERROR_CODE_CHAR_MAX), &res, sizeof(int));
+		return resBuff;
+	}
+}
+
 
 
 
@@ -205,6 +243,10 @@ char * parseAndExecute(char * buff){
 			return sendReservationForAFLight(buff);
 		case SEND_RESERVATION:
 			return sendReservation(buff, (buff + FLIGHT_CODE_CHAR_MAX ));
+		case DELETE_FLIGHT:
+			return deleteFlight(buff);
+		case DELETE_RESERVATON:
+			return deleteReservation(buff);
 	}
 	resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
 	strcpy(resBuff, ERROR_CODE);

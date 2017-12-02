@@ -273,6 +273,38 @@ int insert_reservation(char * flight_code, char * seat, char * name)
 
 }
 
+int delete_reservation(char * flight_code, char * seat){
+  char * sql = "DELETE FROM RESERVATIONS WHERE seat LIKE ? AND flight_code LIKE ?;";
+  sqlite3_stmt * res;
+  int rc;
+  sem_t * sem;
+  sem = openSemaphore(RESERVATION_SEMAPHORE);
+  sem_wait(sem);
+
+
+
+  rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+  if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
+  }
+
+  sqlite3_bind_text(res, 2, flight_code, -1, NULL);
+  sqlite3_bind_text(res, 1, seat, -1, NULL);
+  rc = sqlite3_step(res);
+
+  if(rc != SQLITE_DONE)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
+  }
+
+  sqlite3_finalize(res);
+}
+
+
 int insert_cancellation(char * seat, char * flightCode)
 {
   char * sql = "INSERT INTO CANCELATIONS SELECT * FROM RESERVATIONS WHERE seat LIKE ? AND flight_code LIKE ?;";
@@ -289,7 +321,6 @@ int insert_cancellation(char * seat, char * flightCode)
     fprintf(stderr, "%s\n",sqlite3_errmsg(db));
     return sqlite3_errcode(db);
   }
-
   sqlite3_bind_text(res, 1, seat, -1, NULL);
   sqlite3_bind_text(res, 2, flightCode, -1, NULL);
 
@@ -304,7 +335,7 @@ int insert_cancellation(char * seat, char * flightCode)
   sqlite3_finalize(res);
   sem_post(sem);
   sem_close(sem);
-    //delete_reservation(char * reservation); Should be called to avoid data being in both tables at the same time
+  delete_reservation(flightCode, seat);// Should be called to avoid data being in both tables at the same time
 
   return SQLITE_OK;
 

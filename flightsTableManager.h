@@ -10,5 +10,5 @@ int getNumberOfFLighst();
 tFlightArray * getFlightArray();
 tFlight * getFlight(char * flight_code);
 int insert_flight(char * flight_code, char * origin, char * destination, char * departure_time, char * departure_date, char * arrival_time, char * arrival_date, char * model);
-
+int delete_flight(char * flight_code);
 #endif

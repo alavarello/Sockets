@@ -20,6 +20,8 @@
 #define INSERT_CANCELLATION 8
 #define GET_RESERVATIONS_FOR_A_FLIGHT 9
 #define GET_RESERVATION 10
+#define DELETE_FLIGHT 11
+#define DELETE_RESERVATON 12
 #define ERROR_CODE "ERROR"
 #define ERROR_CODE_CHAR_MAX 6
 #define ACTION_CODE_ERROR 49
@@ -78,6 +80,18 @@ char * parseMessageToSend(int action, void * param){
 			strcpy(resBuff+sizeof(int), (char*)((tReservation*)param)->flightCode);
 			strcpy(resBuff+sizeof(int)+FLIGHT_CODE_CHAR_MAX, (char*)((tReservation*)param)->seatNumber);
 			return resBuff;
+		case DELETE_FLIGHT:
+			resBuff = realloc(resBuff, sizeof(int)+FLIGHT_CODE_CHAR_MAX);
+			memcpy(resBuff, &action, sizeof(int));
+			strcpy(resBuff+sizeof(int), (char*)param);
+			return resBuff;
+		case DELETE_RESERVATON:
+			resBuff = realloc(resBuff, sizeof(int)+FLIGHT_CODE_CHAR_MAX+SEAT_NUMBER_CHAR_MAX);
+			memcpy(resBuff, &action, sizeof(int));
+			strcpy(resBuff+sizeof(int), (char*)((tReservation*)param)->flightCode);
+			strcpy(resBuff+sizeof(int)+FLIGHT_CODE_CHAR_MAX, (char*)((tReservation*)param)->seatNumber);
+			return resBuff;
+
 	}
 	resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
 	strcpy(resBuff, ERROR_CODE);
@@ -177,6 +191,14 @@ char * parseRecivedMessage(int action, char * buff){
 		case GET_RESERVATION:
 			r = deserialize_reservation(buff);
 			printf("%s.  %s\n",r->flightCode, r->seatNumber );
+			break;
+		case DELETE_FLIGHT:
+			printf("%s\n",buff);
+			printf("%d\n",(int)*(buff+ERROR_CODE_CHAR_MAX));
+			break;
+		case DELETE_RESERVATON:
+			printf("%s\n",buff);
+			printf("%d\n",(int)*(buff+ERROR_CODE_CHAR_MAX));
 			break;
 		default: 
 			resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));

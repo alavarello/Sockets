@@ -173,6 +173,38 @@ tFlight * getFlight(char * flight_code)
 
 }
 
+
+int delete_flight(char * flight_code){
+  char * sql = "DELETE FROM FLIGHTS WHERE flight_code LIKE ?;";
+  sqlite3_stmt * res;
+  int rc;
+  sem_t * sem;
+  sem = openSemaphore(FLIGHT_SEMAPHORE);
+  sem_wait(sem);
+
+
+
+  rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
+  if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
+  }
+
+  sqlite3_bind_text(res, 1, flight_code, -1, NULL);
+
+  rc = sqlite3_step(res);
+
+  if(rc != SQLITE_DONE)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return sqlite3_errcode(db);
+  }
+
+  sqlite3_finalize(res);
+}
+
 int insert_flight(char * flight_code, char * origin, char * destination, char * departure_time, char * departure_date, char * arrival_time, char * arrival_date, char * model) 
 {
 

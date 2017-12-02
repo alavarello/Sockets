@@ -50,18 +50,19 @@ int main(){
    /* Send message to the server */
    int action = (int)((*buffer)-'0');
    char * res;
-   if(action == 2 || action == 9){
+   if(action == 2 || action == 9 || action ==11){
        res = "AA954";
        resBuff = parseMessageToSend(action, res);
    }
    else if(action == 3){
-      tFlight t = {"ZD136","EZE", "LIM", "19:00", "27/11/2017", "20:00", "27/11/2017", "Boeing 777"};
+      tFlight t = {"AA954","EZE", "LIM", "19:00", "27/11/2017", "20:00", "27/11/2017", "Boeing 777"};
       resBuff = parseMessageToSend(action, &t);
    }
-   else if(action == 7 || action == 8){
-    tReservation r = {"ZD136","01A", "John"};
+   else if(action == 7 || action == 8 || action==10 || action ==12){
+    tReservation r = {"AA954","01A", "John"};
     resBuff = parseMessageToSend(action, &r);
    }
+  
    else{
     resBuff = parseMessageToSend(action, NULL);
    }
