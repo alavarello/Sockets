@@ -145,6 +145,8 @@ tPlane * getPlane(char * model)
   int rc;
   tPlane * plane;
 
+  rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+
   if(rc != SQLITE_OK)
   {
     fprintf(stderr, "%s\n",sqlite3_errmsg(db));
