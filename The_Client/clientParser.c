@@ -159,8 +159,7 @@ void * parseRecivedMessage(int action, char * buff){
 			return f;
 			break;
 		case INSERT_FLIGHT:
-			printf("%s\n",buff);
-			printf("%d\n",(int)*(buff+ERROR_CODE_CHAR_MAX));
+			buff[ERROR_CODE_CHAR_MAX] = 0;
 			return buff;
 			break;
 		case GET_ALL_PLANES:

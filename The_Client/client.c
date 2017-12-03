@@ -49,7 +49,6 @@ int sendMessage( char * parsedMessage, int bytes)
     
     printf("CLIENT SOCKET: %d\n",clientSocket );
     n = write(clientSocket, parsedMessage, bytes);
-    printf("HOLAAA\n");
     if (n < 0) {
       return 0;
    }else{
@@ -215,8 +214,33 @@ int cancel(tFlight * flight , char * seat){
   }
 }
 
-int addFlightClient(char * origin ,char *   destination ,char *  departureTime ,char * arrivalTime ,char *  planeCode,char *  departureDate ,char *  arrivalDate)
+int addFlightClient(char * flightCode , char * origin ,char *   destination ,char *  departureTime ,char * arrivalTime ,char *  planeCode,char *  departureDate ,char *  arrivalDate)
 {
+  char * result;
+  tFlight * newFlight = malloc(sizeof(*newFlight));
+
+  newFlight->flightCode = flightCode;
+  newFlight->origin = origin;
+  newFlight->destination = destination;
+  newFlight->departureTime = departureTime;
+  newFlight->departureDate = departureDate;
+  newFlight->arrivalTime = arrivalTime;
+  newFlight->arrivalDate = arrivalDate;
+  newFlight->planeCode = planeCode;
+
+  result = askForInfo(INSERT_FLIGHT, newFlight);
+
+  free(newFlight);
+
+  if(strcmp(result , OKEY) == 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+
   return 1;
 }
 int removeFlightClient(char * flightCode)

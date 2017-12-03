@@ -48,7 +48,7 @@ int addFlight()
 
 	RETURN_NULL_CONDITION(planeCode);
 
-	int res = addFlightClient(origin , destination , departureTime ,arrivalTime , planeCode, departureDate , arrivalDate);
+	int res = addFlightClient(flightCode, origin , destination , departureTime ,arrivalTime , planeCode, departureDate , arrivalDate);
 
 	FREE_ALL();
 	
