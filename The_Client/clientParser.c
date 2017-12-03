@@ -181,7 +181,7 @@ void * parseRecivedMessage(int action, char * buff){
 			break;
 		case GET_RESERVATIONS_FOR_A_FLIGHT:
 			sa = deserialize_seatArray(buff);
-			printSeatsArray(*sa);
+			return sa;//printSeatsArray(*sa);
 		case GET_RESERVATION:
 			r = deserialize_reservation(buff);
 			printf("%s.  %s\n",r->flightCode, r->seatNumber );
