@@ -232,5 +232,19 @@ int removeFlightClient(char * flightCode)
   return  ERROR_RETURN(result);
 }
 
+tPlaneArray  * getPlanes()
+{
+  tPlaneArray * planes;
+  int i;
+
+  planes = (tPlaneArray * ) askForInfo( GET_ALL_PLANES , NULL);
+
+  if(planes == NULL)
+  {
+    printf("ERROR COMMUNICATING\n");
+    return NULL;
+  }
+  
+}
 
    

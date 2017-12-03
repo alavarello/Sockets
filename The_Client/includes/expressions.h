@@ -14,14 +14,16 @@
 #include "controller.h"
 #include "structs.h"
 #include <ctype.h>
+#include "constants.h"
 
 int isNumber(char c);
 int isAlpha(char c);
 int isValidSeatExpression(char * seat);
 int checkSeatNumberFormat(char * seat ,  tFlight * currentFlight);
+int isValidPlaneCodeExpression(char * planeCode ,tPlaneArray * planeArray);
 int getColumn(char * seat);
 int getNumber(char * seat);
-int isValidFlightAndPlaneCodeExpression(char * thing);
+int isValidFlightAndPlaneCodeExpression(char * thing );
 int isValidOriginDestination(char * place);
 int isValidTime(char * time);
 int isValidTimeHour (char n1, char n2);

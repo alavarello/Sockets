@@ -76,8 +76,24 @@ int getNumber(char * seat)
 
 }
 
-int isValidFlightAndPlaneCodeExpression(char * thing){
+int isValidPlaneCodeExpression(char * planeCode ,tPlaneArray * planeArray)
+{
 
+	int i = 0;
+	tPlane ** planes = planeArray->planeArray;
+
+	for(i = 0 ; i < planeArray->size ; i++)
+	{
+		if(strcmp(planes[i]->model , planeCode) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int isValidFlightAndPlaneCodeExpression(char * thing)
+{
 	if(isAlpha(thing[0]) && isAlpha(thing[1]) && isNumber(thing[2]) && isNumber(thing[3]) && isNumber(thing[4]) && thing[5] == 0)
 		return 1;
 

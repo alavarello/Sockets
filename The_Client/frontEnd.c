@@ -2,6 +2,22 @@
 
 #define MAX_FLIGHTS 50
 
+void printPlanes(tPlaneArray * planeArray)
+{
+	int i ; 
+
+	tPlane ** planes = planeArray->planeArray;
+
+	printf("%15s | %15s | %15s | %15s | %15s \n" , "Plane Code" , "Rows", "Left", "Middle" , "Right");
+
+	for (i = 0 ; i < planeArray->size ; i++)
+	{
+		printf("%15s | %15d | %15d | %15d | %15d \n" , planes[i]->model , planes[i]->rows, planes[i]->left, planes[i]->middle, planes[i]->right);
+	}
+
+	putchar('\n');
+}
+
 void printMenu (void)
 {
 	printf("Welcome:\n\n");

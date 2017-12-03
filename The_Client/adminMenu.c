@@ -365,9 +365,16 @@ char * getPlaneCode()
 	int flag = 1;
 	int result ;
 	char * planeCode;
+	tPlaneArray * planes;
 
 	
 	while(flag){
+
+		sprintf(msgLog, "Please choose one of the following plane codes:\n");
+		logMessage(msgLog);
+		planes = getPlanes();
+		printPlanes(planes);
+		
 
 		planeCode = readPlaneCode();
 
@@ -376,7 +383,7 @@ char * getPlaneCode()
 			return NULL;
 		}
 
-		result = isValidFlightAndPlaneCodeExpression(planeCode);
+		result = isValidPlaneCodeExpression(planeCode , planes);
 
 		if(!result){
 			sprintf(msgLog, "Please insert a valid plane code\n");
