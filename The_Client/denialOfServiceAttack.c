@@ -2,7 +2,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
-#include "./includes/clientParser.h"
+#include "clientParser.h"
+#include "random.h"
+
 
 
 
@@ -120,7 +122,8 @@ void writeWithoutReadAttack(){
 
 void reproduce()
 {	
-	int i = 0;
+	int action, i = 0;
+	double rand;
 	while(i<4000){
 	/* Create child process */
       pid = fork();
@@ -131,8 +134,15 @@ void reproduce()
       }
       
       if (pid == 0) {
-         /* This is the client process */
-         attack(2);
+      	action = ((++process)%12)+1;
+      	rand = randNormalize();
+      	if(rand < 0.45){
+         	attack(action);
+      	}else if(rand < 0.90){
+      		writeWithoutReadAttack(action);
+      	}else{
+      		whileAttack(action);
+      	}
       }
       i++;
 	}
