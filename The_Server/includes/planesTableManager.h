@@ -9,5 +9,6 @@ int getNumberOfPlanes();
 tPlane** expandPlaneArray(tPlane** planeArray, long size);
 tPlaneArray * getPlaneArray();
 int insert_plane(char * model, int rows, int left, int middle, int right);
+tPlane * getPlane(char * model);
 
 #endif
