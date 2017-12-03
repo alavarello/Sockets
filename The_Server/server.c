@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
 #include <string.h>
 #include "constants.h"
@@ -75,6 +76,7 @@ int main(){
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
+   struct timeval tv;
 
   openDataBase();
   
@@ -92,9 +94,14 @@ int main(){
   /* Set all bits of the padding field to 0 */
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);  
 
+  //putting a timeout interval for the input using the write and read
+  tv.tv_sec = 30;        // 30 Secs Timeout
+  tv.tv_usec = 0;        // Not init'ing this can cause strange errors
   /*---- Bind the address struct to the socket ----*/
   bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
+
+  setsockopt(welcomeSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
   /*---- Listen on the socket, with 5 max connection requests queued ----*/
   if(listen(welcomeSocket,MAX_NUMBER_OF_CLIENTS)==0)
     printf("Listening\n");
