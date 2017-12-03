@@ -82,7 +82,7 @@ int main(){
   /* Set port number, using htons function to use proper byte order */
   serverAddr.sin_port = htons(5002);
   /* Set IP address to localhost */
-  serverAddr.sin_addr.s_addr = inet_addr("192.168.1.3");//this address is for local conection
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");//this address is for local conection
   /* Set all bits of the padding field to 0 */
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);  
 
@@ -116,6 +116,7 @@ int main(){
       
       if (pid == 0) {
          /* This is the client process */
+          printf("AGARRO LA CONEXCION\n");
          close(welcomeSocket);
          childForClient(newSocket);
          exit(0);

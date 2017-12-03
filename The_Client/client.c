@@ -25,14 +25,14 @@ int initiateSocket(){
   /*---- Create the socket. The three arguments are: ----*/
   /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
   clientSocket = socket(PF_INET, SOCK_STREAM, 0);
-  
+  printf("CLIENT SOCKET: %d\n",clientSocket );
   /*---- Configure settings of the server address struct ----*/
   /* Address family = Internet */
   serverAddr.sin_family = AF_INET;
   /* Set port number, using htons function to use proper byte order */
   serverAddr.sin_port = htons(5002);
   /* Set IP address to localhost */
-  serverAddr.sin_addr.s_addr = inet_addr("192.168.1.3"); //this address is for local conection
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); //this address is for local conection
   /* Set all bits of the padding field to 0 */
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);  
 
@@ -43,12 +43,12 @@ int initiateSocket(){
   // add control if everything went fine
 }
 
-int sendMessage( char * parsedMessage)
+int sendMessage( char * parsedMessage, int bytes)
 {
     
-    bzero(buffer,256);
-    n = write(clientSocket, resBuff, 200);
-
+    printf("CLIENT SOCKET: %d\n",clientSocket );
+    n = write(clientSocket, parsedMessage, bytes);
+    printf("HOLAAA\n");
     if (n < 0) {
       perror("ERROR writing to socket");
       return 0;
@@ -74,12 +74,11 @@ char * receiveMessage()
 tFlight * * getFlights()
 {
   int success = 1;
+  int bytes;
   tFlightArray * parsed;
   char * response;
-  char * instruction = parseMessageToSend(GET_ALL_FLIGHTS , NULL);
-
-  success = sendMessage(instruction);
-
+  char * instruction = parseMessageToSend(GET_ALL_FLIGHTS , NULL,&bytes);
+  success = sendMessage(instruction, bytes);
   if(!success){
     printf("ERROR CON SERVIDOR\n");
     return NULL;
@@ -92,7 +91,6 @@ tFlight * * getFlights()
     printf("ERROR CON SERVIDOR\n");
     return NULL;
   }
-
   parsed = (tFlightArray *)  parseRecivedMessage(GET_ALL_FLIGHTS, response);
 
   if(parsed == NULL)

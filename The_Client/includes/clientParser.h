@@ -19,6 +19,6 @@
 
 
 void * parseRecivedMessage(int action, char * buff);
-char * parseMessageToSend(int action, void * param);
+char * parseMessageToSend(int action, void * param, int * bytes);
 
 #endif
