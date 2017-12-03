@@ -93,8 +93,6 @@ void * askForInfo(int instruction , void * message)
     return NULL;
   }
 
-  printf("%s\n",response );
-
   return parseRecivedMessage(instruction, response);
 
 }
@@ -110,8 +108,6 @@ tFlight * * getFlights()
     printf("ERROR COMMUNICATING\n");
     return NULL;
   }
-
-  printf("El tamaño es %d\n", parsed->size);
 
   parsed->flightArray = realloc(parsed->flightArray , (parsed->size + 1) * sizeof(*parsed->flightArray));
 
@@ -137,16 +133,44 @@ tPlane * getPlane(tFlight * flight)
 
 char * * getOccupiedSeats(tFlight * flight)
 {
-  char ** seats = malloc(8 * sizeof(*seats));
+  tSeatsArray * seatsArray;
+  int i ; 
+  char ** seats;
 
-  seats[0] = "01B";
-  seats[1] = "10A";
-  seats[2] = "13E";
-  seats[3] = "13C";
-  seats[4] = "17G";
-  seats[5] = "18F";
-  seats[6] = "19A";
-  seats[7] = NULL;
+  printf("el flightcode es %s\n", flight->flightCode);
+
+  seatsArray = (tSeatsArray * ) askForInfo(GET_RESERVATIONS_FOR_A_FLIGHT , flight->flightCode);
+
+  printf("PASOOOO\n");
+
+  if(seatsArray == NULL)
+  {
+    printf("ERROR COMMUNICATING\n");
+    return NULL;
+  }
+  int size = (int)seatsArray->size;
+ printf("TERMINO1a\n");
+  printf("el size  es %d\n", size);
+  printf("TERMINO1\n");
+
+  seats = malloc((seatsArray->size + 1)*sizeof(*seats));
+  printf("TERMINO2\n");
+
+  for(i = 0 ; i < seatsArray->size ; i++){
+    printf("asiento : %s\n", seatsArray->reservedSeats[i]);
+    seats[i] = malloc(4 * sizeof(char));
+    strcpy(seats[i] , seatsArray->reservedSeats[i]);
+    //free(reservationArray->reservationsArray[i]);
+  }
+
+  
+  seats[i] = NULL;
+
+ for(i = 0 ; i < seatsArray->size ; i++){
+    printf("%s\n",seatsArray->reservedSeats[i] );
+  }
+
+  printf("TERMINO\n");
 
   return seats;
 }
