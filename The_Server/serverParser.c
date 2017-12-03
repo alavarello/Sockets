@@ -119,7 +119,6 @@ char * sendReservation(char * flightCode, char * seat){
 }
 
 char * insertFlight(char * buff){
-	int error = sqlite3_errcode(db);
 	tFlight *  f = deserialize_flight(buff);
 	int  res = insert_flight(f->flightCode, f->origin, f->destination, f->departureTime, f->departureDate, f->arrivalTime, f->arrivalDate, f->planeCode); 
 	char * resBuff;
@@ -139,7 +138,6 @@ char * insertFlight(char * buff){
 
 
 char * insertReservation(char * buff){
-	int error = sqlite3_errcode(db);
 	tReservation *  r = deserialize_reservation(buff);
 	int  res = insert_reservation(r->flightCode, r->seatNumber, r->userName);
 	char * resBuff;
@@ -158,7 +156,6 @@ char * insertReservation(char * buff){
 }
 
 char * insertCancellation(char * buff){
-	int error = sqlite3_errcode(db);
 	tReservation *  r = deserialize_reservation(buff);
 	int  res = insert_cancellation(r->flightCode, r->seatNumber, r->userName);
 	char * resBuff;
@@ -177,7 +174,6 @@ char * insertCancellation(char * buff){
 }
 
 char * deleteFlight(char * buff){
-	int error = sqlite3_errcode(db);
 	int  res =delete_flight(buff);
 	char * resBuff;
 	if(res == SQLITE_OK){
@@ -195,7 +191,6 @@ char * deleteFlight(char * buff){
 }
 
 char * deleteReservation(char * buff){
-	int error = sqlite3_errcode(db);
 	int  res = delete_reservation(buff, buff + FLIGHT_CODE_CHAR_MAX);
 	char * resBuff;
 	if(res == SQLITE_OK){

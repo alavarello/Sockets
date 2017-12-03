@@ -70,7 +70,6 @@ int getNumberOfFLighst()
 
 tFlightArray * getFlightArray()
 {
-	char *err_msg = 0;
   sqlite3_stmt *res;
   tFlight** flightArray = NULL; 
   int rc, numberOfFlights, i;
@@ -203,6 +202,7 @@ int delete_flight(char * flight_code){
   }
 
   sqlite3_finalize(res);
+  return SQLITE_OK; 
 }
 
 int insert_flight(char * flight_code, char * origin, char * destination, char * departure_time, char * departure_date, char * arrival_time, char * arrival_date, char * model) 
@@ -211,7 +211,6 @@ int insert_flight(char * flight_code, char * origin, char * destination, char * 
   char * sql = "INSERT INTO FLIGHTS VALUES(?,?,?,?,?,?,?,?);";
   sqlite3_stmt * res;
   int rc;
-  char * err_msg;
   sem_t * sem;
 
   sem = openSemaphore(FLIGHT_SEMAPHORE);

@@ -72,7 +72,6 @@ void childForClient (int sock) {
 
 int main(){
   int welcomeSocket, newSocket, pid;
-  char buffer[1024];
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;

@@ -46,7 +46,7 @@ char ** exapndSeatsArray(char** seatsArray, int* size)
 
 tSeatsArray * getReservationsSeats(char * flightCode)
 {
-  int rc, numberOfRowsInTable, size = 0, aux = 0;
+  int rc, size = 0, aux = 0;
   sqlite3_stmt *res;
   tSeatsArray * seatsArrayStruct = malloc(sizeof(tSeatsArray));
   char ** seatsArray = NULL;
@@ -105,7 +105,6 @@ int getNumberOfReservationOrCancelations(char* table)
 }
 
 tReservationArray * getReservationOrCancelationArray(char* table){
-  char *err_msg = 0;
   sqlite3_stmt * res;
   tReservation** reservationsArray = NULL;
   tReservationArray* reservationsArrayStruct; 
@@ -162,7 +161,7 @@ tReservationArray * getReservationOrCancelationArray(char* table){
 void printReservationArray(tReservationArray reservationsArray)
 {
   int i;
-  printf("RESERVATION ARRAY: SIZE:%d\n",reservationsArray.size);
+  printf("RESERVATION ARRAY: SIZE:%ld\n",reservationsArray.size);
   for (i = 0; i < reservationsArray.size; ++i)
   {
    printf("FC:%s\n",reservationsArray.reservationsArray[i]->flightCode);
@@ -240,7 +239,6 @@ int insert_reservation(char * flight_code, char * seat, char * name)
   char * sql = "INSERT INTO RESERVATIONS VALUES(?,?,?);";
   sqlite3_stmt * res;
   int rc;
-  char * err_msg;
   sem_t * sem;
 
   sem = openSemaphore(RESERVATION_SEMAPHORE);
@@ -302,6 +300,7 @@ int delete_reservation(char * flight_code, char * seat){
   }
 
   sqlite3_finalize(res);
+   return SQLITE_OK;
 }
 
 
@@ -314,7 +313,7 @@ int insert_cancellation(char * seat, char * flightCode)
 
   sem = openSemaphore(CANCELLATION_SEMAPHORE);
   sem_wait(sem);
-  sqlite3_prepare_v2(db, sql, -1, &res, 0);
+  rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
 
   if(rc != SQLITE_OK)
   {

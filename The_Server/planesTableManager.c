@@ -14,7 +14,7 @@ extern sqlite3 *db;
 void printPlaneArray(tPlaneArray planeArray)
 {
   int i;
-  printf("PLANE SIZE: %d\n",planeArray.size );
+  printf("PLANE SIZE: %ld\n",planeArray.size );
   for(i=0; i< planeArray.size; i++)
   {
     printf("%s\n",planeArray.planeArray[i]->model );
@@ -55,7 +55,6 @@ tPlane** expandPlaneArray(tPlane** planeArray, long size)
 
 tPlaneArray * getPlaneArray()
 {
-  char *err_msg = 0;
   sqlite3_stmt * res;
   tPlane** planeArray = NULL;
   tPlaneArray* planeArrayStruct;
@@ -105,7 +104,6 @@ int insert_plane(char * model, int rows, int left, int middle, int right)
   char * sql = "INSERT INTO PLANES VALUES(?,?,?,?,?);";
   sqlite3_stmt * res;
   int rc;
-  char * err_msg;
   sem_t * sem;
   sem = openSemaphore(PLANE_SEMAPHORE);
   sem_wait(sem);
