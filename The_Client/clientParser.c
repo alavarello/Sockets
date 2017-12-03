@@ -166,33 +166,36 @@ void * parseRecivedMessage(int action, char * buff){
 		case GET_ALL_PLANES:
 			pa = deserialize_plane_array(buff);
 			printPlaneArray(*pa);
+			return pa;
 			break;
 		case GET_ALL_RESERVATIONS:
 			ra = deserialize_reservation_array(buff);
 			printReservationArray(*ra);
+			return ra;
 			break;
 		case INSERT_RESERVATION:
-			printf("%s\n",buff);
-			printf("%d\n",(int)*(buff+ERROR_CODE_CHAR_MAX));
+			buff[ERROR_CODE_CHAR_MAX] = 0;
+			return buff;
 			break;
 		case INSERT_CANCELLATION:
-			printf("%s\n",buff);
-			printf("%d\n",(int)*(buff+ERROR_CODE_CHAR_MAX));
+			buff[ERROR_CODE_CHAR_MAX] = 0;
+			return buff;
 			break;
 		case GET_RESERVATIONS_FOR_A_FLIGHT:
 			sa = deserialize_seatArray(buff);
-			return sa;//printSeatsArray(*sa);
+			return sa;
 		case GET_RESERVATION:
 			r = deserialize_reservation(buff);
 			printf("%s.  %s\n",r->flightCode, r->seatNumber );
+			return r;
 			break;
 		case DELETE_FLIGHT:
-			printf("%s\n",buff);
-			printf("%d\n",(int)*(buff+ERROR_CODE_CHAR_MAX));
+			buff[ERROR_CODE_CHAR_MAX] = 0;
+			return buff;
 			break;
 		case DELETE_RESERVATON:
-			printf("%s\n",buff);
-			printf("%d\n",(int)*(buff+ERROR_CODE_CHAR_MAX));
+			buff[ERROR_CODE_CHAR_MAX] = 0;
+			return buff;
 			break;
 		default: 
 			resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));

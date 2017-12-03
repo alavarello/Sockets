@@ -12,6 +12,8 @@
 #include "controller.h"
 #include "structs.h"
 
+#define OKEY "OKEYY"
+
 tFlight ** getFlights();
 tPlane * getPlane();
 char * * getOccupiedSeats(tFlight * flight);

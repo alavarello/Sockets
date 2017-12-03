@@ -410,7 +410,11 @@ char * receiveSeatNumber()
 	char empty;
 	char digit1 , digit2;
 
-	char * buffer = malloc(4 * sizeof(*buffer)) ;
+	char * buffer = malloc(4 * sizeof(*buffer));
+	if(buffer == NULL)
+	{
+		printf("DEBE ABORTAR PROGRAMA\n");
+	}
 	
 	int i = 0 ;
 	int result;
@@ -437,21 +441,24 @@ char * receiveSeatNumber()
 		}
 
 		if(c != '\n'){
+
 			CLEAN_BUFFER;
-
-
-			printf("You have entered an invalid seat. Please try  again \n");
+			printf("You have entered an invalid seat. Please try  again  1\n");
 
 		}else{
 
 		/* char empty should be empty , result must be 3*/
+		buffer[3] = 0;
 		result = sscanf(buffer , "%c%c%c%c" , &digit1, &digit2 , &c , &empty);
+
+		printf("el resultado fue%d\n", result );
+		printf("result es : %s" ,buffer);
 
 		if(result != 3){
 
 			flag = 1;
 
-			printf("You have entered an invalid seat. Please try  again \n");
+			printf("You have entered an invalid seat. Please try  again 2\n");
 
 		}else{
 

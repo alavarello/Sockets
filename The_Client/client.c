@@ -9,6 +9,7 @@
 #include "serialize_plane.h"
 #include "serialize_reservation.h"
 #include "clientParser.h"
+#include "client.h"
 
 //gcc client.c serialize_reservation.c serialize_plane.c serialize_flight.c clientParser.c -o client  -lsqlite3 -std=c99
 
@@ -137,50 +138,81 @@ char * * getOccupiedSeats(tFlight * flight)
   int i ; 
   char ** seats;
 
-  printf("el flightcode es %s\n", flight->flightCode);
-
   seatsArray = (tSeatsArray * ) askForInfo(GET_RESERVATIONS_FOR_A_FLIGHT , flight->flightCode);
-
-  printf("PASOOOO\n");
 
   if(seatsArray == NULL)
   {
     printf("ERROR COMMUNICATING\n");
     return NULL;
   }
-  int size = (int)seatsArray->size;
- printf("TERMINO1a\n");
-  printf("el size  es %d\n", size);
-  printf("TERMINO1\n");
 
   seats = malloc((seatsArray->size + 1)*sizeof(*seats));
-  printf("TERMINO2\n");
 
   for(i = 0 ; i < seatsArray->size ; i++){
-    printf("asiento : %s\n", seatsArray->reservedSeats[i]);
     seats[i] = malloc(4 * sizeof(char));
     strcpy(seats[i] , seatsArray->reservedSeats[i]);
-    //free(reservationArray->reservationsArray[i]);
+    free(seatsArray->reservedSeats[i]);
   }
 
   
   seats[i] = NULL;
 
- for(i = 0 ; i < seatsArray->size ; i++){
-    printf("%s\n",seatsArray->reservedSeats[i] );
-  }
-
-  printf("TERMINO\n");
+  free(seatsArray->reservedSeats);
+  free(seatsArray);
 
   return seats;
 }
 
-int reserve(tFlight * flight , char * seat){
-  return 0;
+int reserve(tFlight * flight , char * seat)
+{
+
+  tReservation * newReservation = malloc(sizeof(*newReservation));
+  char * result;
+
+  newReservation->flightCode = malloc(10 * sizeof(char));
+  strcpy(newReservation->flightCode, flight->flightCode);
+  newReservation->seatNumber = malloc(10 * sizeof(char));
+  strcpy(newReservation->seatNumber , seat);
+  newReservation->userName = "default";
+
+  result = askForInfo(INSERT_RESERVATION , newReservation);
+
+  free(newReservation);
+
+  printf("result es %s\n",result );
+
+  if(strcmp(result , OKEY) == 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
 }
 
 int cancel(tFlight * flight , char * seat){
-  return 0;
+  tReservation * newReservation = malloc(sizeof(*newReservation));
+  char * result;
+
+  newReservation->flightCode = malloc(10 * sizeof(char));
+  strcpy(newReservation->flightCode, flight->flightCode);
+  newReservation->seatNumber = malloc(10 * sizeof(char));
+  strcpy(newReservation->seatNumber , seat);
+  newReservation->userName = "default";
+
+  result = askForInfo(DELETE_RESERVATON , newReservation);
+
+  free(newReservation);
+
+  if(strcmp(result , OKEY) == 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
 }
 
 int addFlightClient(char * origin ,char *   destination ,char *  departureTime ,char * arrivalTime ,char *  planeCode,char *  departureDate ,char *  arrivalDate)

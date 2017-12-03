@@ -86,8 +86,9 @@ void cancelSeatNumber()
 			flag = cancel(&currentFlight , seat ) ;
 
 			if(flag){
-				sprintf(msgLog, "Cancelling seat %s\n" , seat);
+				sprintf(msgLog, "Seat %s has been cancelled.  The plane state is:\n" , seat);
 				logAction(msgLog);
+				drawPlane();
 				flag = 0;
 			}else{
 				sprintf(msgLog, "\nSeat %s is not able to cancel:\n\n" , seat);
@@ -126,8 +127,9 @@ void reserveSeatNumber()
 			flag = reserve(&currentFlight , seat ) ;
 
 			if(flag){
-				sprintf(msgLog, "Reserving seat %s\n" , seat);
+				sprintf(msgLog, "Seat %s has been reserved. The plane state is:\n" , seat);
 				logAction(msgLog);
+				drawPlane();
 				flag = 0;
 			}else{
 				sprintf(msgLog, "\nSeat %s is no longer available, please choose another one:\n\n" , seat);

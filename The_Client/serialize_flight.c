@@ -142,7 +142,6 @@ auxBuff += sizeof(int);
 tSeatsArray * deserialize_seatArray(char* buff){
   tSeatsArray * seatArray = malloc(sizeof(tSeatsArray));
   int i = 0;
-  printf("ACA ESTA : %s\n", buff);
   memcpy(&(seatArray->size), buff, sizeof(int));
   buff += sizeof(int);
   seatArray->reservedSeats = malloc(sizeof(char*)*seatArray->size);
