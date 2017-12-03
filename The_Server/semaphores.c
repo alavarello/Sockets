@@ -11,8 +11,9 @@ sem_t * openSemaphore(char * s)
     sem_t * sem;
     char * semKey= malloc(MAX_SMAPHORE_NAME * sizeof(char));
 
-    strcat(semKey,s);
+    semKey[0] = 0;
 
+    strcat(semKey,s);
 
     sem = sem_open (semKey, O_CREAT, 0644, 1); 
 

@@ -50,7 +50,6 @@ int sendMessage( char * parsedMessage, int bytes)
     n = write(clientSocket, parsedMessage, bytes);
     printf("HOLAAA\n");
     if (n < 0) {
-      perror("ERROR writing to socket");
       return 0;
    }else{
       return 1;
@@ -68,41 +67,57 @@ char * receiveMessage()
       return NULL;
   }
 
+  printf("Se leyeron %d \n", n );
+
   return pBuffer;
+}
+
+void * askForInfo(int instruction , void * message)
+{
+  int success;
+  char * response;
+  int bytes;
+
+  char * parsedMessage = parseMessageToSend(instruction , message ,&bytes);
+
+  success = sendMessage(parsedMessage, bytes);
+
+  if(!success){
+    return NULL;
+  }
+
+  response = receiveMessage();
+
+  if(response == NULL)
+  {
+    return NULL;
+  }
+
+  printf("%s\n",response );
+
+  return parseRecivedMessage(instruction, response);
+
 }
 
 tFlight * * getFlights()
 {
-  int success = 1;
-  int bytes;
-  tFlightArray * parsed;
-  char * response;
-  char * instruction = parseMessageToSend(GET_ALL_FLIGHTS , NULL,&bytes);
-  success = sendMessage(instruction, bytes);
-  if(!success){
-    printf("ERROR CON SERVIDOR\n");
-    return NULL;
-  }
+  tFlightArray * parsed ;
 
-
-  response = receiveMessage();
-
-  if(!success){
-    printf("ERROR CON SERVIDOR\n");
-    return NULL;
-  }
-  parsed = (tFlightArray *)  parseRecivedMessage(GET_ALL_FLIGHTS, response);
+  parsed = askForInfo(GET_ALL_FLIGHTS, NULL);
 
   if(parsed == NULL)
   {
-    printf("ERRORROROROR\n");
+    printf("ERROR COMMUNICATING\n");
     return NULL;
   }
 
-  parsed->flightArray[parsed->size - 1] = NULL;
+  printf("El tamaño es %d\n", parsed->size);
+
+  parsed->flightArray = realloc(parsed->flightArray , (parsed->size + 1) * sizeof(*parsed->flightArray));
+
+  parsed->flightArray[parsed->size] = NULL;
+
   return parsed->flightArray;
-
-
 }
 
 tPlane * getPlane(tFlight * flight)

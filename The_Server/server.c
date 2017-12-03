@@ -45,6 +45,9 @@ void childForClient (int sock) {
    char buffer[256];
    bzero(buffer,256);
    char * resBuffer;
+
+   while(1)
+   {
    n = read(sock,buffer,255);
    openDataBase();
    resBuffer = parseAndExecute(buffer);
@@ -60,6 +63,7 @@ void childForClient (int sock) {
       perror("ERROR writing to socket");
       exit(1);
    }
+ }
    
 }
 
