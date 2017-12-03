@@ -17,8 +17,8 @@ void printPlaneArray(tPlaneArray planeArray)
   printf("PLANE SIZE: %d\n",planeArray.size );
   for(i=0; i< planeArray.size; i++)
   {
-    printf("%s\n",planeArray.planeArray[i]->model ); 
-    printf("Rows:%d R:%d M:%d L:%d\n",planeArray.planeArray[i]->rows,planeArray.planeArray[i]->right,planeArray.planeArray[i]->middle,planeArray.planeArray[i]->left); 
+    printf("%s\n",planeArray.planeArray[i]->model );
+    printf("Rows:%d R:%d M:%d L:%d\n",planeArray.planeArray[i]->rows,planeArray.planeArray[i]->right,planeArray.planeArray[i]->middle,planeArray.planeArray[i]->left);
   }
 }
 
@@ -58,7 +58,7 @@ tPlaneArray * getPlaneArray()
   char *err_msg = 0;
   sqlite3_stmt * res;
   tPlane** planeArray = NULL;
-  tPlaneArray* planeArrayStruct; 
+  tPlaneArray* planeArrayStruct;
   int rc, numberOfPlanes, i;
 
   sem_t * sem;
@@ -71,7 +71,7 @@ tPlaneArray * getPlaneArray()
   }
   //getting the planes
   char *sql = "SELECT * FROM planes";
-       
+
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
   //------------------
   if(rc != SQLITE_OK)
@@ -87,7 +87,7 @@ tPlaneArray * getPlaneArray()
     planeArray[i]->right = sqlite3_column_int(res, RIGHT_COLUMN);
     planeArray[i]->middle = sqlite3_column_int(res, MIDDLE_COLUMN);
     planeArray[i]->left = sqlite3_column_int(res, LEFT_COLUMN);
-    i++; 
+    i++;
   }
   sqlite3_finalize(res);
   sem_post(sem);
@@ -133,7 +133,44 @@ int insert_plane(char * model, int rows, int left, int middle, int right)
 
   sqlite3_finalize(res);
   sem_post(sem);
-  sem_close(sem); 
+  sem_close(sem);
   return SQLITE_OK;
+
+}
+
+tPlane * getPlane(char * model)
+{
+  char * sql = "SELECT * FROM PLANES WHERE model LIKE ?";
+  sqlite3_stmt * res;
+  int rc;
+  tPlane * plane;
+
+  if(rc != SQLITE_OK)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return NULL;
+  }
+
+  sqlite3_bind_text(res, 1, model, -1, NULL);
+
+  rc = sqlite3_step(res);
+
+  if(rc != SQLITE_DONE)
+  {
+    fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+    return NULL;
+  }
+
+  plane = (tPlane*)malloc(sizeof(tPlane));
+
+  strcpy(plane->model,(char*)sqlite3_column_text(res, MODEL_COLUMN));
+  plane->rows = sqlite3_column_int(res, ROWS_COLUMN);
+  plane->left = sqlite3_column_int(res, LEFT_COLUMN);
+  plane->middle = sqlite3_column_int(res, MIDDLE_COLUMN);
+  plane->right = sqlite3_column_int(res, RIGHT_COLUMN);
+
+  sqlite3_finalize(res);
+
+  return plane;
 
 }
