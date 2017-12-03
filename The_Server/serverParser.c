@@ -157,7 +157,7 @@ char * insertReservation(char * buff){
 
 char * insertCancellation(char * buff){
 	tReservation *  r = deserialize_reservation(buff);
-	int  res = insert_cancellation(r->flightCode, r->seatNumber, r->userName);
+	int  res = insert_cancellation(r->seatNumber,r->flightCode);
 	char * resBuff;
 	if(res == SQLITE_OK){
 		resBuff = malloc(COMPLETE_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
@@ -233,7 +233,7 @@ char * parseAndExecute(char * buff){
 		case INSERT_RESERVATION:
 			return insertReservation(buff);
 		case INSERT_CANCELLATION:
-			insertCancellation(buff);
+			return insertCancellation(buff);
 		case SEND_RESERVATIONS_FOR_A_FLIGHT:
 			return sendReservationForAFLight(buff);
 		case SEND_RESERVATION:

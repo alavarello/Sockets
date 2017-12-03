@@ -46,11 +46,13 @@ void closeDataBase(){
 void childForClient (int sock) {
    int n;
    char buffer[256];
-   bzero(buffer,256);
+   
    char * resBuffer;
 
    while(1)
    {
+
+    bzero(buffer,256);
    n = read(sock,buffer,255);
    openDataBase();
    resBuffer = parseAndExecute(buffer);
@@ -94,7 +96,7 @@ int main(){
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);  
 
   //putting a timeout interval for the input using the write and read
-  tv.tv_sec = 30;        // 30 Secs Timeout
+  tv.tv_sec = 300;        // 30 Secs Timeout
   tv.tv_usec = 0;        // Not init'ing this can cause strange errors
   /*---- Bind the address struct to the socket ----*/
   bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));

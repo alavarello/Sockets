@@ -204,6 +204,8 @@ int cancel(tFlight * flight , char * seat){
 
   free(newReservation);
 
+  printf("%s\n",result );
+
   if(strcmp(result , OKEY) == 0)
   {
     return 1;
