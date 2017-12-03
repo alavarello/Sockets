@@ -201,7 +201,7 @@ int cancel(tFlight * flight , char * seat){
   strcpy(newReservation->seatNumber , seat);
   newReservation->userName = "default";
 
-  result = askForInfo(DELETE_RESERVATON , newReservation);
+  result = askForInfo(INSERT_CANCELLATION, newReservation);
 
   free(newReservation);
 
