@@ -14,6 +14,8 @@
 
 #define OKEY "OKEYY"
 
+#define ERROR_RETURN(param) (strcmp(param , OKEY) == 0)?  1 :  0;
+
 tFlight ** getFlights();
 tPlane * getPlane();
 char * * getOccupiedSeats(tFlight * flight);

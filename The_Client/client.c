@@ -180,14 +180,7 @@ int reserve(tFlight * flight , char * seat)
 
   printf("result es %s\n",result );
 
-  if(strcmp(result , OKEY) == 0)
-  {
-    return 1;
-  }
-  else
-  {
-    return 0;
-  }
+   return  ERROR_RETURN(result);
 }
 
 int cancel(tFlight * flight , char * seat){
@@ -206,14 +199,7 @@ int cancel(tFlight * flight , char * seat){
 
   printf("%s\n",result );
 
-  if(strcmp(result , OKEY) == 0)
-  {
-    return 1;
-  }
-  else
-  {
-    return 0;
-  }
+   return  ERROR_RETURN(result);
 }
 
 int addFlightClient(char * flightCode , char * origin ,char *   destination ,char *  departureTime ,char * arrivalTime ,char *  planeCode,char *  departureDate ,char *  arrivalDate)
@@ -234,20 +220,16 @@ int addFlightClient(char * flightCode , char * origin ,char *   destination ,cha
 
   free(newFlight);
 
-  if(strcmp(result , OKEY) == 0)
-  {
-    return 1;
-  }
-  else
-  {
-    return 0;
-  }
+   return  ERROR_RETURN(result);
 
-  return 1;
 }
 int removeFlightClient(char * flightCode)
 {
-  return 1;
+  char * result; 
+ 
+  result = askForInfo( DELETE_FLIGHT, flightCode);
+
+  return  ERROR_RETURN(result);
 }
 
 
