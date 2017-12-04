@@ -29,10 +29,15 @@ char * readPlaneCode();
 char * readDepDate();
 char * readArrDate();
 
+void listReservationsAndCancelations(tReservationArray * reservations);
+void listReservations(tReservationArray * reservations);
+void listCancelations(tReservationArray * reservations);
+
 /*error logs*/
 
 void logError(char * msg);
 void logAction(char * msg);
 void logMessage(char * msg);
+
 
 #endif

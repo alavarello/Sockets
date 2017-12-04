@@ -169,11 +169,9 @@ void * parseRecivedMessage(int action, char * buff){
 			break;
 		case GET_ALL_RESERVATIONS:
 			ra = deserialize_reservation_array(buff);
-			printReservationArray(*ra);
 			return ra;
 			break;
 		case INSERT_RESERVATION:
-			printf("el resultado fueeeeeeeeeeeeee%s\n",buff );
 			return buff;
 			break;
 		case INSERT_CANCELLATION:

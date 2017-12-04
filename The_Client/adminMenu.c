@@ -115,6 +115,19 @@ void readAdministratorMenu ()
 			
 			case 3:
 			{
+				//list reservations
+				tReservationArray * reservations = getReservations();
+				listReservations(reservations);
+				break;
+			}
+			case 4:
+			{
+				tReservationArray * cancelations = getCancelations();
+				listCancelations(cancelations);
+				break;
+			}
+			case 5:
+			{
 				return;
 				break;
 			}		

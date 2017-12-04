@@ -11,6 +11,7 @@
 #include "serialize_reservation.h"
 #include "clientParser.h"
 #include "client.h"
+#include <unistd.h>
 
 //gcc client.c serialize_reservation.c serialize_plane.c serialize_flight.c clientParser.c -o client  -lsqlite3 -std=c99
 
@@ -176,12 +177,15 @@ int reserve(tFlight * flight , char * seat)
   char * result;
   int res;
   int number;
+  char name[100];
+  name[0] = 0;
+  sprintf(name, "%ld" , (long) getpid());
 
   newReservation->flightCode = malloc(10 * sizeof(char));
   strcpy(newReservation->flightCode, flight->flightCode);
   newReservation->seatNumber = malloc(10 * sizeof(char));
   strcpy(newReservation->seatNumber , seat);
-  newReservation->userName = "default";
+  newReservation->userName = name;
 
   result = askForInfo(INSERT_RESERVATION , newReservation);
 
@@ -207,12 +211,16 @@ int reserve(tFlight * flight , char * seat)
 int cancel(tFlight * flight , char * seat){
   tReservation * newReservation = malloc(sizeof(*newReservation));
   char * result;
+  char name[100];
+  name[0] = 0;
+  sprintf(name, "%ld" , (long) getpid());
 
   newReservation->flightCode = malloc(10 * sizeof(char));
   strcpy(newReservation->flightCode, flight->flightCode);
   newReservation->seatNumber = malloc(10 * sizeof(char));
   strcpy(newReservation->seatNumber , seat);
-  newReservation->userName = "default";
+
+  newReservation->userName = name;
 
   result = askForInfo(INSERT_CANCELLATION, newReservation);
 
@@ -268,4 +276,19 @@ tPlaneArray  * getPlanes()
   return planes;
 }
 
-   
+tReservationArray * getReservations()
+{
+  tReservationArray * reservations;
+  reservations = (tReservationArray * ) askForInfo(GET_ALL_RESERVATIONS , NULL);
+
+  return reservations;
+
+}
+
+tReservationArray * getCancelations()
+{
+  tReservationArray * reservations;
+  reservations = (tReservationArray * ) askForInfo(GET_ALL_RESERVATIONS , NULL);
+
+  return reservations;
+}

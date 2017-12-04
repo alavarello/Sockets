@@ -28,4 +28,7 @@ int removeFlightClient(char * flightCode);
 int reserve(tFlight * flight , char * seat);
 int cancel(tFlight * flight , char * seat);
 
+tReservationArray * getReservations();
+tReservationArray * getCancelations();
+
 #endif

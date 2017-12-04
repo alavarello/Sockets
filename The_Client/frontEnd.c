@@ -44,7 +44,9 @@ void printAdministratorMenu (void)
 	printf("Choose your action:\n");
 	printf("1. Add a flight\n");
 	printf("2. Remove a flight\n");
-	printf("3. Finish\n\n");
+	printf("3. List reservations\n");
+	printf("4. List cancelations\n");
+	printf("5. Finish\n\n");
 }
 
 char * readFlightCode(){
@@ -501,3 +503,32 @@ void logAction(char * msg){
 void logMessage(char * msg){
 	printf("%s\n",msg );
 }
+
+void listReservationsAndCancelations(tReservationArray * reservations)
+{
+	int i = 0 ;
+	tReservation * aux; 
+
+	printf("%15s | %15s | %15s \n" , "Flight Code" , "Seat Number" , "User Pid" );
+
+	for (i = 0 ; i < reservations->size ; i++)
+	{
+		aux = reservations->reservationsArray[i];
+		printf("%15s | %15s | %15s \n" , aux->flightCode , aux-> seatNumber , aux->userName );
+	}
+	putchar('\n');
+}
+
+void listReservations(tReservationArray * reservations)
+{
+	printf("These are all the reservations\n\n");
+	listReservationsAndCancelations(reservations);
+}
+
+void listCancelations(tReservationArray * reservations)
+{
+	printf("These are all the cancellations\n\n");
+	listReservationsAndCancelations(reservations);
+}
+
+
