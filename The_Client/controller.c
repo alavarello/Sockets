@@ -126,15 +126,19 @@ void reserveSeatNumber()
 			
 			flag = reserve(&currentFlight , seat ) ;
 
-			if(flag){
+			if(flag == 1){
 				sprintf(msgLog, "Seat %s has been reserved. The plane state is:\n" , seat);
 				logAction(msgLog);
 				drawPlane();
 				flag = 0;
-			}else{
+			}else if(flag == 0){
 				sprintf(msgLog, "\nSeat %s is no longer available, please choose another one:\n\n" , seat);
 				logError(msgLog);
 				flag = 1;
+			}else if(flag == -1 *  SQLITE_CONSTRAINT_FOREIGNKEY){
+				sprintf(msgLog, "\nFlight  %s has been cancelled,  please choose another flight\n\n" , currentFlight.flightCode);
+				logError(msgLog);
+				flag = 0 ;
 			}
 		}else{
 			sprintf(msgLog ,"The seat format is invalid\n");
@@ -170,6 +174,7 @@ void reserveSeat()
 			freeFlightsArray(flights);
 			free(flightCode);
 			flights = NULL;
+			return;
 		}
 
 		result = setCurrentFlight(flights , flightCode);
@@ -186,7 +191,7 @@ void reserveSeat()
 		}else{
 
 			reserveSeatNumber();
-			flag=0;
+			flag=1;
 		}
 
 	}	

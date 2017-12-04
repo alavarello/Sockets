@@ -119,7 +119,7 @@ char * sendReservationForAFLight(char * flightCode,int * bytes){
 }
 
 char * sendReservation(char * flightCode, char * seat,int * bytes){
-	int error = sqlite3_errcode(db);
+	int error = sqlite3_extended_errcode(db);
 	tReservation * r = getReservation(flightCode, seat);
 	if(r == NULL){
 		*bytes = ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));

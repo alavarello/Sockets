@@ -173,7 +173,7 @@ void * parseRecivedMessage(int action, char * buff){
 			return ra;
 			break;
 		case INSERT_RESERVATION:
-			buff[ERROR_CODE_CHAR_MAX] = 0;
+			printf("el resultado fueeeeeeeeeeeeee%s\n",buff );
 			return buff;
 			break;
 		case INSERT_CANCELLATION:

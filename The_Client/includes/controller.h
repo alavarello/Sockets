@@ -13,6 +13,7 @@
 #include "structs.h"
 #include "clientMenu.h"
 #include "adminMenu.h"
+#include <sqlite3.h>
 
 #define DO_ANOTHER_OPERATION 10
 #define DONT_DO_ANOTHER_OPERATION -10

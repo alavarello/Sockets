@@ -249,7 +249,7 @@ int insert_reservation(char * flight_code, char * seat, char * name)
   if(rc != SQLITE_OK)
   {
     fprintf(stderr, "%s\n",sqlite3_errmsg(db));
-    return sqlite3_errcode(db);
+    return sqlite3_extended_errcode(db);
   }
 
   sqlite3_bind_text(res, 1, flight_code, -1, NULL);
@@ -261,7 +261,7 @@ int insert_reservation(char * flight_code, char * seat, char * name)
   if(rc != SQLITE_DONE)
   {
     fprintf(stderr, "%s\n",sqlite3_errmsg(db));
-    return sqlite3_errcode(db);
+    return sqlite3_extended_errcode(db);
   }
 
   sqlite3_finalize(res);

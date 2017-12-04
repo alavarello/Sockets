@@ -11,6 +11,7 @@
 #include "frontEnd.h"
 #include "controller.h"
 #include "structs.h"
+#include <sqlite3.h>
 
 #define OKEY "OKEYY"
 

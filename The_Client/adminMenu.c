@@ -59,9 +59,15 @@ int addFlight()
 int removeFlight()
 {
 
-	char * flightCode = getFlightCodeToRemove(); //por como lo hago, podriamos sacarlo desde aca
+	char * flightCode = getFlightCodeToRemove();  //por como lo hago, podriamos sacarlo desde aca
 
-	return removeFlightClient(flightCode);
+	if(flightCode == NULL){
+		return 1;
+	}
+	else
+	{
+		return removeFlightClient(flightCode);
+	}
 
 }
 
