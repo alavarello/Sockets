@@ -6,9 +6,12 @@ static char msgLog[MAX_MSG_LOG];
 
 int main(void)
 {
-	initiateSocket();
-	printMenu();
-	readMenu();
+	int res = initiateSocket();
+	if(res != -1)
+	{
+		printMenu();
+		readMenu();
+	}
 	return 0;
 }
 
@@ -28,19 +31,19 @@ void readMenu ()
 				flag = clientSession();
 				break;
 			}
-			
+
 			case 2:
 			{
 				flag = administratorSession();
 				break;
 			}
-			
+
 			case 3:
 			{
 				flag = 0;
 				break;
 			}
-			
+
 			default:
 			{
 				printf("That option is not valid \n");
@@ -82,7 +85,7 @@ void cancelSeatNumber()
 		}
 
 		if(checkSeatNumberFormat(seat , &currentFlight)){
-			
+
 			flag = cancel(&currentFlight , seat ) ;
 
 			if(flag){
@@ -95,7 +98,7 @@ void cancelSeatNumber()
 				logError(msgLog);
 				flag = 1;
 			}
-			
+
 		}else{
 			sprintf(msgLog , "The seat format is invalid\n");
 			logError(msgLog);
@@ -123,7 +126,7 @@ void reserveSeatNumber()
 		}
 
 		if(checkSeatNumberFormat(seat , &currentFlight)){
-			
+
 			flag = reserve(&currentFlight , seat ) ;
 
 			if(flag == 1){
@@ -149,7 +152,7 @@ void reserveSeatNumber()
 		free(seat);
 
 
-		
+
 	}
 
 }
@@ -161,11 +164,11 @@ void reserveSeat()
 	char * flightCode ;
 	int result ;
 
-	
+
 	while(flag){
 
 		flights = getFlights();
-		
+
 		displayFlights(flights);
 
 		flightCode = readFlightCode();
@@ -194,7 +197,7 @@ void reserveSeat()
 			flag=1;
 		}
 
-	}	
+	}
 
 }
 
@@ -203,7 +206,7 @@ void cancelSeat()
 	tFlight ** flights;
 	char * flightCode ;
 	int result ;
-	//char * seat; 
+	//char * seat;
 	int flag = 1;
 
 	while(flag){
@@ -255,7 +258,7 @@ void fillOcuppiedMatrix(char * * occupiedSeats , int * * totalOccupied)
 
 	while(occupiedSeats[i] != NULL)
 	{
-		number = getNumber(occupiedSeats[i]);  
+		number = getNumber(occupiedSeats[i]);
 		column = getColumn(occupiedSeats[i]);
 		totalOccupied[number-1][column] = 1;
 
@@ -294,7 +297,6 @@ void drawPlane()
 
 
 	freeAllDrawPlane(&totalOccupied , &plane , &occupiedSeats);
-	
+
 
 }
-

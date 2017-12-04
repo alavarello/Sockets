@@ -14,8 +14,8 @@ void readClientMenu ()
 {
 	int sel;
 	int flag=1;
-	//char nombrearch[MAX_BUFFER]; 
-	
+	//char nombrearch[MAX_BUFFER];
+
 	do
 	{
 		printClientMenu();
@@ -27,7 +27,7 @@ void readClientMenu ()
 				reserveSeat();
 				break;
 			}
-			
+
 			case 2:
 			{
 				listFlights();
@@ -38,14 +38,14 @@ void readClientMenu ()
 			{
 				cancelSeat();
 				break;
-			}	
-			
+			}
+
 			case 4:
 			{
 				flag = 0;
 				break;
-			}	
-			
+			}
+
 			default:
 			{
 				sprintf(msgLog , "That option is not valid");
@@ -67,4 +67,5 @@ void listFlights()
 	logMessage(msgLog);
 	flights = getFlights();
 	displayFlights(flights);
+	freeFlightsArray(flights);
 }

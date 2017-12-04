@@ -37,21 +37,21 @@ int initiateSocket(){
   /* Set IP address to localhost */
   serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); //this address is for local conection
   /* Set all bits of the padding field to 0 */
-  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);  
+  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
   /*---- Connect the socket to the server using the address struct ----*/
   addr_size = sizeof serverAddr;
   tv.tv_sec = 60*4;        // 30 Secs Timeout
   tv.tv_usec = 0;        // Not init'ing this can cause strange errors
   setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
-  connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
+  return connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
 
   // add control if everything went fine
 }
 
 int sendMessage( char * parsedMessage, int bytes)
 {
-    int i = 0 ; 
+    int i = 0 ;
     while( i < bytes){
       n = write(clientSocket, parsedMessage, bytes);
       i += n;
@@ -59,15 +59,15 @@ int sendMessage( char * parsedMessage, int bytes)
         return 0;
       }
     }
-    
+
    return 1;
 }
 
 char * receiveMessage()
 {
-  int i = 0; 
+  int i = 0;
 
-  char * pBuffer = malloc(2000 * sizeof(char)); 
+  char * pBuffer = malloc(2000 * sizeof(char));
   bzero(pBuffer,2000);
   n = read(clientSocket, pBuffer, 2000);
   if (n < 0) {
@@ -124,7 +124,7 @@ tPlane * getPlane(tFlight * flight)
   int i = 0 ;
 
   tPlaneArray  * planes = getPlanes();
-  tPlane * aux ; 
+  tPlane * aux ;
 
   for (i = 0 ; i < planes->size ; i++)
   {
@@ -143,7 +143,7 @@ tPlane * getPlane(tFlight * flight)
 char * * getOccupiedSeats(tFlight * flight)
 {
   tSeatsArray * seatsArray;
-  int i ; 
+  int i ;
   char ** seats;
 
   seatsArray = (tSeatsArray * ) askForInfo(GET_RESERVATIONS_FOR_A_FLIGHT , flight->flightCode);
@@ -162,7 +162,7 @@ char * * getOccupiedSeats(tFlight * flight)
     free(seatsArray->reservedSeats[i]);
   }
 
-  
+
   seats[i] = NULL;
 
   free(seatsArray->reservedSeats);
@@ -178,7 +178,7 @@ int reserve(tFlight * flight , char * seat)
   char * result;
   int res;
   int number;
-  char name[100];
+  char * name = malloc(100);
   name[0] = 0;
   sprintf(name, "%ld" , (long) getpid());
 
@@ -197,7 +197,7 @@ int reserve(tFlight * flight , char * seat)
 
   res = ERROR_RETURN(result);
 
-  number =  *((int*)(result+6)); 
+  number =  *((int*)(result+6));
 
   printf("%d\n", number );
 
@@ -206,7 +206,7 @@ int reserve(tFlight * flight , char * seat)
   }else{
     return res;
   }
-  
+
 }
 
 int cancel(tFlight * flight , char * seat){
@@ -255,8 +255,8 @@ int addFlightClient(char * flightCode , char * origin ,char *   destination ,cha
 }
 int removeFlightClient(char * flightCode)
 {
-  char * result; 
- 
+  char * result;
+
   result = askForInfo( DELETE_FLIGHT, flightCode);
 
   return  ERROR_RETURN(result);
