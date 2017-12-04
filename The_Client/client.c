@@ -50,28 +50,29 @@ int initiateSocket(){
 
 int sendMessage( char * parsedMessage, int bytes)
 {
+    int i = 0 ; 
+    while( i < bytes){
+      n = write(clientSocket, parsedMessage, bytes);
+      i += n;
+      if(n == -1){
+        return 0;
+      }
+    }
     
-    printf("CLIENT SOCKET: %d\n",clientSocket );
-    n = write(clientSocket, parsedMessage, bytes);
-    if (n < 0) {
-      return 0;
-   }else{
-      return 1;
-   }
+   return 1;
 }
 
 char * receiveMessage()
 {
-  char * pBuffer = malloc(2000 * sizeof(char)); 
+  int i = 0; 
 
+  char * pBuffer = malloc(2000 * sizeof(char)); 
   bzero(pBuffer,2000);
   n = read(clientSocket, pBuffer, 2000);
   if (n < 0) {
       perror("ERROR reading from socket");
       return NULL;
   }
-
-  printf("Se leyeron %d \n", n );
 
   return pBuffer;
 }
@@ -87,14 +88,16 @@ void * askForInfo(int instruction , void * message)
   success = sendMessage(parsedMessage, bytes);
 
   if(!success){
-    return NULL;
+    logError("The server is not available");
+    exit(1);
   }
 
   response = receiveMessage();
 
   if(response == NULL)
   {
-    return NULL;
+    logError("The server is not available");
+    exit(1);
   }
 
   return parseRecivedMessage(instruction, response);
@@ -171,6 +174,7 @@ int reserve(tFlight * flight , char * seat)
 
   tReservation * newReservation = malloc(sizeof(*newReservation));
   char * result;
+  int res;
 
   newReservation->flightCode = malloc(10 * sizeof(char));
   strcpy(newReservation->flightCode, flight->flightCode);
@@ -184,7 +188,24 @@ int reserve(tFlight * flight , char * seat)
 
   printf("result es %s\n",result );
 
-   return  ERROR_RETURN(result);
+
+  res = ERROR_RETURN(result);
+
+  int number;
+
+
+  printf("%s\n", result);
+
+  sscanf(result + strlen("OKEYY") +1, "%d" , &number);
+
+    printf("el numero es %d\n", number);
+
+  if(res == 0){
+    return -1 * (int)(result + strlen("OKEYY"));
+  }else{
+    return res;
+  }
+  
 }
 
 int cancel(tFlight * flight , char * seat){
