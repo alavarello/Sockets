@@ -3,7 +3,7 @@ LIBS = -lm
 CC = gcc
 CFLAGS = -g -Wall
 
-.PHONY: default all clean
+.PHONY: default all clean dosa
 
 default: $(TARGET)
 all: default
@@ -21,5 +21,9 @@ $(TARGET): $(OBJECTS)
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
+
+dosa:
+	$(MAKE) -C ./tests all
+
 
 .PHONY: all clean
