@@ -175,6 +175,7 @@ int reserve(tFlight * flight , char * seat)
   tReservation * newReservation = malloc(sizeof(*newReservation));
   char * result;
   int res;
+  int number;
 
   newReservation->flightCode = malloc(10 * sizeof(char));
   strcpy(newReservation->flightCode, flight->flightCode);
@@ -191,17 +192,12 @@ int reserve(tFlight * flight , char * seat)
 
   res = ERROR_RETURN(result);
 
-  int number;
+  number =  *((int*)(result+6)); 
 
-
-  printf("%s\n", result);
-
-  sscanf(result + strlen("OKEYY") +1, "%d" , &number);
-
-    printf("el numero es %d\n", number);
+  printf("%d\n", number );
 
   if(res == 0){
-    return -1 * (int)(result + strlen("OKEYY"));
+    return -1 *  number;
   }else{
     return res;
   }
