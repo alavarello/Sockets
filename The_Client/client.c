@@ -111,12 +111,6 @@ tFlight * * getFlights()
 
   parsed = askForInfo(GET_ALL_FLIGHTS, NULL);
 
-  if(parsed == NULL)
-  {
-    printf("ERROR COMMUNICATING\n");
-    return NULL;
-  }
-
   parsed->flightArray = realloc(parsed->flightArray , (parsed->size + 1) * sizeof(*parsed->flightArray));
 
   parsed->flightArray[parsed->size] = NULL;
@@ -127,15 +121,22 @@ tFlight * * getFlights()
 tPlane * getPlane(tFlight * flight)
 {
 
-  tPlane * plane = (tPlane * ) malloc(sizeof(tPlane));
+  int i = 0 ;
 
-  plane->model = "BO747";
-  plane->rows = 20;
-  plane->left = 3;
-  plane->middle = 4;
-  plane->right = 3;
+  tPlaneArray  * planes = getPlanes();
+  tPlane * aux ; 
 
-  return plane;
+  for (i = 0 ; i < planes->size ; i++)
+  {
+    aux = planes->planeArray[i];
+    if(strcmp(aux->model , flight->planeCode) == 0)
+    {
+      return aux;
+    }
+
+  }
+
+  return NULL;
 
 }
 
@@ -249,7 +250,7 @@ int addFlightClient(char * flightCode , char * origin ,char *   destination ,cha
 
   free(newFlight);
 
-   return  ERROR_RETURN(result);
+  return  ERROR_RETURN(result);
 
 }
 int removeFlightClient(char * flightCode)
@@ -264,21 +265,16 @@ int removeFlightClient(char * flightCode)
 tPlaneArray  * getPlanes()
 {
   tPlaneArray * planes;
-  int i;
 
   planes = (tPlaneArray * ) askForInfo( GET_ALL_PLANES , NULL);
 
-  if(planes == NULL)
-  {
-    printf("ERROR COMMUNICATING\n");
-    return NULL;
-  }
   return planes;
 }
 
 tReservationArray * getReservations()
 {
   tReservationArray * reservations;
+
   reservations = (tReservationArray * ) askForInfo(GET_ALL_RESERVATIONS , NULL);
 
   return reservations;
@@ -288,6 +284,7 @@ tReservationArray * getReservations()
 tReservationArray * getCancelations()
 {
   tReservationArray * reservations;
+
   reservations = (tReservationArray * ) askForInfo(GET_ALL_RESERVATIONS , NULL);
 
   return reservations;

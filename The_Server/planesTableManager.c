@@ -87,13 +87,17 @@ tPlaneArray * getPlaneArray()
     planeArray[i]->middle = sqlite3_column_int(res, MIDDLE_COLUMN);
     planeArray[i]->left = sqlite3_column_int(res, LEFT_COLUMN);
     i++;
+
   }
+  printf("antes %d\n", planeArray[i-1]->middle );
   sqlite3_finalize(res);
+  printf("desp %d\n", planeArray[i-1]->middle );
   sem_post(sem);
   sem_close(sem);
   planeArrayStruct = malloc(sizeof(tPlaneArray));
   planeArrayStruct->planeArray = planeArray;
   planeArrayStruct->size = numberOfPlanes;
+   printf("number of planes %d\n",numberOfPlanes );
   return planeArrayStruct;
 }
 

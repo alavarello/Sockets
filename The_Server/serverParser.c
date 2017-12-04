@@ -72,7 +72,7 @@ char * sendAllPlanes(int * bytes){
 		memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
 		return ERROR_CODE;
 	}
-	*bytes = TPLANES_BYTES*p->size;
+	*bytes = TPLANES_BYTES*p->size + 1*sizeof(long);
 	return serialize_plane_array(p);
 }
 
