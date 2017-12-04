@@ -44,7 +44,7 @@ void closeDataBase(){
  }
 
 void childForClient (int sock) {
-   int n;
+   int n, bytes;
    char buffer[256];
    
    char * resBuffer;
@@ -52,17 +52,17 @@ void childForClient (int sock) {
    while(1)
    {
 
-    bzero(buffer,256);
+  bzero(buffer,256);
    n = read(sock,buffer,255);
    openDataBase();
-   resBuffer = parseAndExecute(buffer);
+   resBuffer = parseAndExecute(buffer, &bytes);
 
    if (n < 0) {
       perror("ERROR reading from socket");
       exit(1);
    }
    
-  n = write(sock,resBuffer,500);
+  n = write(sock,resBuffer,bytes);
    
    if (n < 0) {
       perror("ERROR writing to socket");

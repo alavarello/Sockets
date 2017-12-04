@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
 #include <string.h>
 #include "structs.h"
@@ -21,7 +22,7 @@ struct sockaddr_in serverAddr;
 socklen_t addr_size;
 
 int initiateSocket(){
-
+  struct timeval tv;
   printf("INITIATING\n");
   /*---- Create the socket. The three arguments are: ----*/
   /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
@@ -39,6 +40,9 @@ int initiateSocket(){
 
   /*---- Connect the socket to the server using the address struct ----*/
   addr_size = sizeof serverAddr;
+  tv.tv_sec = 60*4;        // 30 Secs Timeout
+  tv.tv_usec = 0;        // Not init'ing this can cause strange errors
+  setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
   connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
 
   // add control if everything went fine
