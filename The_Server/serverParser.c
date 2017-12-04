@@ -44,7 +44,7 @@ char * sendAllFLights(int * bytes){
 		memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
 		return ERROR_CODE;
 	}
-	*bytes = TFLIGHT_BYTES*f->size;
+	*bytes = TFLIGHT_BYTES*f->size + sizeof(long);
 	return serialize_flight_array(f);
 }
 
@@ -86,7 +86,7 @@ char * sendAllReservations(int * bytes){
 		memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
 		return ERROR_CODE;
 	}
-	*bytes = TRESERVATION_BYTES*r->size;
+	*bytes = TRESERVATION_BYTES*r->size + sizeof(long);
 	return serialize_reservation_array(r);
 }
 
@@ -100,7 +100,7 @@ char * sendAllCancellations(int * bytes){
 		memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
 		return ERROR_CODE;
 	}
-	*bytes = TRESERVATION_BYTES*r->size;
+	*bytes = TRESERVATION_BYTES*r->size + sizeof(long);
 	return serialize_reservation_array(r);
 }
 
@@ -134,7 +134,7 @@ char * sendReservation(char * flightCode, char * seat,int * bytes){
 
 char * insertFlight(char * buff,int * bytes){
 	tFlight *  f = deserialize_flight(buff);
-	int  res = insert_flight(f->flightCode, f->origin, f->destination, f->departureTime, f->departureDate, f->arrivalTime, f->arrivalDate, f->planeCode); 
+	int  res = insert_flight(f->flightCode, f->origin, f->destination, f->departureTime, f->departureDate, f->arrivalTime, f->arrivalDate, f->planeCode);
 	char * resBuff;
 	if(res == SQLITE_OK){
 		*bytes = COMPLETE_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));
