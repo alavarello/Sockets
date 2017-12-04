@@ -18,6 +18,7 @@
 
 tFlight ** getFlights();
 tPlane * getPlane();
+tPlaneArray * getPlanes();
 char * * getOccupiedSeats(tFlight * flight);
 
 int addFlightClient(char * flightCode,char * origin ,char *   destination ,char *  departureTime ,char * arrivalTime ,char *  planeCode,char *  departureDate ,char *  arrivalDate);

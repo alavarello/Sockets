@@ -244,7 +244,7 @@ tPlaneArray  * getPlanes()
     printf("ERROR COMMUNICATING\n");
     return NULL;
   }
-  
+  return planes;
 }
 
    
