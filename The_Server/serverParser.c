@@ -114,7 +114,7 @@ char * sendReservationForAFLight(char * flightCode,int * bytes){
 		memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
 		return ERROR_CODE;
 	}
-	*bytes = SEAT_NUMBER_CHAR_MAX*s->size;
+	*bytes = (SEAT_NUMBER_CHAR_MAX*s->size)+sizeof(int);
 	return serialize_seatArray(s);
 }
 

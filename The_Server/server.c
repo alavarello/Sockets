@@ -61,7 +61,7 @@ void childForClient (int sock) {
       perror("ERROR reading from socket");
       exit(1);
    }
-   
+   printf("%d\n",bytes );
   n = write(sock,resBuffer,bytes);
    
    if (n < 0) {
