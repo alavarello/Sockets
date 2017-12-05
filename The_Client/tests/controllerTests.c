@@ -16,7 +16,7 @@ char ** givenOccupiedArray();
 void whenWeCreateTheOccupiedMatrix(char ** occupiedSeats , int ** totalOccupied);
 void thenTheMatrixIsCorrect();
 
-int controllerTests()
+int main()
 {
 	testFillOccupiedMatrix();
 	return 1;

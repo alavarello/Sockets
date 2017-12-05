@@ -1,13 +1,14 @@
 TARGET = client
 TARGET_TEST = clientTests
+TARGET_ALL = $(TARGET) $(TARGET_TEST)
 LIBS = -lm
 CC = gcc
 CFLAGS = -g -Wall -pedantic -Wextra -Wparentheses
 
-.PHONY: default all clean dosa
+.PHONY: default all clean tests
 
 default: $(TARGET)
-all: default
+all: $(TARGET_ALL)
 test : $(TARGET_TEST)
 
 OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
@@ -23,8 +24,9 @@ $(TARGET): $(OBJECTS)
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
+	$(MAKE) -C ./tests clean
 
-dosa:
+$(TARGET_TEST):
 	$(MAKE) -C ./tests all
 
 

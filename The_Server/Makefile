@@ -1,4 +1,6 @@
 TARGET = server
+TARGET_TEST = clientTests
+TARGET_ALL = $(TARGET) $(TARGET_TEST)
 LIBS = -lm -lsqlite3 -lpthread
 CC = gcc
 CFLAGS = -g -Wall
@@ -6,7 +8,8 @@ CFLAGS = -g -Wall
 .PHONY: default all clean
 
 default: $(TARGET)
-all: default
+all: $(TARGET_ALL)
+test : $(TARGET_TEST)
 
 OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
 
@@ -21,5 +24,10 @@ $(TARGET): $(OBJECTS)
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
+	$(MAKE) -C ./tests clean
+	
+$(TARGET_TEST):
+	$(MAKE) -C ./tests all
+
 
 .PHONY: all clean

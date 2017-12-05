@@ -78,7 +78,7 @@ void insertReservationNullPK(){
 
 void insertCancellation(){
 	insert_reservation("AR136","01C", "John Doe");
-	int res = insert_cancellation("AR136","01C", "John Doe");
+	int res = insert_cancellation("AR136","01C");
 	assert(res==SQLITE_OK);
  	printf("INSERT CANCELATION TEST: OK\n");
 }

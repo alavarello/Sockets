@@ -1,20 +1,24 @@
 
-TARGET = dosa
+TARGET = tests
 LIBS = -lm
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -Wall
 
-.PHONY: default all clean dosa
+.PHONY: default all clean tests
 
 default: $(TARGET)
 all: default
 
 clean:
 	-rm -f *.o
-	-rm -f $(TARGET)
+	-rm -f denialOfServiceAttack
+	-rm -f controllerTests
+	-rm -f expressionsTests
 
-dosa:
-	$(CC) $(CFLAGS)  -I../includes denialOfServiceAttack.c ../clientParser.c ../serialize_flight.c ../serialize_plane.c ../serialize_reservation.c ../random.c -o $(TARGET)
-
-
+tests:
+	$(CC) $(CFLAGS)  -I../includes denialOfServiceAttack.c ../clientParser.c ../serialize_flight.c ../serialize_plane.c ../serialize_reservation.c ../random.c -o denialOfServiceAttack
+	$(CC) $(CFLAGS)  -I../includes expressionsTest.c ../expressions.c ../client.c ../clientParser.c ../serialize_flight.c ../serialize_plane.c ../serialize_reservation.c -o expressionsTests
+	
 .PHONY: all clean
+
+
