@@ -105,7 +105,7 @@ void writeWithoutReadAttack(int action)
 {
 	int bytes;
 	int n;
-	char  *buff *flightCode; 
+	char  *buff, *flightCode; 
 	int clientSocket;
 	clientSocket = initiateSocket();
 	if(action == 2 || action == 9 || action == 11)
