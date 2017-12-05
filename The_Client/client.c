@@ -16,10 +16,10 @@
 //gcc client.c serialize_reservation.c serialize_plane.c serialize_flight.c clientParser.c -o client  -lsqlite3 -std=c99
 
 
-int clientSocket, n;
-char buffer[2048];
 char * resBuff;
-struct sockaddr_in serverAddr;
+
+int clientSocket, n;
+char buffer[2048];struct sockaddr_in serverAddr;
 socklen_t addr_size;
 
 int initiateSocket(){
@@ -35,13 +35,13 @@ int initiateSocket(){
   /* Set port number, using htons function to use proper byte order */
   serverAddr.sin_port = htons(5002);
   /* Set IP address to localhost */
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); //this address is for local conection
+  serverAddr.sin_addr.s_addr = inet_addr("10.2.69.99"); //this address is for local conection
   /* Set all bits of the padding field to 0 */
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
   /*---- Connect the socket to the server using the address struct ----*/
   addr_size = sizeof serverAddr;
-  tv.tv_sec = 60*4;        // 30 Secs Timeout
+  tv.tv_sec = 30;        // 30 Secs Timeout
   tv.tv_usec = 0;        // Not init'ing this can cause strange errors
   setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
   return connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
@@ -53,7 +53,7 @@ int sendMessage( char * parsedMessage, int bytes)
 {
     int i = 0 ;
     while( i < bytes){
-      n = write(clientSocket, parsedMessage, bytes);
+      n = write(clientSocket, parsedMessage, bytes - i);
       i += n;
       if(n == -1){
         return 0;

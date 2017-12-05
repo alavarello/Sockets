@@ -14,10 +14,12 @@
 #include "clientMenu.h"
 #include "adminMenu.h"
 #include <sqlite3.h>
+#include <unistd.h>
 
 #define DO_ANOTHER_OPERATION 10
 #define DONT_DO_ANOTHER_OPERATION -10
 #define MAX_MSG_LOG 100
+#define MAX_ATTEMPTS 10
 
 int setCurrentFlight(tFlight ** flights , char * flightCode);
 
