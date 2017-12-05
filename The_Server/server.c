@@ -4,7 +4,9 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <string.h>
+#include <stdlib.h>
 #include "constants.h"
 #include "structs.h"
 #include "serialize_flight.h"
