@@ -135,5 +135,6 @@ void deleteCancelations(){
    
    sqlite3_close(db);
    printf("Close database successfully\n");
+   printf("--------DATABASE TEST: OK---------\n");
    return 0;
 }

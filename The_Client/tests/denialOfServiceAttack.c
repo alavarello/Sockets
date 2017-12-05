@@ -45,42 +45,6 @@ int initiateSocket(){
   return clientSocket;
 }
 
-void whileAttack(int action ){
-	int bytes;
-	int n, i = 0;
-	char  *buff, *pBuffer; 
-	int clientSocket;
-	clientSocket = initiateSocket();
-	printf("ENTER PROCESS: %d WHILE ATTACK WITH ACTION: %d\n",process, action);
-	//while(i <200){
-		
-		if(action == 2 || action == 9 || action == 11){
-		char * flightCode = "AA954";
-		buff = parseMessageToSend(action, flightCode, &bytes);
-		}
-		else if(action == 3){
-			tFlight t = {"AA954", "EZE", "MIA", "00:30", "01/01/2017", "04:20", "02/01/2017", "Boeing 777"};
-			buff = parseMessageToSend(action, &t, &bytes);
-		}else if(action == 7 || action == 8 || action == 10 || action == 12){
-			tReservation r = {"AR136","01A", "John Doe"};
-			buff = parseMessageToSend(action, &r, &bytes);
-		}else {
-			buff = parseMessageToSend(action, NULL, &bytes);
-		}
-		n = write(clientSocket, buff, bytes);
-		
-		pBuffer = malloc(2000 * sizeof(char)); 
-  		bzero(pBuffer,2000);
-  		sleep(3);
-  		printf("ANTES DEL READ\n");
-  		n = read(clientSocket, pBuffer, 2000);
-  		printf("DESPUES DEL READ\n");
-  		free(pBuffer);
-  		free(buff);
-  		i++;
-  //	}
-  	printf("PROCESS: %d WHILE ATTACK WITH ACTION: %d\n",process, action);
-}
 
 void attack(int action){
 	int bytes;
@@ -149,7 +113,7 @@ void reproduce()
 {	
 	int action, i = 0, pid;
 	double rand;
-	while(i<4){
+	while(i<100){
 	/* Create child process */
       pid = fork();
       action = ((++process)%12)+1;
