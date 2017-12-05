@@ -15,6 +15,9 @@ char * serialize_flight(tFlight * t)
   ARRIVAL_TIME_CHAR_MAX + ARRIVAL_DATE_CHAR_MAX + PLANE_CODE_CHAR_MAX )*sizeof(char);
 
   buff = malloc(bytes);
+
+  MALLOC_CHECK(buff);
+
   aux = buff;
 
   memcpy(aux, t->flightCode, FLIGHT_CODE_CHAR_MAX);
@@ -49,6 +52,8 @@ tFlight * deserialize_flight(char * buff)
 
   tFlight * res = malloc(sizeof(tFlight));
 
+  MALLOC_CHECK(res);
+
   res->flightCode = malloc(FLIGHT_CODE_CHAR_MAX*sizeof(char));
   memcpy(res->flightCode, buff, FLIGHT_CODE_CHAR_MAX);
   buff += FLIGHT_CODE_CHAR_MAX;
@@ -77,7 +82,10 @@ tFlight * deserialize_flight(char * buff)
   memcpy(res->arrivalDate, buff, ARRIVAL_DATE_CHAR_MAX);
   buff += ARRIVAL_DATE_CHAR_MAX;
 
+
   res->planeCode = malloc(PLANE_CODE_CHAR_MAX*sizeof(char));
+
+  MALLOC_CHECK(res->planeCode);
   memcpy(res->planeCode, buff, PLANE_CODE_CHAR_MAX);
 
   return res;
@@ -94,6 +102,9 @@ char * serialize_flight_array(tFlightArray * flightArray)
   ARRIVAL_TIME_CHAR_MAX + ARRIVAL_DATE_CHAR_MAX + PLANE_CODE_CHAR_MAX )*sizeof(char);
 
   buff = malloc(flightArray->size*bytes + sizeof(long));
+
+  MALLOC_CHECK(buff);
+
   aux = buff;
   memcpy(aux, &(flightArray->size), sizeof(long));
   aux += sizeof(long);
@@ -111,6 +122,9 @@ tFlightArray * deserialize_flight_array(char * buff)
 {
   int i;
   tFlightArray * res = malloc(sizeof(tFlightArray));
+
+  MALLOC_CHECK(res);
+
   memcpy(&(res->size), buff, sizeof(long));
   buff += sizeof(long);
   int bytes = ( FLIGHT_CODE_CHAR_MAX + ORIGIN_CHAR_MAX + DESTINATION_CHAR_MAX + DEPARTURE_TIME_CHAR_MAX + DEPARTURE_DATE_CHAR_MAX +
@@ -132,6 +146,8 @@ char * serialize_seatArray(tSeatsArray * seatArray)
   char * auxBuff = buff;
   int i = 0;
 
+  MALLOC_CHECK(buff);
+
   memcpy(auxBuff,&(seatArray->size), sizeof(int));
   auxBuff += sizeof(int);
 
@@ -149,6 +165,8 @@ tSeatsArray * deserialize_seatArray(char* buff)
 {
   tSeatsArray * seatArray = malloc(sizeof(tSeatsArray));
   int i = 0;
+
+  MALLOC_CHECK(seatArray);
 
   memcpy(&(seatArray->size), buff, sizeof(int));
   buff += sizeof(int);

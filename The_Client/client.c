@@ -90,6 +90,10 @@ char * receiveMessage(int instruction)
   char * pBuffer;
   int bytes = getBytesForReading(instruction);
   pBuffer = malloc(bytes * sizeof(char));
+
+  MALLOC_CHECK(pBuffer);
+
+  MALLOC_CHECK(pBuffer);
   bzero(pBuffer,bytes);
   n = read(clientSocket, pBuffer, bytes);
   if (n < 0)
@@ -184,9 +188,12 @@ char * * getOccupiedSeats(tFlight * flight)
 
   seats = malloc((seatsArray->size + 1)*sizeof(*seats));
 
+  MALLOC_CHECK(seats);
+
   for(i = 0 ; i < seatsArray->size ; i++)
   {
     seats[i] = malloc(4 * sizeof(char));
+    MALLOC_CHECK(seats);
     strcpy(seats[i] , seatsArray->reservedSeats[i]);
     free(seatsArray->reservedSeats[i]);
   }
@@ -201,22 +208,26 @@ char * * getOccupiedSeats(tFlight * flight)
 
 int reserve(tFlight * flight , char * seat)
 {
-
-  tReservation * newReservation = malloc(sizeof(*newReservation));
   char * result;
   int res;
   int number;
   char name[USER_NAME_CHAR_MAX];
+  tReservation * newReservation = malloc(sizeof(*newReservation));
+  MALLOC_CHECK(newReservation);
+
   name[0] = 0;
   int size  = sprintf(name, "%ld" , (long) getpid());
 
   printf("se copiaron : %d\n", size);
 
   newReservation->flightCode = malloc(10 * sizeof(char));
+  MALLOC_CHECK(newReservation->flightCode);
   strcpy(newReservation->flightCode, flight->flightCode);
   newReservation->seatNumber = malloc(10 * sizeof(char));
+  MALLOC_CHECK(newReservation->seatNumber);
   strcpy(newReservation->seatNumber , seat);
   newReservation->userName = calloc(USER_NAME_CHAR_MAX , sizeof(char));
+  MALLOC_CHECK(newReservation->userName);
   strcpy(newReservation->userName , name);
 
   result = communicate(INSERT_RESERVATION , newReservation);
@@ -243,11 +254,16 @@ int cancel(tFlight * flight , char * seat)
   name[0] = 0;
   sprintf(name, "%ld" , (long) getpid());
 
+  MALLOC_CHECK(newReservation);
+
   newReservation->flightCode = malloc(10 * sizeof(char));
+  MALLOC_CHECK(newReservation->flightCode);
   strcpy(newReservation->flightCode, flight->flightCode);
   newReservation->seatNumber = malloc(10 * sizeof(char));
+  MALLOC_CHECK(newReservation->seatNumber);
   strcpy(newReservation->seatNumber , seat);
   newReservation->userName = calloc(USER_NAME_CHAR_MAX, sizeof(char));
+  MALLOC_CHECK(newReservation->userName);
   strcpy(newReservation->userName , name);
 
   result = communicate(INSERT_CANCELLATION, newReservation);
@@ -261,6 +277,8 @@ int addFlightClient(char * flightCode , char * origin ,char *   destination ,cha
 {
   char * result;
   tFlight * newFlight = malloc(sizeof(*newFlight));
+
+  MALLOC_CHECK(newFlight);
 
   newFlight->flightCode = flightCode;
   newFlight->origin = origin;

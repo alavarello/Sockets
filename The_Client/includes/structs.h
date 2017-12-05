@@ -28,6 +28,8 @@
 
 #define CLEAN_BUFFER while(getchar()!='\n')
 
+#define MALLOC_CHECK(p) if(p == NULL) exit(1);
+
 typedef struct {
 	char* flightCode;
 	char* origin;

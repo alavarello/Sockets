@@ -42,4 +42,6 @@ void * communicate(int instruction , void * message);
 tReservationArray * getReservations();
 tReservationArray * getCancelations();
 int initiateSocket();
+void closeSocket();
+
 #endif

@@ -11,6 +11,7 @@
 char * parseMessageToSend(int action, void * param, int * bytes)
 {
 	char * resBuff = malloc(sizeof(int));
+	MALLOC_CHECK(resBuff);
 	*bytes = sizeof(int);
 	char * aux;
 	int error = ACTION_CODE_ERROR;
@@ -40,6 +41,7 @@ char * parseMessageToSend(int action, void * param, int * bytes)
 			aux = serialize_flight((tFlight *) param);
 			free(resBuff);
 			resBuff = malloc(TFLIGHT_BYTES+sizeof(int));
+			MALLOC_CHECK(resBuff);
 			*bytes = sizeof(int)+TFLIGHT_BYTES;
 			memcpy(resBuff, &action, sizeof(int));		
 			memcpy(resBuff+sizeof(int), aux, TFLIGHT_BYTES);
@@ -65,6 +67,7 @@ char * parseMessageToSend(int action, void * param, int * bytes)
 			aux = serialize_reservation((tReservation *) param);
 			free(resBuff);
 			resBuff = malloc(TRESERVATION_BYTES+sizeof(int));
+			MALLOC_CHECK(resBuff);
 			*bytes = sizeof(int)+TRESERVATION_BYTES;
 			memcpy(resBuff, &action, sizeof(int));
 			memcpy(resBuff+sizeof(int), aux, TRESERVATION_BYTES);
@@ -75,6 +78,7 @@ char * parseMessageToSend(int action, void * param, int * bytes)
 			aux = serialize_reservation((tReservation *) param);
 			free(resBuff);
 			resBuff = malloc(TRESERVATION_BYTES+sizeof(int));
+			MALLOC_CHECK(resBuff);
 			*bytes = sizeof(int)+TRESERVATION_BYTES;
 			memcpy(resBuff, &action, sizeof(int));
 			memcpy(resBuff+sizeof(int), aux, TRESERVATION_BYTES);
@@ -117,6 +121,7 @@ char * parseMessageToSend(int action, void * param, int * bytes)
 	}
 
 	resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
+	MALLOC_CHECK(resBuff);
 	strcpy(resBuff, ERROR_CODE);
 	memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
 
@@ -179,6 +184,7 @@ void * parseRecivedMessage(int action, char * buff){
 			return buff;
 		default: 
 			resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
+			MALLOC_CHECK(resBuff);
 			strcpy(resBuff, ERROR_CODE);
 			memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
 			return resBuff;

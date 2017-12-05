@@ -12,6 +12,8 @@ char * serialize_plane(tPlane * t)
   bytes = (MODEL_CHAR_MAX*sizeof(char) + 4*sizeof(int));
 
   buff = malloc(bytes);
+
+  MALLOC_CHECK(buff);
   aux = buff;
 
   memcpy(aux, t->model, MODEL_CHAR_MAX);
@@ -37,6 +39,8 @@ tPlane * deserialize_plane(char * buff)
 {
 
   tPlane * res = malloc(sizeof(tPlane));
+
+  MALLOC_CHECK(res);
 
   res->model = malloc(MODEL_CHAR_MAX*sizeof(char));
   memcpy(res->model, buff, MODEL_CHAR_MAX);
@@ -68,6 +72,9 @@ char * serialize_plane_array(tPlaneArray * planeArray)
   bytes = (MODEL_CHAR_MAX*sizeof(char) + 4*sizeof(int));
 
   buff = malloc(planeArray->size*bytes + sizeof(long));
+
+  MALLOC_CHECK(buff);
+
   aux = buff;
   memcpy(aux, &(planeArray->size), sizeof(long));
   aux += sizeof(long);
@@ -89,6 +96,8 @@ tPlaneArray * deserialize_plane_array(char * buff)
   int bytes;
   
   tPlaneArray * res = malloc(sizeof(tPlaneArray));
+
+  MALLOC_CHECK(res);
 
   memcpy(&(res->size), buff, sizeof(res->size));
 

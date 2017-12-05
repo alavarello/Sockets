@@ -14,6 +14,9 @@ char * serialize_reservation(tReservation * t)
   bytes = (FLIGHT_CODE_CHAR_MAX + SEAT_NUMBER_CHAR_MAX + USER_NAME_CHAR_MAX)*sizeof(char);
 
   buff = malloc(bytes);
+
+  MALLOC_CHECK(buff);
+
   aux = buff;
 
   memcpy(aux, t->flightCode, FLIGHT_CODE_CHAR_MAX);
@@ -33,6 +36,8 @@ tReservation * deserialize_reservation(char * buff)
 {
 
   tReservation * res = malloc(sizeof(tReservation));
+
+  MALLOC_CHECK(res);
 
   res->flightCode = malloc(FLIGHT_CODE_CHAR_MAX*sizeof(char));
   memcpy(res->flightCode, buff, FLIGHT_CODE_CHAR_MAX);
@@ -59,6 +64,9 @@ char * serialize_reservation_array(tReservationArray * reservationArray)
   bytes = (FLIGHT_CODE_CHAR_MAX + SEAT_NUMBER_CHAR_MAX + USER_NAME_CHAR_MAX)*sizeof(char);
 
   buff = malloc(reservationArray->size*bytes + sizeof(long));
+
+  MALLOC_CHECK(buff);
+
   aux = buff;
   memcpy(aux, &(reservationArray->size), sizeof(long));
   aux += sizeof(long);
@@ -77,6 +85,9 @@ tReservationArray * deserialize_reservation_array(char * buff)
 {
   int i, bytes;
   tReservationArray * res = malloc(sizeof(tReservation));
+
+  MALLOC_CHECK(res);
+  
   memcpy(&(res->size), buff, sizeof(long));
   buff += sizeof(long);
 

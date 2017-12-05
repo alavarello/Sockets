@@ -54,6 +54,8 @@ char * readFlightCode()
 	int i = 0 ;
 	int error = 1;
 
+	MALLOC_CHECK(s);
+
 	while(error)
 	{
 		i=0;
@@ -90,6 +92,8 @@ char * readOrigin()
 	int c;
 	int i = 0 ;
 	int error = 1;
+
+	MALLOC_CHECK(s);
 
 	while(error)
 	{
@@ -128,6 +132,8 @@ char * readDestination()
 	int i = 0 ;
 	int error = 1;
 
+	MALLOC_CHECK(s);
+
 	while(error)
 	{
 		i=0;
@@ -165,6 +171,8 @@ char * readDepTime()
 	int i = 0 ;
 	int error = 1;
 
+	MALLOC_CHECK(s);
+
 	while(error)
 	{
 		i=0;
@@ -200,6 +208,8 @@ char * readArrTime()
 	int c;
 	int i = 0 ;
 	int error = 1;
+
+	MALLOC_CHECK(s);
 
 	while(error)
 	{
@@ -237,6 +247,8 @@ char * readPlaneCode()
 	int i = 0 ;
 	int error = 1;
 
+	MALLOC_CHECK(s);
+
 	while(error)
 	{
 		i=0;
@@ -273,6 +285,8 @@ char * readDepDate()
 	int i = 0 ;
 	int error = 1;
 
+	MALLOC_CHECK(s);
+
 	while(error)
 	{
 		i=0;
@@ -308,6 +322,8 @@ char * readArrDate()
 	int c;
 	int i = 0 ;
 	int error = 1;
+
+	MALLOC_CHECK(s);
 
 	while(error)
 	{
@@ -462,6 +478,8 @@ char * receiveSeatNumber()
 	int result;
 
 	int flag = 1;
+
+	MALLOC_CHECK(buffer);
 
 	printf("Please insert your seat number. Example: '01A' \n");
 

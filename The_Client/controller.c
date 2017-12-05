@@ -92,8 +92,11 @@ void drawPlane()
 
 	int * * totalOccupied = malloc(plane->rows* sizeof(*totalOccupied));
 
+	MALLOC_CHECK(totalOccupied);
+
 	for( j = 0 ; j < plane->rows ; j++){
 		totalOccupied[j] = calloc((plane->left + plane->right + plane->middle) , sizeof(int));
+		MALLOC_CHECK(totalOccupied[j]);
 	}
 
 	fillOcuppiedMatrix(occupiedSeats , totalOccupied);
