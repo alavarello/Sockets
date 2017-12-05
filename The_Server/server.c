@@ -149,8 +149,10 @@ do{
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
   //putting a timeout interval for the input using the write and read
-  tv.tv_sec = 60 * 5 ;        // 30 Secs Timeout
+  tv.tv_sec = 6*60;        // 30 Secs Timeout
   tv.tv_usec = 0;        // Not init'ing this can cause strange errors
+  
+  
 
   /*---- Bind the address struct to the socket ----*/
     ret = bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
@@ -162,7 +164,7 @@ do{
 
   processSem = openProcessSemaphore("/processSem");
 
-  setsockopt(welcomeSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
+  
   /*---- Listen on the socket, with 5 max connection requests queued ----*/
   if(listen(welcomeSocket,MAX_NUMBER_OF_CLIENTS)==0)
     printf("Listening\n");
@@ -176,7 +178,7 @@ do{
   {
    
     newSocket = accept(welcomeSocket, (struct sockaddr *) &serverStorage, &addr_size);
-
+    setsockopt(newSocket, SOL_SOCKET, SO_RCVTIMEO, (const struct timeval*)&tv,sizeof(struct timeval));
     if(newSocket < 0)
     {
       printf("ERROR in getting the new socket\n");
