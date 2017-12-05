@@ -105,12 +105,12 @@ void writeWithoutReadAttack(int action)
 {
 	int bytes;
 	int n;
-	char  *buff; 
+	char  *buff *flightCode; 
 	int clientSocket;
 	clientSocket = initiateSocket();
 	if(action == 2 || action == 9 || action == 11)
 	{
-		char * flightCode = "AA954";
+		flightCode = "AA954";
 		buff = parseMessageToSend(action, flightCode, &bytes);
 	}
 	else if(action == 3)
