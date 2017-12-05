@@ -14,7 +14,7 @@ clean:
 	-rm -f databaseTest
 	
 
-tests:
+$(TARGET):
 	$(CC) $(CFLAGS)  -I../includes databaseTest.c getTest.c insertTest.c ../reservationAndCancelationManager.c ../flightsTableManager.c ../planesTableManager.c ../semaphores.c  -o databaseTest -lsqlite3
 	
 .PHONY: all clean

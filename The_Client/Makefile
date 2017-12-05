@@ -1,5 +1,5 @@
 TARGET = client
-TARGET_TEST = clientTests
+TARGET_TEST = tests
 TARGET_ALL = $(TARGET) $(TARGET_TEST)
 LIBS = -lm
 CC = gcc
@@ -24,8 +24,7 @@ $(TARGET): $(OBJECTS)
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
-	$(MAKE) -C ./tests
-	 clean
+	$(MAKE) -C ./tests clean
 
 $(TARGET_TEST):
 	$(MAKE) -C ./tests all

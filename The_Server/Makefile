@@ -1,11 +1,11 @@
 TARGET = server
-TARGET_TEST = test
+TARGET_TEST = tests
 TARGET_ALL = $(TARGET) $(TARGET_TEST)
 LIBS = -lm -lsqlite3 -lpthread
 CC = gcc
 CFLAGS = -g -Wall
 
-.PHONY: default all clean
+.PHONY: default all clean tests
 
 default: $(TARGET)
 all: $(TARGET_ALL)
