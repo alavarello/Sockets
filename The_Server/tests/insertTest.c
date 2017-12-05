@@ -61,17 +61,18 @@ void insertSameReservation(){
 	int res = insert_reservation("AR136","01B", "John Doe");
 	assert(res==SQLITE_OK);
 	res = insert_reservation("AR136","01B", "John Doe");
-	assert(res==SQLITE_CONSTRAINT);
+
+	assert(res==SQLITE_CONSTRAINT_PRIMARYKEY);
  	printf("INSERT SAME RESERVATION TEST: OK\n");
 }
 
 void insertReservationNullPK(){
 	int res = insert_reservation(NULL,"01B", "John Doe");
-	assert(res==SQLITE_CONSTRAINT);
+	assert(res==SQLITE_CONSTRAINT_NOTNULL);
 	res = insert_reservation("AR1364",NULL, "John Doe");
-	assert(res==SQLITE_CONSTRAINT);
+	assert(res==SQLITE_CONSTRAINT_NOTNULL);
 	res = insert_reservation(NULL,NULL, "John Doe");
-	assert(res==SQLITE_CONSTRAINT);
+	assert(res==SQLITE_CONSTRAINT_NOTNULL);
 	printf("INSERT RESERVATION NULL PK TEST: OK\n");
 }
 
@@ -83,27 +84,7 @@ void insertCancellation(){
  	printf("INSERT CANCELATION TEST: OK\n");
 }
 
-//INSERT CANCELATION IS DIFFERENT
-void insertSameCancellation(){
-	// insert_reservation("AR1364","01C", "John Doe");
-	// int res = insert_cancellation("AR1364","01B");
-	// assert(res==SQLITE_OK);
-	// res = insert_cancellation("AR1364","01B");
-	// assert(res==SQLITE_OK);
- 	printf("INSERT SAME CANCELATION TEST: TODO\n");
-}
 
-
-//INSERT CANCELATION IS DIFFERENT
-void insertCancellationNullPK(){
-	// int res = insert_cancellation(NULL,"01B", "John Doe");
-	// assert(res==SQLITE_CONSTRAINT);
-	// res = insert_cancellation("AR1364",NULL, "John Doe");
-	// assert(res==SQLITE_CONSTRAINT);
-	// res = insert_cancellation(NULL,NULL, "John Doe");
-	// assert(res==SQLITE_CONSTRAINT);
-	printf("INSERT CANCELATION NULL PK TEST: TODO\n");
-}
 
 
 

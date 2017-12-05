@@ -9,11 +9,81 @@
 
  sqlite3 *db;
 
- //gcc databaseTest.c insertTest.c getTest.c reservationAndCancelationManager.c flightsTableManager.c planesTableManager.c  -o databaseTest -lsqlite3 -std=c99
+ void deleteFLights(){
+   int rc, numberOfFlights;
+   sqlite3_stmt *res;
+   //getting the number of flights
+    char * sqlFLightCount = "DELETE FROM FLIGHTS;";
+    rc = sqlite3_prepare_v2(db, sqlFLightCount, -1, &res, 0);
+     if(rc != SQLITE_OK)
+    {
+      fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+      return;
+    }
+    sqlite3_step(res);
+    numberOfFlights = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
+    return;
+ }
+
+ void deletePlanes(){
+   int rc, numberOfFlights;
+   sqlite3_stmt *res;
+   //getting the number of flights
+    char * sqlFLightCount = "DELETE FROM PLANES;";
+    rc = sqlite3_prepare_v2(db, sqlFLightCount, -1, &res, 0);
+     if(rc != SQLITE_OK)
+    {
+      fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+      return;
+    }
+    sqlite3_step(res);
+    numberOfFlights = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
+    return;
+}
+void deleteReservations(){
+   int rc, numberOfFlights;
+   sqlite3_stmt *res;
+   //getting the number of flights
+    char * sqlFLightCount = "DELETE FROM RESERVATIONS;";
+    rc = sqlite3_prepare_v2(db, sqlFLightCount, -1, &res, 0);
+     if(rc != SQLITE_OK)
+    {
+      fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+      return;
+    }
+    sqlite3_step(res);
+    numberOfFlights = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
+    return;
+}
+void deleteCancelations(){
+   int rc, numberOfFlights;
+   sqlite3_stmt *res;
+   //getting the number of flights
+    char * sqlFLightCount = "DELETE FROM CANCELATIONS;";
+    rc = sqlite3_prepare_v2(db, sqlFLightCount, -1, &res, 0);
+     if(rc != SQLITE_OK)
+    {
+      fprintf(stderr, "%s\n",sqlite3_errmsg(db));
+      return;
+    }
+    sqlite3_step(res);
+    numberOfFlights = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
+    return;
+}
+
+ void deleteTablesValues(){
+   deleteCancelations();
+   deleteReservations();
+   deletePlanes();
+   deleteFLights();
+ }
 
  int main(int argc, char* argv[]) {
-   char *zErrMsg = 0;
-   int rc, res;
+   int rc;
    /* Open database */
    rc = sqlite3_open("test.db", &db);
    
@@ -23,21 +93,23 @@
    } else {
       fprintf(stdout, "Opened database successfully\n");
    }
-  
-   // //INSERT TESTS
-   // insertFlight();
-   // insertSameFlight();
-   // insertFlightNullPK();
-   // insertFlightWithInvalidModel();
-   // insertPlane();
-   // insertSamePlane();
-   // insertPlaneNullPK();
-   // insertReservation();
-   // insertSameReservation();
-   // insertReservationNullPK();
-   // insertCancellation();
-   // insertSameCancellation();
-   // insertCancellationNullPK();
+   printf("ANTES\n");
+   deleteTablesValues();
+   printf("DESPUES\n");
+   //INSERT TESTS
+   insertFlight();
+   insertSameFlight();
+   insertFlightNullPK();
+   insertFlightWithInvalidModel();
+   insertPlane();
+   insertSamePlane();
+   insertPlaneNullPK();
+   insertReservation();
+   insertSameReservation();
+   insertReservationNullPK();
+   insertCancellation();
+
+   deleteTablesValues();
 
    //GET ELEMENTS FROM DATABASE. THIS TEST USE INSERT
    getPlaneArrayWith0Elements();
@@ -63,5 +135,6 @@
    
    sqlite3_close(db);
    printf("Close database successfully\n");
+   printf("--------DATABASE TEST: OK---------\n");
    return 0;
 }
