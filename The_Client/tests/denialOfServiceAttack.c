@@ -55,12 +55,12 @@ void attack(int action)
 {
 	int bytes;
 	int n;
-	char  *buff, *pBuffer; 
+	char  *buff, *pBuffer, *flightCode; 
 	int clientSocket;
 	clientSocket = initiateSocket();
 	if(action == 2 || action == 9 || action == 11)
 	{
-		char * flightCode = "AA954";
+		flightCode = "AA954";
 		buff = parseMessageToSend(action, flightCode, &bytes);
 	}
 	else if(action == 3)
@@ -139,7 +139,7 @@ void reproduce()
 {	
 	int action, i = 0, pid;
 	double rand;
-	while(i<100){
+	while(i<1000){
 	/* Create child process */
       pid = fork();
       //the action for the parser to perform

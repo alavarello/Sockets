@@ -9,7 +9,7 @@
 #include <string.h>
 #include <fcntl.h>
 
-#define MAX_PROCESSES 2
+#define MAX_PROCESSES 20
 
 sem_t * openSemaphore(char * s);
 sem_t * openProcessSemaphore(char * s);
