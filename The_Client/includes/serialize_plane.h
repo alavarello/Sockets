@@ -8,3 +8,4 @@ char * serialize_plane_array(tPlaneArray * planeArray);
 tPlaneArray * deserialize_plane_array(char * buff);
 
 #endif
+

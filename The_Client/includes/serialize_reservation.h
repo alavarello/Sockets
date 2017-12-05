@@ -9,3 +9,4 @@ char * serialize_reservation_array(tReservationArray * reservationArray);
 tReservationArray * deserialize_reservation_array(char * buff);
 
 #endif
+
