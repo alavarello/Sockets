@@ -16,5 +16,6 @@
 
 void freeAllDrawPlane(int *** totalOccupiedP , tPlane ** planeP , char *** occupiedSeatsP );
 void freeFlightsArray( tFlight ** flights);
+void freeReservationArray(tReservationArray ** reservations);
 
 #endif

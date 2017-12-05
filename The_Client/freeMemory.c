@@ -36,3 +36,16 @@ void freeFlightsArray( tFlight ** flights)
 
 	free(flights);
 }
+
+void freeReservationArray(tReservationArray ** reservations)
+{
+	int size = (*reservations)->size;
+	int i;
+
+	for( i = 0 ; i < size ; i++)
+	{
+		free((*reservations)->reservationsArray[i]);
+	}
+	free((*reservations)->reservationsArray);
+	free((*reservations));
+}
