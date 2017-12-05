@@ -23,5 +23,7 @@ int main(void)
 	{
 		logError("Unable to connect");
 	}
+	
+	closeSocket();
 	return 0;
 }

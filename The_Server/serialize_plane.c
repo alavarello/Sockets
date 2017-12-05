@@ -107,6 +107,6 @@ tPlaneArray * deserialize_plane_array(char * buff)
     res->planeArray[i] = deserialize_plane(buff);
     buff += bytes;
   }
-printf("SALIO del FOR\n");
+  
   return res;
 }

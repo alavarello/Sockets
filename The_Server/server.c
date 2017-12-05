@@ -31,15 +31,20 @@
 
  sqlite3 *db;
 
- void openDataBase(){
+ void openDataBase()
+ {
+  
   int rc;
     /* Open database */
-   rc = sqlite3_open("flightsDataBase.db", &db);
+  rc = sqlite3_open("flightsDataBase.db", &db);
 
-   if( rc ) {
+  if( rc ) 
+  {
       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-   } else {
-      fprintf(stdout, "Opened database successfully\n");
+  }
+  else
+  {
+      //fprintf(stdout, "Opened database successfully\n");
       enableFK();
    }
  }
@@ -58,52 +63,58 @@
    }
    rc = sqlite3_step(res);
 
-    if (rc != SQLITE_DONE) {
-        fprintf(stderr, "Can't enable Foreign Key support: %s\n", sqlite3_errmsg(db));
-
-    }
+  if (rc != SQLITE_DONE)
+  {
+      fprintf(stderr, "Can't enable Foreign Key support: %s\n", sqlite3_errmsg(db));
+  }
 
     sqlite3_finalize(res);
  }
 
-void closeDataBase(){
-  sqlite3_close(db);
-   printf("Close database successfully\n");
- }
+void closeDataBase()
+{
+    sqlite3_close(db);
+    printf("Close database successfully\n");
+}
 
 void childForClient (int sock) {
-   int n, bytes;
-   char buffer[256];
-
-   char * resBuffer;
+  int n, bytes;
+  char buffer[256];
+  char * resBuffer;
+  
   openDataBase();
 
    while(1)
    {
 
-  bzero(buffer,256);
-   n = read(sock,buffer,255);
+    bzero(buffer,256);
+    n = read(sock,buffer,255);
 
-   resBuffer = parseAndExecute(buffer, &bytes);
+    resBuffer = parseAndExecute(buffer, &bytes);
 
-   if (n < 0) {
-    printf("SALIO ERROR\n");
-      perror("ERROR reading from socket");
-      exit(1);
+    if(resBuffer == NULL)
+    {
+      return;
+    }
+
+    if (n < 0) 
+    {
+        perror("ERROR reading from socket");
+        return;
+    }
+    n = write(sock,resBuffer,bytes);
+
+    if (n < 0) 
+    {
+        perror("ERROR writing to socket");
+        return;
+    }
+   
    }
-   printf("%d\n",bytes );
-  n = write(sock,resBuffer,bytes);
-
-   if (n < 0) {
-    printf("SALIO ERROR\n");
-      perror("ERROR writing to socket");
-      exit(1);
-   }
- }
- printf("SALIO NORMAL\n");
 }
 
-int main(){
+int main()
+{
   int welcomeSocket, newSocket, pid, ret, enable = 1;
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
@@ -111,6 +122,7 @@ int main(){
    struct timeval tv;
 
   openDataBase();
+
 do{
 
   /*---- Create the socket. The three arguments are: ----*/
@@ -157,37 +169,44 @@ do{
   /*---- Accept call creates a new socket for the incoming connection ----*/
   addr_size = sizeof serverStorage;
 
-  while(1){
-   newSocket = accept(welcomeSocket, (struct sockaddr *) &serverStorage, &addr_size);
+  while(1)
+  {
+   
+    newSocket = accept(welcomeSocket, (struct sockaddr *) &serverStorage, &addr_size);
 
-  if(newSocket < 0){
-   printf("ERROR in getting the new socket\n");
-  }else{
-
-
+    if(newSocket < 0)
+    {
+      printf("ERROR in getting the new socket\n");
+    }
+    else
+    {
       /* Create child process */
       pid = fork();
 
-      if (pid < 0) {
-         perror("ERROR on fork");
+      if (pid < 0)
+      {
+         perror("Connection failed when trying to fork");
          exit(1);
       }
 
-      if (pid == 0) {
+      if (pid == 0)
+      {
          /* This is the client process */
-          printf("AGARRO LA CONEXCION\n");
-         close(welcomeSocket);
-         childForClient(newSocket);
-         exit(0);
+          printf("Connection successful\n");
+          close(welcomeSocket);
+          childForClient(newSocket);
+          printf("Connection ended\n" );
+          exit(0);
       }
-      else {
+      else 
+      {
          close(newSocket);
       }
-  }
+    }
   /*---- Send message to the socket of the incoming connection ----*/
   }
 
   closeDataBase();
-   printf("Close database successfully\n");
+
   return 0;
 }

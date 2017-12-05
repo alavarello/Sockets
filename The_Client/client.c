@@ -9,6 +9,12 @@ int clientSocket, n;
 char buffer[2048];struct sockaddr_in serverAddr;
 socklen_t addr_size;
 
+void closeSocket()
+{
+  communicate(END_PROCESS , NULL);
+  close(clientSocket);
+}
+
 int initiateSocket()
 {
   struct timeval tv;
@@ -106,6 +112,7 @@ void * communicate(int instruction , void * message)
   if(!success)
   {
     logError("The server is not available");
+    closeSocket();
     exit(1);
   }
 
@@ -114,6 +121,7 @@ void * communicate(int instruction , void * message)
   if(response == NULL)
   {
     logError("The server is not available");
+    closeSocket();
     exit(1);
   }
 
