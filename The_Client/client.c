@@ -23,7 +23,7 @@ int initiateSocket()
   /* Set port number, using htons function to use proper byte order */
   serverAddr.sin_port = htons(5002);
   /* Set IP address to localhost */
-  serverAddr.sin_addr.s_addr = inet_addr("192.168.1.3"); //this address is for local conection
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); //this address is for local conection
   /* Set all bits of the padding field to 0 */
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
@@ -51,11 +51,41 @@ int sendMessage( char * parsedMessage, int bytes)
    return 1;
 }
 
-char * receiveMessage()
+int getBytesForReading(int instruction){
+  switch(instruction){
+    case GET_ALL_FLIGHTS:
+      return TFLIGHT_BYTES*MAX_FLIGHTS + sizeof(long);
+    case GET_FLIGHT:
+      return TFLIGHT_BYTES;
+    case INSERT_FLIGHT:
+      return ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));
+    case GET_ALL_PLANES:
+      return TPLANES_BYTES*MAX_PLANES + 1*sizeof(long);
+    case GET_ALL_RESERVATIONS:
+      return TRESERVATION_BYTES*MAX_RESERVATIONS + sizeof(long);
+    case INSERT_RESERVATION:
+      return ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));
+    case INSERT_CANCELLATION:
+      return ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));
+    case GET_RESERVATIONS_FOR_A_FLIGHT:
+      return SEAT_NUMBER_CHAR_MAX*MAX_SEATS+sizeof(int);
+    case GET_RESERVATION:
+      return TRESERVATION_BYTES;
+    case DELETE_FLIGHT:
+      return ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));
+    case DELETE_RESERVATON:
+      return ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));
+    default: return 0;
+  }
+}
+
+char * receiveMessage(int instruction)
 {
-  char * pBuffer = malloc(2000 * sizeof(char));
-  bzero(pBuffer,2000);
-  n = read(clientSocket, pBuffer, 2000);
+  char * pBuffer;
+  int bytes = getBytesForReading(instruction);
+  pBuffer = malloc(bytes * sizeof(char));
+  bzero(pBuffer,bytes);
+  n = read(clientSocket, pBuffer, bytes);
   if (n < 0)
   {
       perror("ERROR reading from socket");
@@ -81,7 +111,7 @@ void * communicate(int instruction , void * message)
     exit(1);
   }
 
-  response = receiveMessage();
+  response = receiveMessage(instruction);
 
   if(response == NULL)
   {
