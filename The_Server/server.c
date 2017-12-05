@@ -15,6 +15,7 @@
 #include "reservationAndCancelationManager.h"
 #include "serverParser.h"
 #include <sqlite3.h>
+#include <unistd.h>
 
 #define MAX_NUMBER_OF_CLIENTS 100
 
@@ -98,17 +99,25 @@ void childForClient (int sock) {
 }
 
 int main(){
-  int welcomeSocket, newSocket, pid;
+  int welcomeSocket, newSocket, pid, ret, enable = 1;
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
    struct timeval tv;
 
   openDataBase();
+do{
 
   /*---- Create the socket. The three arguments are: ----*/
   /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
   welcomeSocket = socket(PF_INET, SOCK_STREAM, 0);
+
+  if (setsockopt(welcomeSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+  {
+    printf("setsockopt(SO_REUSEADDR) failed");
+
+  }
+
 
   /*---- Configure settings of the server address struct ----*/
   /* Address family = Internet */
@@ -116,15 +125,21 @@ int main(){
   /* Set port number, using htons function to use proper byte order */
   serverAddr.sin_port = htons(5002);
   /* Set IP address to localhost */
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");//this address is for local conection
+  serverAddr.sin_addr.s_addr = inet_addr("10.2.69.99");//this address is for local conection
   /* Set all bits of the padding field to 0 */
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
   //putting a timeout interval for the input using the write and read
   tv.tv_sec = 60 * 5 ;        // 30 Secs Timeout
   tv.tv_usec = 0;        // Not init'ing this can cause strange errors
+
   /*---- Bind the address struct to the socket ----*/
-  bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
+    ret = bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
+    sleep(2);
+  } while(ret == -1);
+
+
+
 
 
   setsockopt(welcomeSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
