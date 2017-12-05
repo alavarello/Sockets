@@ -61,6 +61,8 @@ int getBytesForReading(int instruction){
       return TPLANES_BYTES*MAX_PLANES + 1*sizeof(long);
     case GET_ALL_RESERVATIONS:
       return TRESERVATION_BYTES*MAX_RESERVATIONS + sizeof(long);
+     case GET_ALL_CANCELATIONS:
+      return TRESERVATION_BYTES*MAX_CANCELATIONS + sizeof(long);
     case INSERT_RESERVATION:
       return ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));
     case INSERT_CANCELLATION:
