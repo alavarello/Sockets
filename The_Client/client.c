@@ -12,11 +12,9 @@ socklen_t addr_size;
 int initiateSocket()
 {
   struct timeval tv;
-  printf("INITIATING\n");
   /*---- Create the socket. The three arguments are: ----*/
   /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
   clientSocket = socket(PF_INET, SOCK_STREAM, 0);
-  printf("CLIENT SOCKET: %d\n",clientSocket );
   /*---- Configure settings of the server address struct ----*/
   /* Address family = Internet */
   serverAddr.sin_family = AF_INET;
