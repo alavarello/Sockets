@@ -24,7 +24,8 @@ $(TARGET): $(OBJECTS)
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
-	$(MAKE) -C ./tests clean
+	$(MAKE) -C ./tests
+	 clean
 
 $(TARGET_TEST):
 	$(MAKE) -C ./tests all
