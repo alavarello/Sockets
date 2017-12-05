@@ -254,6 +254,8 @@ char * parseAndExecute(char * buff,int * bytes){
 			return sendAllPlanes(bytes);
 		case SEND_ALL_RESERVATIONS:
 			return sendAllReservations(bytes);
+		case SEND_ALL_CANCELATIONS:
+			return sendAllCancellations(bytes);
 		case INSERT_RESERVATION:
 			return insertReservation(buff,bytes);
 		case INSERT_CANCELLATION:
