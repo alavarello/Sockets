@@ -28,9 +28,9 @@
  sqlite3 *db;
  void openDataBase(){
   int rc;
-    /* Open database */
+    
 
-/*
+
    rc = sqlite3_open("flightsDataBase.db", &db);
    
    if( rc ) {
@@ -39,8 +39,7 @@
       fprintf(stdout, "Opened database successfully\n");
    }
  }
- */
-/*
+
 void closeDataBase(){
   sqlite3_close(db);
    printf("Close database successfully\n");

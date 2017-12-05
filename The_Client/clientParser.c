@@ -91,51 +91,6 @@ char * parseMessageToSend(int action, void * param, int * bytes){
 
 }
 
-void printFlightArray(tFlightArray flightArray)
-{
-  int i;
-  printf("PRINTING ARRAY: SIZE:%ld\n--------------------------------------------------",flightArray.size );
-  for(i = 0; i<flightArray.size; i++)
-  {
-
-    printf("FlighCode: %s\n", flightArray.flightArray[i]->flightCode);
-    printf("O:%s  D:%s\n", flightArray.flightArray[i]->origin,flightArray.flightArray[i]->destination);
-    printf("DT:%s  DD:%s\n", flightArray.flightArray[i]->departureTime, flightArray.flightArray[i]->departureDate);
-    printf("AT:%s  AD:%s\n", flightArray.flightArray[i]->arrivalTime,flightArray.flightArray[i]->arrivalDate);
-
-  }
-}
-
-void printPlaneArray(tPlaneArray planeArray)
-{
-  int i;
-  printf("PLANE SIZE: %d\n",planeArray.size );
-  for(i=0; i< planeArray.size; i++)
-  {
-    printf("%s\n",planeArray.planeArray[i]->model ); 
-    printf("Rows:%d R:%d M:%d L:%d\n",planeArray.planeArray[i]->rows,planeArray.planeArray[i]->right,planeArray.planeArray[i]->middle,planeArray.planeArray[i]->left); 
-  }
-}
-
-void printReservationArray(tReservationArray reservationsArray)
-{
-  int i;
-  printf("RESERVATION ARRAY: SIZE:%d\n",reservationsArray.size);
-  for (i = 0; i < reservationsArray.size; ++i)
-  {
-   printf("FC:%s  SN:%s\n",reservationsArray.reservationsArray[i]->flightCode,reservationsArray.reservationsArray[i]->seatNumber);
-  }
-}
-
-void printSeatsArray(tSeatsArray seatsArray)
-{
-  int i;
-  printf("SEATS ARRAY: SIZE:%d\n",seatsArray.size);
-  for (i = 0; i < seatsArray.size; ++i)
-  {
-   printf("SEAT:%s\n",seatsArray.reservedSeats[i]);
-  }
-}
 
 void * parseRecivedMessage(int action, char * buff){
 
@@ -150,34 +105,24 @@ void * parseRecivedMessage(int action, char * buff){
 	switch(action){
 		case GET_ALL_FLIGHTS:
 			fa = deserialize_flight_array(buff);
-			//printFlightArray(*fa);
 			return fa;
-			break;
 		case GET_FLIGHT:
 			f = deserialize_flight(buff);
-			//printf("%s\n", f->flightCode);
 			return f;
-			break;
 		case INSERT_FLIGHT:
 			buff[ERROR_CODE_CHAR_MAX] = 0;
 			return buff;
-			break;
 		case GET_ALL_PLANES:
 			pa = deserialize_plane_array(buff);
-			printPlaneArray(*pa);
 			return pa;
-			break;
 		case GET_ALL_RESERVATIONS:
 			ra = deserialize_reservation_array(buff);
 			return ra;
-			break;
 		case INSERT_RESERVATION:
 			return buff;
-			break;
 		case INSERT_CANCELLATION:
 			buff[ERROR_CODE_CHAR_MAX] = 0;
 			return buff;
-			break;
 		case GET_RESERVATIONS_FOR_A_FLIGHT:
 			sa = deserialize_seatArray(buff);
 			return sa;
@@ -185,19 +130,16 @@ void * parseRecivedMessage(int action, char * buff){
 			r = deserialize_reservation(buff);
 			printf("%s.  %s\n",r->flightCode, r->seatNumber );
 			return r;
-			break;
 		case DELETE_FLIGHT:
 			buff[ERROR_CODE_CHAR_MAX] = 0;
 			return buff;
-			break;
 		case DELETE_RESERVATON:
 			buff[ERROR_CODE_CHAR_MAX] = 0;
 			return buff;
-			break;
 		default: 
 			resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
 			strcpy(resBuff, ERROR_CODE);
 			memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
-			printf("%s\n",resBuff );
+			return resBuff;
 	}
 }

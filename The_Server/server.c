@@ -1,3 +1,4 @@
+
 /****************** SERVER CODE ****************/
 
 #include <stdio.h>
@@ -127,7 +128,7 @@ do{
   /* Set port number, using htons function to use proper byte order */
   serverAddr.sin_port = htons(5002);
   /* Set IP address to localhost */
-  serverAddr.sin_addr.s_addr = inet_addr("10.2.69.99");//this address is for local conection
+  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");//this address is for local conection
   /* Set all bits of the padding field to 0 */
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
