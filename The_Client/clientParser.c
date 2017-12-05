@@ -127,18 +127,22 @@ void * parseRecivedMessage(int action, char * buff){
 	switch(action){
 		case GET_ALL_FLIGHTS:
 			fa = deserialize_flight_array(buff);
+			free(buff);
 			return fa;
 		case GET_FLIGHT:
 			f = deserialize_flight(buff);
+			free(buff);
 			return f;
 		case INSERT_FLIGHT:
 			buff[ERROR_CODE_CHAR_MAX] = 0;
 			return buff;
 		case GET_ALL_PLANES:
 			pa = deserialize_plane_array(buff);
+			free(buff);
 			return pa;
 		case GET_ALL_RESERVATIONS:
 			ra = deserialize_reservation_array(buff);
+			free(buff);
 			return ra;
 		case INSERT_RESERVATION:
 			return buff;
@@ -147,10 +151,12 @@ void * parseRecivedMessage(int action, char * buff){
 			return buff;
 		case GET_RESERVATIONS_FOR_A_FLIGHT:
 			sa = deserialize_seatArray(buff);
+			free(buff);
 			return sa;
 		case GET_RESERVATION:
 			r = deserialize_reservation(buff);
 			printf("%s.  %s\n",r->flightCode, r->seatNumber );
+			free(buff);
 			return r;
 		case DELETE_FLIGHT:
 			buff[ERROR_CODE_CHAR_MAX] = 0;
