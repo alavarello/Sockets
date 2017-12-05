@@ -1,10 +1,13 @@
+
 /****************** SERVER CODE ****************/
 
 #include <stdio.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <string.h>
+#include <stdlib.h>
 #include "constants.h"
 #include "structs.h"
 #include "serialize_flight.h"
@@ -15,6 +18,7 @@
 #include "reservationAndCancelationManager.h"
 #include "serverParser.h"
 #include <sqlite3.h>
+#include <unistd.h>
 
 #define MAX_NUMBER_OF_CLIENTS 100
 
@@ -98,17 +102,25 @@ void childForClient (int sock) {
 }
 
 int main(){
-  int welcomeSocket, newSocket, pid;
+  int welcomeSocket, newSocket, pid, ret, enable = 1;
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
    struct timeval tv;
 
   openDataBase();
+do{
 
   /*---- Create the socket. The three arguments are: ----*/
   /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
   welcomeSocket = socket(PF_INET, SOCK_STREAM, 0);
+
+  if (setsockopt(welcomeSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+  {
+    printf("setsockopt(SO_REUSEADDR) failed");
+
+  }
+
 
   /*---- Configure settings of the server address struct ----*/
   /* Address family = Internet */
@@ -123,8 +135,14 @@ int main(){
   //putting a timeout interval for the input using the write and read
   tv.tv_sec = 60 * 5 ;        // 30 Secs Timeout
   tv.tv_usec = 0;        // Not init'ing this can cause strange errors
+
   /*---- Bind the address struct to the socket ----*/
-  bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
+    ret = bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
+    sleep(2);
+  } while(ret == -1);
+
+
+
 
 
   setsockopt(welcomeSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));

@@ -15,5 +15,6 @@ tReservationArray *getCancelationArray();
 tSeatsArray * getReservationsSeats(char * flightCode);
 char ** exapndSeatsArray(char** seatsArray, int* size);
 void printSeatsArray(tSeatsArray seatsArray);
+int insert_cancellation(char * seat, char * flightCode);
 int delete_reservation(char * flight_code, char * seat);
 #endif

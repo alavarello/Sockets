@@ -90,7 +90,7 @@ int getNumberOfReservationOrCancelations(char* table)
   {
     sqlPlaneCount = "SELECT count(*) FROM CANCELATIONS";
   }
-  
+
     rc = sqlite3_prepare_v2(db, sqlPlaneCount, -1, &res, 0);
     if(rc != SQLITE_OK)
   {
@@ -107,7 +107,7 @@ int getNumberOfReservationOrCancelations(char* table)
 tReservationArray * getReservationOrCancelationArray(char* table){
   sqlite3_stmt * res;
   tReservation** reservationsArray = NULL;
-  tReservationArray* reservationsArrayStruct; 
+  tReservationArray* reservationsArrayStruct;
   int rc, numberOfRowsInTable, i;
 
   sem_t * sem;
@@ -129,7 +129,7 @@ tReservationArray * getReservationOrCancelationArray(char* table){
   {
       return NULL;
   }
-  
+
   rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
   //----------------------
 
@@ -141,7 +141,7 @@ tReservationArray * getReservationOrCancelationArray(char* table){
 
   reservationsArray = expanReservationArray(reservationsArray, numberOfRowsInTable);
   i = 0;
-  while(sqlite3_step(res) == SQLITE_ROW) 
+  while(sqlite3_step(res) == SQLITE_ROW)
   {
     strcpy(reservationsArray[i]->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
     strcpy(reservationsArray[i]->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
@@ -211,7 +211,7 @@ tReservation * getReservation(char * flightCode, char * seat)
   rc = sqlite3_step(res);
 
   if(rc == SQLITE_ROW)
-  { 
+  {
     strcpy(reservation->flightCode ,(char*)sqlite3_column_text(res, FLIGHT_CODE_COLUMN));
     strcpy(reservation->seatNumber ,(char*)sqlite3_column_text(res, SEAT_NUMBER_COLUMN));
     strcpy(reservation->userName ,(char*)sqlite3_column_text(res, USER_NAME_COLUMN));
@@ -255,7 +255,7 @@ int insert_reservation(char * flight_code, char * seat, char * name)
   sqlite3_bind_text(res, 1, flight_code, -1, NULL);
   sqlite3_bind_text(res, 2, seat, -1, NULL);
   sqlite3_bind_text(res, 3, name, -1, NULL);
-  
+
   rc = sqlite3_step(res);
 
   if(rc != SQLITE_DONE)
@@ -306,7 +306,7 @@ int delete_reservation(char * flight_code, char * seat){
 
 int insert_cancellation(char * seat, char * flightCode)
 {
-  char * sql = "INSERT INTO CANCELATIONS SELECT * FROM RESERVATIONS WHERE seat LIKE ? AND flight_code LIKE ?;";
+  char * sql = "INSERT INTO CANCELATIONS SELECT *, null FROM RESERVATIONS WHERE seat LIKE ? AND flight_code LIKE ?;";
   sqlite3_stmt * res;
   int rc;
   sem_t * sem;

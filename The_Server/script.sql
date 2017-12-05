@@ -35,6 +35,6 @@ CREATE TABLE CANCELATIONS
   flight_code TEXT NOT NULL CHECK(length("flight_code") = 5),
   seat TEXT NOT NULL CHECK(length("seat") = 3),
   name TEXT NOT NULL CHECK(length("name") <= 24),
-  PRIMARY KEY(flight_code, seat),
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
   FOREIGN KEY (flight_code) REFERENCES FLIGHTS
 );

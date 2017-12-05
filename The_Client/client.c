@@ -65,8 +65,6 @@ int sendMessage( char * parsedMessage, int bytes)
 
 char * receiveMessage()
 {
-  int i = 0;
-
   char * pBuffer = malloc(2000 * sizeof(char));
   bzero(pBuffer,2000);
   n = read(clientSocket, pBuffer, 2000);

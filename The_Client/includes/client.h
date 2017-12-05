@@ -30,5 +30,5 @@ int cancel(tFlight * flight , char * seat);
 
 tReservationArray * getReservations();
 tReservationArray * getCancelations();
-
+int initiateSocket();
 #endif
