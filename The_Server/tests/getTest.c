@@ -91,23 +91,23 @@ void getReservationArrayWith0Elements(){
 	printf("GET RESERVATION ARRAY WITH 0 ELEMENTS TEST: OK\n");
 }
 void getReservationArrayWith1Element(){
-	insert_reservation("AR1364","01A", "John Doe");
+	insert_reservation("AR136","01A", "John Doe");
 	tReservationArray * t = getReservationArray();
 	assert(t->size == 1);
 	assert(t->reservationsArray != NULL);
 	printf("GET RESERVATION ARRAY WITH 1 ELEMENTS TEST: OK\n");
 }
 void getReservationArrayTest(){
-	insert_reservation("AR1364","01B", "John Doe");
-	insert_reservation("AR1364","01C", "John Doe");
-	insert_reservation("AR1364","01D", "John Doe");
+	insert_reservation("AR134","01B", "John Doe");
+	insert_reservation("AR136","01C", "John Doe");
+	insert_reservation("AR136","01D", "John Doe");
 	tReservationArray * t = getReservationArray();
 	assert(t->size == 4);
 	assert(t->reservationsArray != NULL);
-	assert(strcmp(t->reservationsArray[0]->flightCode, "AR1364") == 0);
-	assert(strcmp(t->reservationsArray[0]->flightCode, "AR1364") == 0);
-	assert(strcmp(t->reservationsArray[0]->flightCode, "AR1364") == 0);
-	assert(strcmp(t->reservationsArray[0]->flightCode, "AR1364") == 0);
+	assert(strcmp(t->reservationsArray[0]->flightCode, "AR136") == 0);
+	assert(strcmp(t->reservationsArray[0]->flightCode, "AR136") == 0);
+	assert(strcmp(t->reservationsArray[0]->flightCode, "AR136") == 0);
+	assert(strcmp(t->reservationsArray[0]->flightCode, "AR136") == 0);
 	printf("GET RESERVATION ARRAY TEST: OK\n");
 
 }

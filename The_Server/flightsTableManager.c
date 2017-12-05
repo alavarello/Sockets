@@ -54,7 +54,7 @@ int getNumberOfFLighst()
 	int rc, numberOfFlights;
 	sqlite3_stmt *res;
 	//getting the number of flights
-    char * sqlFLightCount = "SELECT count(*) FROM flights";
+    char * sqlFLightCount = "Select count(*) from flights";
     rc = sqlite3_prepare_v2(db, sqlFLightCount, -1, &res, 0);
      if(rc != SQLITE_OK)
     {
