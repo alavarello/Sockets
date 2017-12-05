@@ -300,7 +300,7 @@ tReservationArray * getCancelations()
 {
   tReservationArray * reservations;
 
-  reservations = (tReservationArray * ) communicate(GET_ALL_RESERVATIONS , NULL);
+  reservations = (tReservationArray * ) communicate(GET_ALL_CANCELATIONS , NULL);
 
   return reservations;
 }
