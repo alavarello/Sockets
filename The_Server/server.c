@@ -87,6 +87,7 @@ void childForClient (int sock) {
    resBuffer = parseAndExecute(buffer, &bytes);
 
    if (n < 0) {
+    printf("SALIO ERROR\n");
       perror("ERROR reading from socket");
       exit(1);
    }
@@ -94,11 +95,12 @@ void childForClient (int sock) {
   n = write(sock,resBuffer,bytes);
 
    if (n < 0) {
+    printf("SALIO ERROR\n");
       perror("ERROR writing to socket");
       exit(1);
    }
  }
-
+ printf("SALIO NORMAL\n");
 }
 
 int main(){

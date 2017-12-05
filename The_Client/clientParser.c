@@ -50,6 +50,11 @@ char * parseMessageToSend(int action, void * param, int * bytes)
 			memcpy(resBuff, &action, sizeof(int));
 			return resBuff;
 		}	
+		case GET_ALL_CANCELATIONS:
+		{
+			memcpy(resBuff, &action, sizeof(int));
+			return resBuff;
+		}	
 		case INSERT_RESERVATION:
 		{
 			aux = serialize_reservation((tReservation *) param);
@@ -138,6 +143,9 @@ void * parseRecivedMessage(int action, char * buff){
 			pa = deserialize_plane_array(buff);
 			return pa;
 		case GET_ALL_RESERVATIONS:
+			ra = deserialize_reservation_array(buff);
+			return ra;
+		case GET_ALL_CANCELATIONS:
 			ra = deserialize_reservation_array(buff);
 			return ra;
 		case INSERT_RESERVATION:
