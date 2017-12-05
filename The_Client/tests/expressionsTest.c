@@ -28,18 +28,12 @@ void testValidExpDates();
 
 /* Beginning of tests*/
 
-void logError(char * msg)
-{
-	printf("\nERROR: %s \n", msg );
-}
 
-int main()
+void expressionsTest()
 {
 	isNumberTest();
 	isAlphaTest();
 	testValidExpDates();
-
-	return 1;
 }
 
 void isNumberTest()

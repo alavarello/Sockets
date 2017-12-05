@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <stdlib.h>
 #include <string.h>
 #include <structs.h>
 #include "clientParser.h"
 #include "random.h"
 #include <unistd.h>
 #include <assert.h>
+#include <arpa/inet.h>
 
 
 
@@ -45,7 +47,7 @@ int initiateSocket(){
 
 void whileAttack(int action ){
 	int bytes;
-	int n, i;
+	int n, i = 0;
 	char  *buff, *pBuffer; 
 	int clientSocket;
 	clientSocket = initiateSocket();
@@ -156,20 +158,13 @@ void reproduce()
          perror("ERROR on fork");
          exit(1);
       }
-      if(process == 1){
-      	whileAttack(action);
-      }else{
-      	attack(action);
-      }
+     
       if (pid == 0) {
-      	if(rand < 0.45){
-         	//attack(action);
-      	}else if(rand < 0.90){
-      		//writeWithoutReadAttack(action);
-      	}else{
-      		//whileAttack(action);
+      	if(rand < 0.5){
+         	attack(action);
+      	}else if(rand < 1){
+      		writeWithoutReadAttack(action);
       	}
-      	
       	return;
       }
       i++;

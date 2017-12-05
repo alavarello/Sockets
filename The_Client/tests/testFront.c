@@ -1,12 +1,12 @@
-//testFront.c
 
-// entry point for tests. Uncomment to use, and comment the other main in controller.c
 
-/*
+void expressionsTest();
+void controllerTests();
+
 int main(){
-
+	expressionsTest();
 	controllerTests();
 	
 }
-*/
+
 
