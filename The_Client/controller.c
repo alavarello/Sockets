@@ -179,17 +179,17 @@ void reserveSeatNumber()
 				drawPlane();
 				flag = 0;
 			}
-			else if(flag == 0)
-			{
-				sprintf(msgLog, "\nSeat %s is no longer available, please choose another one:\n\n" , seat);
-				logError(msgLog);
-				flag = 1;
-			}
 			else if(flag == -1 *  SQLITE_CONSTRAINT_FOREIGNKEY)
 			{
 				sprintf(msgLog, "\nFlight  %s has been cancelled,  please choose another flight\n\n" , currentFlight.flightCode);
 				logError(msgLog);
 				flag = 0 ;
+			}
+			else 
+			{
+				sprintf(msgLog, "\nSeat %s is no longer available, please choose another one:\n\n" , seat);
+				logError(msgLog);
+				flag = 1;
 			}
 		}
 		else

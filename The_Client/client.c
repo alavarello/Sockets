@@ -117,6 +117,8 @@ void * communicate(int instruction , void * message)
     exit(1);
   }
 
+  free(parsedMessage);
+
   return parseRecivedMessage(instruction, response);
 
 }
@@ -194,15 +196,18 @@ int reserve(tFlight * flight , char * seat)
   char * result;
   int res;
   int number;
-  char * name = malloc(100);
+  char name[USER_NAME_CHAR_MAX];
   name[0] = 0;
-  sprintf(name, "%ld" , (long) getpid());
+  int size  = sprintf(name, "%ld" , (long) getpid());
+
+  printf("se copiaron : %d\n", size);
 
   newReservation->flightCode = malloc(10 * sizeof(char));
   strcpy(newReservation->flightCode, flight->flightCode);
   newReservation->seatNumber = malloc(10 * sizeof(char));
   strcpy(newReservation->seatNumber , seat);
-  newReservation->userName = name;
+  newReservation->userName = calloc(USER_NAME_CHAR_MAX , sizeof(char));
+  strcpy(newReservation->userName , name);
 
   result = communicate(INSERT_RESERVATION , newReservation);
 
@@ -224,7 +229,7 @@ int cancel(tFlight * flight , char * seat)
 {
   tReservation * newReservation = malloc(sizeof(*newReservation));
   char * result;
-  char name[100];
+  char name[USER_NAME_CHAR_MAX];
   name[0] = 0;
   sprintf(name, "%ld" , (long) getpid());
 
@@ -232,8 +237,8 @@ int cancel(tFlight * flight , char * seat)
   strcpy(newReservation->flightCode, flight->flightCode);
   newReservation->seatNumber = malloc(10 * sizeof(char));
   strcpy(newReservation->seatNumber , seat);
-
-  newReservation->userName = name;
+  newReservation->userName = calloc(USER_NAME_CHAR_MAX, sizeof(char));
+  strcpy(newReservation->userName , name);
 
   result = communicate(INSERT_CANCELLATION, newReservation);
 

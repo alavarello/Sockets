@@ -53,12 +53,14 @@ void readAdministratorMenu ()
 			{
 				reservations = getReservations();
 				listReservations(reservations);
+				freeReservationArray(&reservations);
 				break;
 			}
 			case 4:
 			{
 				cancelations = getCancelations();
 				listCancelations(cancelations);
+				freeReservationArray(&cancelations);
 				break;
 			}
 			case 5:

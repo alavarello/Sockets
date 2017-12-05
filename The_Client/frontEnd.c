@@ -478,15 +478,18 @@ char * receiveSeatNumber()
 		}
 		
 
-		if(strcmp(buffer , "q") == 0)
+		if(i == 1 && strcmp(buffer , "q") == 0)
 		{
 			free(buffer);
 			return "q";
 		}
 
-		if(c != '\n')
+		if(c != '\n' || i != 3)
 		{
-			CLEAN_BUFFER;
+			if(c != '\n')
+			{
+				CLEAN_BUFFER;
+			}	
 			printf("You have entered an invalid seat. Please try  again  1\n");
 
 		}

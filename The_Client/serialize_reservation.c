@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "freeMemory.h"
 
 char * serialize_reservation(tReservation * t)
 {

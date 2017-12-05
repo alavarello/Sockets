@@ -14,6 +14,7 @@
 #include "frontEnd.h"
 #include "structs.h"
 #include "expressions.h"
+#include "freeMemory.h"
 
 #define FREE_ALL() free(flightCode); free(origin) ; free(destination); free(departureDate); free(departureTime); free(arrivalTime) ; free(planeCode); free(arrivalDate)
 #define RETURN_NULL_CONDITION(t) if(t == NULL){ FREE_ALL() ;  return 0 ;}
