@@ -1,5 +1,5 @@
 TARGET = server
-TARGET_TEST = clientTests
+TARGET_TEST = test
 TARGET_ALL = $(TARGET) $(TARGET_TEST)
 LIBS = -lm -lsqlite3 -lpthread
 CC = gcc
