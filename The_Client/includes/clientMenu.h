@@ -17,5 +17,8 @@
 int clientSession();
 void readClientMenu ();
 void listFlights();
+void reserveSeat();
+void cancelSeat();
+
 
 #endif

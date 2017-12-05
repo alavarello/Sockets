@@ -39,8 +39,8 @@ void freeAllDrawPlane(int *** totalOccupied , tPlane ** plane , char *** occupie
 
 void freeFlightsArray( tFlight ** flights);
 
-void reserveSeat();
+void cancelSeatNumber();
 
-void cancelSeat();
+void reserveSeatNumber();
 
 #endif

@@ -6,7 +6,6 @@ static char msgLog[MAX_MSG_LOG];
 
 int main(void)
 {
-
 	int res ;
 	int attempts = 0 ;
 	do
@@ -23,7 +22,8 @@ int main(void)
 		printMenu();
 		readMenu();
 
-	}else
+	}
+	else
 	{
 		logError("Unable to connect");
 	}
@@ -39,6 +39,7 @@ void readMenu ()
 	do
 	{
 		sel=getint("Choose your option:\n");
+
 		switch(sel)
 		{
 			case 1:
@@ -65,17 +66,17 @@ void readMenu ()
 				flag=1;
 			}
 		}
-	}
-	while (flag);
+	}while (flag);
 }
 
-int setCurrentFlight(tFlight ** flights , char * flightCode){
-
+int setCurrentFlight(tFlight ** flights , char * flightCode)
+{
 	int i = 0 ;
 
-	while(flights[i]!= NULL && i < MAX_FLIGHTS){
-
-		if(strcmp(flights[i]->flightCode, flightCode) == 0){
+	while(flights[i]!= NULL && i < MAX_FLIGHTS)
+	{
+		if(strcmp(flights[i]->flightCode, flightCode) == 0)
+		{
 			currentFlight = *flights[i];
 			return  1;
 		}
@@ -83,187 +84,6 @@ int setCurrentFlight(tFlight ** flights , char * flightCode){
 	}
 	return 0;
 }
-
-void cancelSeatNumber()
-{
-	char * seat;
-	int flag = 1;
-
-	while(flag){
-
-		drawPlane();
-
-		seat = receiveSeatNumber();
-
-		if(strcmp(seat , "q") == 0){
-			return;
-		}
-
-		if(checkSeatNumberFormat(seat , &currentFlight)){
-
-			flag = cancel(&currentFlight , seat ) ;
-
-			if(flag){
-				sprintf(msgLog, "Seat %s has been cancelled.  The plane state is:\n" , seat);
-				logAction(msgLog);
-				drawPlane();
-				flag = 0;
-			}else{
-				sprintf(msgLog, "\nSeat %s is not able to cancel:\n\n" , seat);
-				logError(msgLog);
-				flag = 1;
-			}
-
-		}else{
-			sprintf(msgLog , "The seat format is invalid\n");
-			logError(msgLog);
-			flag = 1;
-		}
-
-		free(seat);
-	}
-
-}
-
-void reserveSeatNumber()
-{
-	char * seat;
-	int flag = 1;
-
-	while(flag){
-
-		drawPlane();
-
-		seat = receiveSeatNumber();
-
-		if(strcmp(seat , "q") == 0){
-			return;
-		}
-
-		if(checkSeatNumberFormat(seat , &currentFlight)){
-
-			flag = reserve(&currentFlight , seat ) ;
-
-			if(flag == 1){
-				sprintf(msgLog, "Seat %s has been reserved. The plane state is:\n" , seat);
-				logAction(msgLog);
-				drawPlane();
-				flag = 0;
-			}else if(flag == 0){
-				sprintf(msgLog, "\nSeat %s is no longer available, please choose another one:\n\n" , seat);
-				logError(msgLog);
-				flag = 1;
-			}else if(flag == -1 *  SQLITE_CONSTRAINT_FOREIGNKEY){
-				sprintf(msgLog, "\nFlight  %s has been cancelled,  please choose another flight\n\n" , currentFlight.flightCode);
-				logError(msgLog);
-				flag = 0 ;
-			}
-		}else{
-			sprintf(msgLog ,"The seat format is invalid\n");
-			logError(msgLog);
-			flag = 1;
-		}
-
-		free(seat);
-
-
-
-	}
-
-}
-
-void reserveSeat()
-{
-	int flag = 1;
-	tFlight ** flights;
-	char * flightCode ;
-	int result ;
-
-
-	while(flag){
-
-		flights = getFlights();
-
-		displayFlights(flights);
-
-		flightCode = readFlightCode();
-
-		if(strcmp(flightCode , "q") == 0){
-			freeFlightsArray(flights);
-			free(flightCode);
-			flights = NULL;
-			return;
-		}
-
-		result = setCurrentFlight(flights , flightCode);
-
-		freeFlightsArray(flights);
-		free(flightCode);
-
-		flights = NULL;
-
-		if(!result){
-			sprintf(msgLog, "Please insert a valid flight code\n");
-			logError(msgLog);
-			flag = 1;
-		}else{
-
-			reserveSeatNumber();
-			flag=1;
-		}
-
-	}
-
-}
-
-void cancelSeat()
-{
-	tFlight ** flights;
-	char * flightCode ;
-	int result ;
-	//char * seat;
-	int flag = 1;
-
-	while(flag){
-
-		flights = getFlights();
-
-		displayFlights(flights);
-
-		flightCode = readFlightCode();
-
-		if(strcmp(flightCode , "q") == 0){
-			freeFlightsArray(flights);
-			free(flightCode);
-			flights = NULL;
-			return ;
-		}
-
-		result = setCurrentFlight(flights , flightCode);
-
-		freeFlightsArray(flights);
-		free(flightCode);
-
-		flights = NULL;
-
-		if(!result){
-			sprintf(msgLog,"Please insert a valid flight code\n");
-			logError(msgLog);
-			flag = 1;
-			break;
-		}else{
-
-
-			cancelSeatNumber();
-
-			flag=0;
-		}
-	}
-
-}
-
-
-
 
 void fillOcuppiedMatrix(char * * occupiedSeats , int * * totalOccupied)
 {
@@ -279,8 +99,6 @@ void fillOcuppiedMatrix(char * * occupiedSeats , int * * totalOccupied)
 
 		i++;
 	}
-
-
 }
 
 void updateOccupiedArrays(tPlane * plane , int row , int  ** totalOccupied , int ** left, int ** middle, int ** right)
@@ -288,8 +106,6 @@ void updateOccupiedArrays(tPlane * plane , int row , int  ** totalOccupied , int
 	*left = totalOccupied[row] + 0;
 	*middle = totalOccupied[row] + plane->left;
 	*right = totalOccupied[row] + plane->middle + plane->left;
-
-
 }
 
 void drawPlane()
@@ -310,8 +126,106 @@ void drawPlane()
 
 	drawPlaneFront(plane, totalOccupied );
 
-
 	freeAllDrawPlane(&totalOccupied , &plane , &occupiedSeats);
 
+}
+
+
+void cancelSeatNumber()
+{
+	char * seat;
+	int flag = 1;
+
+	while(flag)
+	{
+		drawPlane();
+
+		seat = receiveSeatNumber();
+
+		if(strcmp(seat , "q") == 0)
+		{
+			return;
+		}
+
+		if(checkSeatNumberFormat(seat , &currentFlight))
+		{
+			flag = cancel(&currentFlight , seat ) ;
+
+			if(flag)
+			{
+				sprintf(msgLog, "Seat %s has been cancelled.  The plane state is:\n" , seat);
+				logAction(msgLog);
+				drawPlane();
+				flag = 0;
+			}
+			else
+			{
+				sprintf(msgLog, "\nSeat %s is not able to cancel:\n\n" , seat);
+				logError(msgLog);
+				flag = 1;
+			}
+
+		}
+		else
+		{
+			sprintf(msgLog , "The seat format is invalid\n");
+			logError(msgLog);
+			flag = 1;
+		}
+
+		free(seat);
+	}
+}
+
+void reserveSeatNumber()
+{
+	char * seat;
+	int flag = 1;
+
+	while(flag)
+	{
+
+		drawPlane();
+
+		seat = receiveSeatNumber();
+
+		if(strcmp(seat , "q") == 0)
+		{
+			return;
+		}
+
+		if(checkSeatNumberFormat(seat , &currentFlight)){
+
+			flag = reserve(&currentFlight , seat );
+
+			if(flag == 1)
+			{
+				sprintf(msgLog, "Seat %s has been reserved. The plane state is:\n" , seat);
+				logAction(msgLog);
+				drawPlane();
+				flag = 0;
+			}
+			else if(flag == 0)
+			{
+				sprintf(msgLog, "\nSeat %s is no longer available, please choose another one:\n\n" , seat);
+				logError(msgLog);
+				flag = 1;
+			}
+			else if(flag == -1 *  SQLITE_CONSTRAINT_FOREIGNKEY)
+			{
+				sprintf(msgLog, "\nFlight  %s has been cancelled,  please choose another flight\n\n" , currentFlight.flightCode);
+				logError(msgLog);
+				flag = 0 ;
+			}
+		}
+		else
+		{
+			sprintf(msgLog ,"The seat format is invalid\n");
+			logError(msgLog);
+			flag = 1;
+		}
+
+		free(seat);
+	}
 
 }

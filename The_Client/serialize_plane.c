@@ -4,12 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
-
 char * serialize_plane(tPlane * t)
 {
   int bytes = 0;
   char * buff, * aux;
-
 
   bytes = (MODEL_CHAR_MAX*sizeof(char) + 4*sizeof(int));
 

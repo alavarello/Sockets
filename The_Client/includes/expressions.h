@@ -32,6 +32,8 @@ int isValidDate(char * date);
 int isValidDayAndMonth(char d1, char d2, char m1, char m2, int y);
 int isValidYear(char y1, char y2, char y3, char y4);
 
+int isntOnTheList(char * flightCode, tFlight ** flights);
+int isOnTheList(char * flightCode, tFlight ** flights);
 /* se supone que a la funcion de abajo hay que llamarla cuando ya se sepa que los dias y horarios que ingreso son validos */
 int checkLogicalTimeDifference(char * timeDeparture, char * timeArrival, char * dateDeparture, char * dateArrival);
 int dateDiff(char * big, char * small);

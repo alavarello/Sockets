@@ -1,12 +1,14 @@
 TARGET = client
+TARGET_TEST = clientTests
 LIBS = -lm
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -pedantic -Wextra -Wparentheses
 
 .PHONY: default all clean dosa
 
 default: $(TARGET)
 all: default
+test : $(TARGET_TEST)
 
 OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
 
@@ -16,7 +18,7 @@ OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 $(TARGET): $(OBJECTS)
-	$(CC)  $(OBJECTS) -Wall  $(LIBS) -o $@
+	$(CC)  $(OBJECTS) -Wall -pedantic -Wextra -Wparentheses $(LIBS) -o $@
 
 clean:
 	-rm -f *.o

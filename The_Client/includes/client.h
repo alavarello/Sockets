@@ -12,6 +12,15 @@
 #include "controller.h"
 #include "structs.h"
 #include <sqlite3.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <netinet/in.h>
+#include "serialize_flight.h"
+#include "serialize_plane.h"
+#include "serialize_reservation.h"
+#include "clientParser.h"
+#include <unistd.h>
+#include <arpa/inet.h>
 
 #define OKEY "OKEYY"
 
@@ -27,6 +36,8 @@ int removeFlightClient(char * flightCode);
 
 int reserve(tFlight * flight , char * seat);
 int cancel(tFlight * flight , char * seat);
+
+void * communicate(int instruction , void * message);
 
 tReservationArray * getReservations();
 tReservationArray * getCancelations();

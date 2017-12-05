@@ -21,6 +21,7 @@ char * readFlightCode();
 void displayFlights(tFlight ** flights);
 void printRow(int n , int * occupied);
 void printHeaders(tPlane * plane);
+void printPlanes(tPlaneArray * planeArray);
 char * readOrigin();
 char * readDestination();
 char * readDepTime();

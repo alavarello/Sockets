@@ -7,26 +7,31 @@
 #include "clientParser.h"
 #include "structs.h"
 #include "constants.h"
-//#include <sqlite3.h>
 
-
-char * parseMessageToSend(int action, void * param, int * bytes){
-
+char * parseMessageToSend(int action, void * param, int * bytes)
+{
 	char * resBuff = malloc(sizeof(int));
 	*bytes = sizeof(int);
 	char * aux;
 	int error = ACTION_CODE_ERROR;
-	switch(action){
+
+	switch(action)
+	{
 		case GET_ALL_FLIGHTS:
+		{
 			memcpy(resBuff, &action, sizeof(int));
 			return resBuff;
+		}	
 		case GET_FLIGHT:
+		{
 			resBuff = realloc(resBuff, sizeof(int)+FLIGHT_CODE_CHAR_MAX); 
 			*bytes = sizeof(int)+FLIGHT_CODE_CHAR_MAX;
 			memcpy(resBuff, &action, sizeof(int));
 			strcpy(resBuff+sizeof(int), (char*)param);
 			return resBuff;
+		}	
 		case INSERT_FLIGHT:
+		{
 			aux = serialize_flight((tFlight *) param);
 			free(resBuff);
 			resBuff = malloc(TFLIGHT_BYTES+sizeof(int));
@@ -34,13 +39,19 @@ char * parseMessageToSend(int action, void * param, int * bytes){
 			memcpy(resBuff, &action, sizeof(int));		
 			memcpy(resBuff+sizeof(int), aux, TFLIGHT_BYTES);
 			return resBuff;
+		}	
 		case GET_ALL_PLANES:
+		{
 			memcpy(resBuff, &action, sizeof(int));
 			return resBuff;
+		}	
 		case GET_ALL_RESERVATIONS:
+		{
 			memcpy(resBuff, &action, sizeof(int));
 			return resBuff;
+		}	
 		case INSERT_RESERVATION:
+		{
 			aux = serialize_reservation((tReservation *) param);
 			free(resBuff);
 			resBuff = malloc(TRESERVATION_BYTES+sizeof(int));
@@ -48,7 +59,9 @@ char * parseMessageToSend(int action, void * param, int * bytes){
 			memcpy(resBuff, &action, sizeof(int));
 			memcpy(resBuff+sizeof(int), aux, TRESERVATION_BYTES);
 			return resBuff;
+		}	
 		case INSERT_CANCELLATION:
+		{
 			aux = serialize_reservation((tReservation *) param);
 			free(resBuff);
 			resBuff = malloc(TRESERVATION_BYTES+sizeof(int));
@@ -56,39 +69,48 @@ char * parseMessageToSend(int action, void * param, int * bytes){
 			memcpy(resBuff, &action, sizeof(int));
 			memcpy(resBuff+sizeof(int), aux, TRESERVATION_BYTES);
 			return resBuff;
+		}	
 		case GET_RESERVATIONS_FOR_A_FLIGHT:
+		{
 			resBuff = realloc(resBuff, sizeof(int)+FLIGHT_CODE_CHAR_MAX);
 			*bytes = sizeof(int)+FLIGHT_CODE_CHAR_MAX;
 			memcpy(resBuff, &action, sizeof(int));
 			strcpy(resBuff+sizeof(int), (char*)param);
 			return resBuff;
+		}	
 		case GET_RESERVATION:
+		{
 			resBuff = realloc(resBuff, sizeof(int)+FLIGHT_CODE_CHAR_MAX+SEAT_NUMBER_CHAR_MAX);
 			*bytes = sizeof(int)+FLIGHT_CODE_CHAR_MAX + SEAT_NUMBER_CHAR_MAX;
 			memcpy(resBuff, &action, sizeof(int));
 			strcpy(resBuff+sizeof(int), (char*)((tReservation*)param)->flightCode);
 			strcpy(resBuff+sizeof(int)+FLIGHT_CODE_CHAR_MAX, (char*)((tReservation*)param)->seatNumber);
 			return resBuff;
+		}	
 		case DELETE_FLIGHT:
+		{
 			resBuff = realloc(resBuff, sizeof(int)+FLIGHT_CODE_CHAR_MAX);
 			*bytes = sizeof(int)+FLIGHT_CODE_CHAR_MAX;
 			memcpy(resBuff, &action, sizeof(int));
 			strcpy(resBuff+sizeof(int), (char*)param);
 			return resBuff;
+		}	
 		case DELETE_RESERVATON:
+		{
 			resBuff = realloc(resBuff, sizeof(int)+FLIGHT_CODE_CHAR_MAX+SEAT_NUMBER_CHAR_MAX);
 			*bytes = sizeof(int)+FLIGHT_CODE_CHAR_MAX + SEAT_NUMBER_CHAR_MAX;
 			memcpy(resBuff, &action, sizeof(int));
 			strcpy(resBuff+sizeof(int), (char*)((tReservation*)param)->flightCode);
 			strcpy(resBuff+sizeof(int)+FLIGHT_CODE_CHAR_MAX, (char*)((tReservation*)param)->seatNumber);
 			return resBuff;
-
+		}	
 	}
+
 	resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));
 	strcpy(resBuff, ERROR_CODE);
 	memcpy((resBuff+ERROR_CODE_CHAR_MAX), &error, sizeof(int));
-	return resBuff;
 
+	return resBuff;
 }
 
 

@@ -84,7 +84,8 @@ tFlight * deserialize_flight(char * buff)
 
 }
 
-char * serialize_flight_array(tFlightArray * flightArray){
+char * serialize_flight_array(tFlightArray * flightArray)
+{
   int bytes = 0, i;
   char * buff, * aux, *flight;
 
@@ -96,7 +97,8 @@ char * serialize_flight_array(tFlightArray * flightArray){
   aux = buff;
   memcpy(aux, &(flightArray->size), sizeof(long));
   aux += sizeof(long);
-  for(i = 0; i<flightArray->size; i++){
+  for(i = 0; i<flightArray->size; i++)
+  {
     flight = serialize_flight(flightArray->flightArray[i]);
     memcpy(aux, flight, bytes);
     free(flight);
@@ -105,7 +107,8 @@ char * serialize_flight_array(tFlightArray * flightArray){
   return buff;
 }
 
-tFlightArray * deserialize_flight_array(char * buff){
+tFlightArray * deserialize_flight_array(char * buff)
+{
   int i;
   tFlightArray * res = malloc(sizeof(tFlightArray));
   memcpy(&(res->size), buff, sizeof(long));
@@ -115,42 +118,50 @@ tFlightArray * deserialize_flight_array(char * buff){
 
 
   res->flightArray = malloc(res->size*sizeof(tFlight*));
-  for(i = 0; i< res->size; i++){
+  for(i = 0; i< res->size; i++)
+  {
     res->flightArray[i] = deserialize_flight(buff);
     buff += bytes;
   }
   return res;
 }
 
+char * serialize_seatArray(tSeatsArray * seatArray)
+{
+  char * buff = malloc((SEAT_NUMBER_CHAR_MAX*seatArray->size)+sizeof(int));
+  char * auxBuff = buff;
+  int i = 0;
 
+  memcpy(auxBuff,&(seatArray->size), sizeof(int));
+  auxBuff += sizeof(int);
 
-char * serialize_seatArray(tSeatsArray * seatArray){
-char * buff = malloc((SEAT_NUMBER_CHAR_MAX*seatArray->size)+sizeof(int));
-char * auxBuff = buff;
-int i = 0;
-memcpy(auxBuff,&(seatArray->size), sizeof(int));
-auxBuff += sizeof(int);
   while(i< seatArray->size)
   {
     memcpy(auxBuff,seatArray->reservedSeats[i], SEAT_NUMBER_CHAR_MAX);
     auxBuff += SEAT_NUMBER_CHAR_MAX;
     i++;
   }
+
   return buff;
 }
 
-tSeatsArray * deserialize_seatArray(char* buff){
+tSeatsArray * deserialize_seatArray(char* buff)
+{
   tSeatsArray * seatArray = malloc(sizeof(tSeatsArray));
   int i = 0;
+
   memcpy(&(seatArray->size), buff, sizeof(int));
   buff += sizeof(int);
   seatArray->reservedSeats = malloc(sizeof(char*)*seatArray->size);
-  while(i < seatArray->size){
+
+  while(i < seatArray->size)
+  {
       seatArray->reservedSeats[i] = malloc(sizeof(char)*SEAT_NUMBER_CHAR_MAX);
       memcpy(seatArray->reservedSeats[i], buff, sizeof(char)*SEAT_NUMBER_CHAR_MAX);
       buff += sizeof(char)*SEAT_NUMBER_CHAR_MAX;
       i++;
   }
+  
   return seatArray;
 }
 

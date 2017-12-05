@@ -8,7 +8,7 @@
 #define DESTINATION_COLUMN 2
 #define DEPARTURETIME_COLUMN 3
 #define ARRIVAL_TIME_COLUMN 4
-#define PLANE_CODE 5}
+#define PLANE_CODE 5
 
 #define MAX_BUFFER 100
 
@@ -24,7 +24,7 @@
 #define PASSPORT_COLUMN 2
 #define USER_NAME_COLUMN 3
 #define RESERVATION_CODE_COLUMN 4
-#define MAX_FLIGHTS 50
+#define MAX_FLIGHTS 200
 
 #define CLEAN_BUFFER while(getchar()!='\n')
 

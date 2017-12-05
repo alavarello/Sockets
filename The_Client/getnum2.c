@@ -1,7 +1,3 @@
-/* SIMILAR A GETNUM, SOLO QUE SI A CONTINUACION DEL NUMERO HAY CARACTERES
-** EXTRA QUE NO SEAN ESPACIOS, LO TOMA COMO INVALIDO
-*/
-
 #include <stdio.h>
 #include "getnum.h"
 #include <string.h>
@@ -9,8 +5,6 @@
 
 #define BORRA_BUFFER while (getchar() != '\n')
 
-
-/* Verifica que en el buffer solo hayan quedado espacios */
 static int
 finalBuffer()
 {
