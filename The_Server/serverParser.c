@@ -30,6 +30,7 @@
 #define COMPLETE_CODE_CHAR_MAX 6
 #define ERROR_CODE_CHAR_MAX 6
 #define ACTION_CODE_ERROR 49
+#define END_PROCESS 100
 
 extern sqlite3 *db;
 
@@ -268,6 +269,8 @@ char * parseAndExecute(char * buff,int * bytes){
 			return deleteFlight(buff,bytes);
 		case DELETE_RESERVATON:
 			return deleteReservation(buff,bytes);
+		case END_PROCESS:
+			return NULL;	
 	}
 	*bytes = ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int));
 	resBuff = malloc(ERROR_CODE_CHAR_MAX*(sizeof(char)+ sizeof(int)));

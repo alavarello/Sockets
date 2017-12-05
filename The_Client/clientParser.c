@@ -21,6 +21,11 @@ char * parseMessageToSend(int action, void * param, int * bytes)
 		{
 			memcpy(resBuff, &action, sizeof(int));
 			return resBuff;
+		}
+		case END_PROCESS:
+		{
+			memcpy(resBuff, &action, sizeof(int));
+			return resBuff;
 		}	
 		case GET_FLIGHT:
 		{

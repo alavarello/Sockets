@@ -16,6 +16,7 @@
 #define ERROR_CODE "ERROR"
 #define ERROR_CODE_CHAR_MAX 6
 #define ACTION_CODE_ERROR 49
+#define END_PROCESS 100
 
 
 char * parseRecivedMessage(int action, char * buff);
