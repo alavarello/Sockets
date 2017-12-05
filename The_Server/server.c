@@ -19,6 +19,7 @@
 #include "serverParser.h"
 #include <sqlite3.h>
 #include <unistd.h>
+#include "semaphores.h"
 
 #define MAX_NUMBER_OF_CLIENTS 100
 
@@ -120,6 +121,7 @@ int main()
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
    struct timeval tv;
+   sem_t * processSem ; 
 
   openDataBase();
 
@@ -158,6 +160,7 @@ do{
 
 
 
+  processSem = openProcessSemaphore("/processSem");
 
   setsockopt(welcomeSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv,sizeof(struct timeval));
   /*---- Listen on the socket, with 5 max connection requests queued ----*/
@@ -180,6 +183,7 @@ do{
     }
     else
     {
+      sem_wait(processSem);
       /* Create child process */
       pid = fork();
 
@@ -196,6 +200,7 @@ do{
           close(welcomeSocket);
           childForClient(newSocket);
           printf("Connection ended\n" );
+          sem_post(processSem);
           exit(0);
       }
       else 
